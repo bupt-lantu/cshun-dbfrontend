@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # cshun-vd
 
 ## Project setup
@@ -25,6 +24,4 @@ npm run test
 ```
 npm run lint
 ```
-=======
-# cshun-dbfrontend
->>>>>>> e0528699348a6d445c7ef86e293e0277169ad603
+

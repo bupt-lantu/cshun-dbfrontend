@@ -8,11 +8,8 @@ export default new Vuex.Store({
       canvas:{},
   },
   mutations: {
-    set_canvas(){
-      
-    }
   },
   actions: {
-
+    
   }
 })
