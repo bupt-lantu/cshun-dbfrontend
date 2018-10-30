@@ -27,6 +27,13 @@
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>
+
+    <div id="toLogin">
+      <router-link id="jmp" to="/Login">
+        登陆界面
+      </router-link>
+    </div>
+    
   </div>
 </template>
 
@@ -54,5 +61,10 @@ li {
 }
 a {
   color: #42b983;
+}
+
+#jmp {
+  height: 200px;
+  width: 100px;
 }
 </style>
