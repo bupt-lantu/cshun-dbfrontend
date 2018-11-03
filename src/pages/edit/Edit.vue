@@ -6,7 +6,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import EditTools from './components/Tools'
 import EditCanvas from './components/Canvas'
 export default {
