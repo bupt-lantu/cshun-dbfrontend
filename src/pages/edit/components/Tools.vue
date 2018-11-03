@@ -1,12 +1,12 @@
 <template>
   <div>
-      This is header.
+      This is tools.
   </div>
 </template>
 
 <script>
 export default {
-  name: 'EditHeader',
+  name: 'Tools',
 }
 </script>
 

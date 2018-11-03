@@ -1,16 +1,19 @@
 <template>
   <div class="edit">
-      <edit-header></edit-header>
+    <edit-tools></edit-tools>
+    <edit-canvas></edit-canvas>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import EditHeader from './components/Header'
+import EditTools from './components/Tools'
+import EditCanvas from './components/Canvas'
 export default {
   name: 'edit',
   components:{
-      EditHeader: EditHeader
+      EditTools: EditTools,
+      EditCanvas: EditCanvas
   }
 }
 </script>
