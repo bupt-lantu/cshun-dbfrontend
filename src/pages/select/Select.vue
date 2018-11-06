@@ -19,12 +19,12 @@
 
       <v-flex xs12 sm12 md6 my-3
       v-for="village in villagesInfo" 
-      :key="village.name">
+      :key="village.id">
         <v-hover>
           <v-card 
           slot-scope="{ hover }"
           class="village-card"
-          @click="select(village.name)">
+          @click.native="select(village.id)">
             <v-card-title primary-title 
             class="village-title"
             :class="{ titleHovered: hover }">
@@ -48,8 +48,8 @@ export default {
   data(){
     return {
       villagesInfo: [
-        {name: '第一个村', description: '本书是 JavaScript 超级畅销书的最新版。ECMAScript 5 和 HTML5 在标准之争中双双胜出，使大量 专有实现和客户端扩展正式进入规范，同时也为 JavaScript 增添了很多适应未来发展的新特性。本书这 一版除增加 5 章全新内容外，其他章节也有较大幅度的增补和修订，新内容篇幅约占三分之一。全书从 JavaScript 语言实现的各个组成部分'},
-        {name: '第二个村', description: '描述二二描述描述描述描述描述描述'}
+        {id:'dsada2312dsaddas231', name: '第一个村', description: '本书是 JavaScript 超级畅销书的最新版。ECMAScript 5 和 HTML5 在标准之争中双双胜出，使大量 专有实现和客户端扩展正式进入规范，同时也为 JavaScript 增添了很多适应未来发展的新特性。本书这 一版除增加 5 章全新内容外，其他章节也有较大幅度的增补和修订，新内容篇幅约占三分之一。全书从 JavaScript 语言实现的各个组成部分'},
+        {id:'qwefsaf23121sfafsa3', name: '第二个村', description: '描述二二描述描述描述描述描述描述'}
       ]
     };
   },
@@ -57,8 +57,9 @@ export default {
     //retrive villages info from backend
   },
   methods: {
-    select: function(villageName){
-      //jump to another
+    select: function(villageId){
+      //jump to edit page
+      this.$router.push({ name: 'edit', params: { id: villageId}});
     } 
   }
 }
