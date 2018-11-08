@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import md5 from "js-md5";
 export default {
   name: "Login",
   data() {
@@ -66,6 +67,8 @@ export default {
       if(this.valid){
         console.log("try submit");
         let formData=new URLSearchParams();
+        //use md5 to encode password
+        this.LoginParams.password = md5(this.LoginParams.password);
         for(let it in this.LoginParams) {
           formData.append(it, this.LoginParams[it]);
         }
