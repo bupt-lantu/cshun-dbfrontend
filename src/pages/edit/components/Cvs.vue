@@ -74,8 +74,7 @@ export default {
     },
     save()
     {
-        let savePack = cvs.save();
-        //send savePack
+        cvs.saveToServer();
     },
   },
   watch:{
