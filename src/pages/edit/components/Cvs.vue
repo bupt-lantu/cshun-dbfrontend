@@ -29,7 +29,8 @@
     <canvas id="c" width="1000" height="1000"></canvas>
   </div>
 </template>
- <script>
+
+<script>
 import  vCanvas  from './cvs/vCanvas.js';
 var cvs;
 export default {
@@ -95,3 +96,4 @@ export default {
         border: 1px solid black;
     }
 </style>
+
