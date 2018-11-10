@@ -1,70 +1,5 @@
 <template>
-  <v-app>
-    <v-layout row wrap>
-      <v-flex md12>
-        <v-layout row wrap>
-          <v-toolbar
-            color="teal"
-            dense
-            fixed
-            clipped-left
-            app
-          >
-            <v-toolbar-side-icon @click.stop="drawer = !drawer">
-              <v-icon v-if="drawer" large>keyboard_arrow_up</v-icon>
-              <v-icon v-else large>keyboard_arrow_down</v-icon>
-            </v-toolbar-side-icon>
-            <v-toolbar-title class="mr-5 align-center">
-              <span class="title">可视化数据库编辑页</span>
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-layout row align-center style="max-width: 650px">
-              <v-text-field
-                :append-icon-cb="() => {}"
-                placeholder="村户查询..."
-                single-line
-                append-icon="search"
-                color="white"
-                hide-details
-              ></v-text-field>
-              <v-btn 
-                color="blue-grey"
-                :loading="loading4"
-                :disabled="loading4"
-                @click.native="loader = 'loading4'"
-              >
-                清空
-                <span slot="loader" class="custom-loader">
-                  <v-icon light>cached</v-icon>
-                </span>
-              </v-btn>
-              <v-btn 
-                color="lime darken-1"
-                :loading="loading"
-                :disabled="loading"
-                @click.native="loader = 'loading'"
-              >导出数据</v-btn>
-              <v-btn
-                color="light-green"
-                :loading="loading2"
-                :disabled="loading2"
-                @click.native="loader = 'loading2'"
-              >导出长图</v-btn>
-              <v-btn
-                color="cyan darken-4"
-                :loading="loading3"
-                :disabled="loading3"
-                @click.native="loader = 'loading3'"
-              > 
-                保存
-                <span slot="loader">正在保存中</span>
-              </v-btn>
-            </v-layout>
-          </v-toolbar>
-        </v-layout>
-      <v-spacer></v-spacer>
-      </v-flex>
-    </v-layout>
+  <v-content>
     <v-navigation-drawer
       v-model="drawer"
       fixed
@@ -113,8 +48,65 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-  </v-app>
-    
+    <v-toolbar
+      color="teal"
+      dense
+      fixed
+      clipped-left
+      app
+    >
+      <v-toolbar-side-icon @click.stop="drawer = !drawer">
+        <v-icon v-if="drawer" large>keyboard_arrow_up</v-icon>
+        <v-icon v-else large>keyboard_arrow_down</v-icon>
+      </v-toolbar-side-icon>
+      <v-toolbar-title class="mr-5 align-center">
+        <span class="title">可视化数据库编辑页</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-layout row align-center style="max-width: 650px">
+        <v-text-field
+          :append-icon-cb="() => {}"
+          placeholder="村户查询..."
+          single-line
+          append-icon="search"
+          color="white"
+          hide-details
+        ></v-text-field>
+        <v-btn 
+          color="blue-grey"
+          :loading="loading4"
+          :disabled="loading4"
+          @click.native="loader = 'loading4'"
+        >
+          清空
+          <span slot="loader" class="custom-loader">
+            <v-icon light>cached</v-icon>
+          </span>
+        </v-btn>
+        <v-btn 
+          color="lime darken-1"
+          :loading="loading"
+          :disabled="loading"
+          @click.native="loader = 'loading'"
+        >导出数据</v-btn>
+        <v-btn
+          color="light-green"
+          :loading="loading2"
+          :disabled="loading2"
+          @click.native="loader = 'loading2'"
+        >导出长图</v-btn>
+        <v-btn
+          color="cyan darken-4"
+          :loading="loading3"
+          :disabled="loading3"
+          @click.native="loader = 'loading3'"
+        > 
+          保存
+          <span slot="loader">正在保存中</span>
+        </v-btn>
+      </v-layout>
+    </v-toolbar>
+  </v-content>
 </template>
 
 <script>
