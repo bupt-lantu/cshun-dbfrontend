@@ -5,7 +5,7 @@
         <v-icon dark>edit</v-icon>
       </v-btn>
     </v-layout>
-    <v-flex md3 offset-md9>
+    <!-- <v-flex md3 offset-md9>
       <v-toolbar
         dense
         floating
@@ -19,7 +19,7 @@
           <v-icon>more_vert</v-icon>
         </v-btn>
       </v-toolbar>
-    </v-flex>
+    </v-flex> -->
   </v-layout>
 
     
