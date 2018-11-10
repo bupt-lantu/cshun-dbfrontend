@@ -7,8 +7,8 @@
           <h1>长顺可视化数据库</h1>
 
         <v-form v-model="valid">
-          <v-text-field id="adminId" 
-            v-model="LoginParams.adminId"
+          <v-text-field id="username" 
+            v-model="LoginParams.username"
             :rules="idRules"
             prepend-inner-icon="person"
             label="用户名"
@@ -49,7 +49,7 @@ export default {
       valid: true,
       showPassword: false,
       LoginParams: {
-        adminId: "",
+        username: "",
         password: ""
       },
       idRules: [
@@ -68,21 +68,21 @@ export default {
         console.log("try submit");
         let formData=new URLSearchParams();
         //use md5 to encode password
-        this.LoginParams.password = md5(this.LoginParams.password);
-        for(let it in this.LoginParams) {
-          formData.append(it, this.LoginParams[it]);
-        }
+        let password = md5(this.LoginParams.password);
+        formData.append('username', this.LoginParams.username);
+        formData.append('password', password);
+
         console.log(formData.toString());
         
-        this.$Http.post('https://127.0.0.1:8082/login',formData,
+        this.$Http.post('https://dev.cshun.gaojianli.me/api/login', formData, 
         {headers:{'Content-Type':'application/x-www-form-urlencoded'}})
-        .then( 
+        .then(
           response => {
             console.log("Get Response");
             console.log(response);
             },
           error => {
-            console.log("Error");
+            console.log("Error Occurs");
             console.log(error);
             }
         );
