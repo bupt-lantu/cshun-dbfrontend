@@ -21,11 +21,11 @@
           村户详细信息
         </v-subheader>
         <v-list>
-          <v-list-tile v-for="item in items2" :key="item.text" avatar @click="">
+          <v-list-tile v-for="item in items2" :key="item.text" v-show="!item.isInCanvas" avatar>
             <!-- <v-list-tile-action>
               <v-icon color="grey darken-1">add_circle_outline</v-icon>
             </v-list-tile-action> -->
-            <v-list-tile-action>
+            <v-list-tile-action :id="item.id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
               <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="6" rx="2" ry="2" width="100" height="36" 
@@ -40,7 +40,7 @@
             <v-list-tile-title v-text="item.text"></v-list-tile-title>
           </v-list-tile>
         </v-list>
-        <v-list-tile class="mt-3" @click="">
+        <v-list-tile class="mt-3">
           <v-list-tile-action>
             <v-icon color="grey darken-1">add_circle_outline</v-icon>
           </v-list-tile-action>
@@ -48,7 +48,7 @@
             添加村户
           </v-list-tile-title>
         </v-list-tile>
-        <v-list-tile @click="">
+        <v-list-tile>
           <v-list-tile-action>
             <v-icon color="grey darken-1">settings</v-icon>
           </v-list-tile-action>
@@ -120,6 +120,7 @@
 </template>
 
 <script>
+import {bus} from '../../../bus.js'
 export default {
   name: 'VillagerList',
   data: () => ({
@@ -128,9 +129,9 @@ export default {
     { icon: 'arrow_back', text: '返回地点选择' },
     ],
     items2: [
-    { id: 1, text: '张三' },
-    { id: 2, text: '李四' },
-    { id: 3, text: '王五' }
+    { id: 1, text: '张三' ,isInCanvas:false},
+    { id: 2, text: '李四' ,isInCanvas:false},
+    { id: 3, text: '王五' ,isInCanvas:false}
     ],
     loader: null,
     loading: false,
@@ -145,6 +146,16 @@ export default {
     goBackToSelect(){
       this.$router.push({ name: 'select'});
     },
+    
+    dragStart(event){
+        event.dataTransfer.setData("text/plain", event.target.id);
+    },    
+  },
+  mounted(){
+    bus.$on('showP',(id)=>{
+        let element=this.items2.find((index) => index.id==id);
+        element.isInCanvas=true;
+    });
   },
 
   watch: {

@@ -71,15 +71,15 @@
                 保存
             </v-btn>
         </v-layout>
-    <v-layout justify-center>
-        <canvas id="c" width=1100 height=450></canvas>
+    <v-layout justify-center @dragover="dragOver($event)" @drop="dragFinished($event)">
+        <canvas id="c" width=1500 height=750 ref="canvas"></canvas>
     </v-layout>
-    
     </v-content>
 </template>
 
 <script>
 import  vCanvas  from './cvs/vCanvas.js';
+import {bus} from '../../../bus.js'
 var cvs;
 export default {
   name: 'Cvs',
@@ -131,6 +131,45 @@ export default {
     }
   },
   methods:{
+    getScrollTop(){
+        let scrollTop = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+          scrollTop = document.documentElement.scrollTop;
+        } else if (document.body) {
+          scrollTop = document.body.scrollTop;
+        }
+        return scrollTop;
+      },
+
+   canvasMousePos(canvas, event){
+        let x = (document.documentElement.scrollLeft || document.body.scrollLeft) + (event.clientX || event.pageX);
+        let y = (event.clientY || event.pageY) + this.getScrollTop();
+        return {
+          x: x - cvs.canvas._offset.left,
+          y: y - cvs.canvas._offset.top
+        }
+    },
+
+   dragOver(event){
+        event.preventDefault();
+    },
+
+  dragFinished(event){
+    event.preventDefault();
+    let p=this.canvasMousePos(this.$refs.canvas,event);
+    let id = event.dataTransfer.getData("text");
+    let div=document.getElementById(id);
+    let svg_xml=new XMLSerializer().serializeToString(div.childNodes[0]).toString();
+    fabric.loadSVGFromString(svg_xml, function(objects, options) {
+          let obj = fabric.util.groupSVGElements(objects, options);
+          obj.set({
+            left:p.x,
+            top:p.y,
+          });
+      bus.$emit('showP',id);
+      cvs.addSVG(obj,id);
+      });
+  },
     changeStateTo(sta)
     {
         cvs.changeStateTo(sta);
