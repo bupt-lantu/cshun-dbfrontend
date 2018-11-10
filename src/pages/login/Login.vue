@@ -66,16 +66,13 @@ export default {
     submit: function() {
       if(this.valid){
         console.log("try submit");
-        let formData=new URLSearchParams();
-        //use md5 to encode password
-        let password = md5(this.LoginParams.password);
-        formData.append('username', this.LoginParams.username);
-        formData.append('password', password);
 
-        console.log(formData.toString());
+        let postdata = {};
+        postdata.username = this.LoginParams.username;
+        //postdata.password = md5(this.LoginParams.password);
+        postdata.password = this.LoginParams.password;
         
-        this.$Http.post('https://dev.cshun.gaojianli.me/api/login', formData, 
-        {headers:{'Content-Type':'application/x-www-form-urlencoded'}})
+        this.$Http.post('https://dev.cshun.gaojianli.me/api/login', postdata)
         .then(
           response => {
             console.log("Get Response");
