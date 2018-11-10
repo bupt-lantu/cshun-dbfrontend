@@ -7,7 +7,7 @@
       app
     >
       <v-list dense>
-        <v-list-tile v-for="item in items" :key="item.text" @click="">
+        <v-list-tile v-for="item in items" :key="item.text" @click="goBackToSelect">
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
@@ -141,6 +141,12 @@ export default {
   props: {
     source: String
   },
+  methods:{
+    goBackToSelect(){
+      this.$router.push({ name: 'select'});
+    },
+  },
+
   watch: {
       loader () {
         const l = this.loader

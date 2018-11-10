@@ -77,6 +77,7 @@ export default {
           response => {
             console.log("Get Response");
             console.log(response);
+            this.$router.push({ name: 'select'});
             },
           error => {
             console.log("Error Occurs");
