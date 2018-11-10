@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <v-btn v-on:click="changeStateTo('move');"></v-btn>
     <button v-on:click="changeStateTo('move');">移动画布</button>
     <button v-on:click="changeStateTo('editvert');">移动控制点</button>
     <button v-on:click="changeStateTo('addvert');">添加控制点</button>

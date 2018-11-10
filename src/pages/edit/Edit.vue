@@ -7,7 +7,9 @@
     
     <v-content>
       
-      <edit-tools></edit-tools>
+      <cvs></cvs>
+      <!-- <edit-tools></edit-tools> -->
+      <villager-list></villager-list>
       
         <!-- <v-layout justify-end align-end>
           <v-flex shrink>
@@ -33,11 +35,13 @@
 
 import EditTools from './components/Tools'
 import VillagerList from './components/VillagerList'
+import Cvs from './components/Cvs'
 export default {
   name: 'edit',
   components:{
       EditTools: EditTools,
       VillagerList: VillagerList,
+      Cvs: Cvs,
   }
 }
 </script>
