@@ -22,12 +22,22 @@
         </v-subheader>
         <v-list>
           <v-list-tile v-for="item in items2" :key="item.text" avatar @click="">
-            <v-btn 
-              round
-              color="teal darken-3" 
-              block 
-              v-text="item.text"
-            ></v-btn>
+            <!-- <v-list-tile-action>
+              <v-icon color="grey darken-1">add_circle_outline</v-icon>
+            </v-list-tile-action> -->
+            <v-list-tile-action>
+              <svg width="100%" height="100%" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="6" rx="2" ry="2" width="100" height="36" 
+                  style="fill:orange;stroke:brown;
+                  stroke-width:5;opacity:0.5"
+                ></rect>
+                <text x="45" y="30">
+                  {{item.id}}
+                </text>
+              </svg>
+            </v-list-tile-action>
+            <v-list-tile-title v-text="item.text"></v-list-tile-title>
           </v-list-tile>
         </v-list>
         <v-list-tile class="mt-3" @click="">
@@ -118,9 +128,9 @@ export default {
     { icon: 'arrow_back', text: '返回地点选择' },
     ],
     items2: [
-    { picture: 28, text: '张三' },
-    { picture: 38, text: '李四' },
-    { picture: 48, text: '王五' }
+    { id: 1, text: '张三' },
+    { id: 2, text: '李四' },
+    { id: 3, text: '王五' }
     ],
     loader: null,
     loading: false,
