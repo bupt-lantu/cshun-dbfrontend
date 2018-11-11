@@ -11,7 +11,7 @@
                 v-on:click="changeStateTo('editvert');"
                 color="brown light-1"
             >
-                移动控制点
+                选择|移动对象
             </v-btn>
             <v-btn
                 v-on:click="changeStateTo('addvert');"

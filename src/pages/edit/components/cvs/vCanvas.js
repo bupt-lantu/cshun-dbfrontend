@@ -36,6 +36,8 @@ export default class vCanvas
         this.canvas.on('mouse:up',this.onMouseUp.bind(this));
         this.canvas.on('mouse:move',this.onMouseMove.bind(this));
         this.canvas.on('object:moving',this.onMove.bind(this));
+        this.canvas.on('object:rotated',this.save.bind(this));
+        this.canvas.on('object:scaled',this.save.bind(this));
         if(savepack!=null)//RESTORE FROM PREVIOUS DATA
         {
             this.restore(savepack);
@@ -231,12 +233,13 @@ export default class vCanvas
             originY: 'top'
         });
     }
-    createSVG(str,pos,id,save=true)
+    createSVG(str,pos,id,save=true,SVGprop=null)
     {
         let that = this;
         fabric.loadSVGFromString(str, function(objects, options) {
             let obj = fabric.util.groupSVGElements(objects, options);
             obj.set({left:pos.x,top:pos.y,});
+            if(SVGprop) obj.set(SVGprop);
             obj.id = id;
             obj.isSVG = true;
             obj.SVGstr = str;
@@ -395,7 +398,12 @@ export default class vCanvas
         let svgArray = new Array();
         for(let tt of this.SVGMap)
         {
-            svgArray.push({id: tt[0],svgstr: tt[1].SVGstr,pos:{x: tt[1].left,y: tt[1].top}});
+            svgArray.push({
+                id: tt[0],
+                svgstr: tt[1].SVGstr,
+                pos:{x: tt[1].left,y: tt[1].top},
+                prop:{angle: tt[1].angle,scaleX: tt[1].scaleX,scaleY: tt[1].scaleY}
+            });
         }
         savePack = {
             vertset: Array.from(this.vertSet),
@@ -460,7 +468,7 @@ export default class vCanvas
         let svgArray = savePack.svgarray;
         this.SVGMap.clear();
         for(let tt of svgArray)
-        {this.createSVG(tt.svgstr,tt.pos,tt.id,false);}
+        {this.createSVG(tt.svgstr,tt.pos,tt.id,false,tt.prop);}
         let vtmap = new Map();
         for(let tt of savePack.vertset)
         {
