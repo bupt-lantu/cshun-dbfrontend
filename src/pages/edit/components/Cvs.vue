@@ -15,7 +15,7 @@
                 v-on:click="changeStateTo('editvert');"
                 color="brown light-1"
             >
-                选择移动对象
+                选择 | 移动对象
             </v-btn>
             <v-btn
                 v-on:click="changeStateTo('addvert');"
@@ -214,6 +214,10 @@ export default {
     },
   },
   watch:{
+      EditBtn: function()
+      {
+          if(!this.EditBtn){cvs.changeStateTo("move");}
+      },
       lineProp: function(val)
       {
           console.log(val);
@@ -222,17 +226,22 @@ export default {
   },
   mounted()
   {
+      let wZoom = 0.9,hZoom = 0.9;
       window.addEventListener('resize',function(event){
-          let width = Math.round(document.body.clientWidth*0.75);
-          let height = Math.round(document.body.clientHeight*0.8);
-          console.log(width);console.log(height);
+          console.log("CHANGE");
+          let width = Math.round(document.body.clientWidth*wZoom);
+          let height = Math.round((document.body.clientHeight-40)*hZoom);
           document.getElementById('c').width = width;
           document.getElementById('c').height = height;
           let savePack = cvs.save();
           cvs.canvas.dispose();
           cvs = new vCanvas({x:width,y:height},savePack);
       });
-      cvs = new vCanvas({x:Math.round(document.body.clientWidth*0.8),y:Math.round(document.body.clientHeight*0.7)});
+      let width = Math.round(document.body.clientWidth*wZoom);
+      let height = Math.round((document.body.clientHeight-40)*hZoom);
+      document.getElementById('c').width = width;
+      document.getElementById('c').height = height;
+      cvs = new vCanvas({x:width,y:height});
       window.addEventListener('addSVG',function(event){
           bus.$emit('showP',event.detail.id);
       });
