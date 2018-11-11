@@ -1,5 +1,5 @@
 <template>
-    <v-content>
+    <v-content v-if="EditBtn">
         <v-layout justify-space-between row>
             <v-btn
                 v-on:click="changeStateTo('move');"
@@ -83,6 +83,7 @@ import {bus} from '../../../bus.js'
 var cvs;
 export default {
   name: 'Cvs',
+  props: ['EditBtn'],
   data () {
     return {
         linetpOptions:[

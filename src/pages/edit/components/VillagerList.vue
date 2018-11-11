@@ -84,14 +84,10 @@
         ></v-text-field>
         <v-btn 
           color="blue-grey"
-          :loading="loading4"
-          :disabled="loading4"
-          @click.native="loader = 'loading4'"
+          @click="ChangeEditState"
         >
-          清空
-          <span slot="loader" class="custom-loader">
-            <v-icon light>cached</v-icon>
-          </span>
+          <span v-if="tool">退出编辑</span>
+          <span v-else>编辑模式</span>
         </v-btn>
         <v-btn 
           color="lime darken-1"
@@ -105,15 +101,6 @@
           :disabled="loading2"
           @click.native="loader = 'loading2'"
         >导出长图</v-btn>
-        <v-btn
-          color="cyan darken-4"
-          :loading="loading3"
-          :disabled="loading3"
-          @click.native="loader = 'loading3'"
-        > 
-          保存
-          <span slot="loader">正在保存中</span>
-        </v-btn>
       </v-layout>
     </v-toolbar>
   </v-content>
@@ -124,6 +111,7 @@ import {bus} from '../../../bus.js'
 export default {
   name: 'VillagerList',
   data: () => ({
+    tool: false,
     drawer: null,
     items: [
     { icon: 'arrow_back', text: '返回地点选择' },
@@ -149,7 +137,13 @@ export default {
     
     dragStart(event){
         event.dataTransfer.setData("text/plain", event.target.id);
-    },    
+    },
+
+    ChangeEditState(){
+      this.tool = !this.tool;
+      console.log("tool:"+this.tool);
+      this.$emit('CES');
+    }
   },
   mounted(){
     bus.$on('showP',(id)=>{

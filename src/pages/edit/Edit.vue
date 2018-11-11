@@ -3,8 +3,8 @@
     class="edit"
     dark
   > 
-    <villager-list></villager-list>
-    <cvs></cvs>
+    <villager-list @CES = "ChangeEditState"></villager-list>
+    <cvs :EditBtn = "!isedit"></cvs>
     <edit-tools></edit-tools>
   
   </v-app>
@@ -17,11 +17,22 @@ import VillagerList from './components/VillagerList'
 import Cvs from './components/Cvs'
 export default {
   name: 'edit',
+  data () {
+    return {
+      isedit: 'true'
+    }
+  },
   components:{
       EditTools: EditTools,
       VillagerList: VillagerList,
       Cvs: Cvs,
   },
+  methods: {
+    ChangeEditState () {
+      console.log("isedit:"+this.isedit)
+      this.isedit = !this.isedit
+    }
+  }
 }
 </script>
 <style>
