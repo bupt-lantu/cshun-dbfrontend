@@ -38,14 +38,9 @@ export default class vCanvas
         this.canvas.on('object:moving',this.onMove.bind(this));
         this.canvas.on('object:rotated',this.save.bind(this));
         this.canvas.on('object:scaled',this.save.bind(this));
-        if(savepack!=null)//RESTORE FROM PREVIOUS DATA
-        {
-            this.restore(savepack);
-            this.save();
-            return;
-        }
-        this.renderMap();
-        this.changeStateTo("move");
+        if(savepack!=null){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
+        else{this.renderMap();}
+        this.changeStateTo("move"); 
         this.save();
     }
     changeStateTo(sta)//move,editvert,addvert,remove,connect,restore
@@ -157,7 +152,11 @@ export default class vCanvas
             p.draw();
             this.moveflag = true;
         }
-        else if(p.isSVG){this.moveflag=true;}
+        else if(p.isSVG)
+        {
+            this.moveflag=true;
+            p.rlPos = {x: p.left-this.mapProp.mapPos.x,y: p.top-this.mapProp.mapPos.y};
+        }
     }
     onMouseMove(e)
     {
@@ -268,8 +267,8 @@ export default class vCanvas
             {
                 let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: obj.id}});
                 window.dispatchEvent(removeSVGEvent);
+                this.SVGMap.delete(parseInt(obj.id));
                 if(save) this.save(-obj.id);
-                this.SVGMap.delete(obj.id);
             }
             //if(obj instanceof fabric.Circle){}
         }
@@ -416,7 +415,7 @@ export default class vCanvas
             state: this.state,
             mapprop: this.mapProp
         }
-        this.history.add(savePack,changedSVGid);
+        return this.history.add(savePack,changedSVGid);
     }
     saveToServer()
     {
@@ -433,11 +432,6 @@ export default class vCanvas
             let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: id}});
             window.dispatchEvent(removeSVGEvent);
         }
-        else if(id<0)
-        {
-            let addSVGEvent = new CustomEvent('addSVG',{detail:{id: -id}});
-            window.dispatchEvent(addSVGEvent);
-        }
         this.restore(this.history.undo());
     }
     redo()
@@ -445,12 +439,7 @@ export default class vCanvas
         if(!this.history.canRedo()) return;
         let src = this.history.redo();
         let id = parseInt(this.history.getTopSVGid());
-        if(id>0)
-        {
-            let addSVGEvent = new CustomEvent('addSVG',{detail:{id: id}});
-            window.dispatchEvent(addSVGEvent);
-        }
-        else if(id<0)
+        if(id<0)
         {
             let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: -id}});
             window.dispatchEvent(removeSVGEvent);

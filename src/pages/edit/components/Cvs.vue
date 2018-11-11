@@ -200,13 +200,21 @@ export default {
   },
   mounted()
   {
-      cvs = new vCanvas({x:1000,y:1000});
+      window.addEventListener('resize',function(event){
+          let width = Math.round(document.body.clientWidth*0.75);
+          let height = Math.round(document.body.clientHeight*0.7);
+          console.log(width);console.log(height);
+          document.getElementById('c').width = width;
+          document.getElementById('c').height = height;
+          let savePack = cvs.save();
+          cvs.canvas.dispose();
+          cvs = new vCanvas({x:width,y:height},savePack);
+      });
+      cvs = new vCanvas({x:Math.round(document.body.clientWidth*0.7),y:Math.round(document.body.clientHeight*0.7)});
       window.addEventListener('addSVG',function(event){
-          console.log(event.detail);
           bus.$emit('showP',event.detail.id);
       });
       window.addEventListener('removeSVG',function(event){
-          console.log(event.detail);
           bus.$emit('removeP',event.detail.id);
       });
   }
