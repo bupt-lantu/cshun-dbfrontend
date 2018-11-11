@@ -1,17 +1,21 @@
 <template>
     <v-content>
-        <v-layout justify-space-between row v-if="EditBtn">
-            <v-btn
+        <v-layout
+            justify-space-between 
+            row 
+            v-if="EditBtn"
+        >
+            <!-- <v-btn
                 v-on:click="changeStateTo('move');"
                 color="brown light-1"
             >
                 移动画布
-            </v-btn>
+            </v-btn> -->
             <v-btn
                 v-on:click="changeStateTo('editvert');"
                 color="brown light-1"
             >
-                选择|移动对象
+                选择移动对象
             </v-btn>
             <v-btn
                 v-on:click="changeStateTo('addvert');"
@@ -34,21 +38,35 @@
             <v-flex md1>
                 <v-select
                     :items="linetpOptions"
-                    label="选择线形"
+                    label="线条形状"
                     color ='brown light-1'
                 ></v-select>
             </v-flex>
             <v-flex md1>
                 <v-select
                     :items="lineColorOptions"
-                    label="选择颜色"
+                    label="线条颜色"
                     color ='brown light-1'
                 ></v-select>
             </v-flex>
             <v-flex md1>
                 <v-select
                     :items="lineWidthOptions"
-                    label="选择线宽"
+                    label="线条宽度"
+                    color ='brown light-1'
+                ></v-select>
+            </v-flex>
+            <v-flex md1>
+                <v-select
+                    :items="lineColorOptions"
+                    label="边缘颜色"
+                    color ='brown light-1'
+                ></v-select>
+            </v-flex>
+            <v-flex md1>
+                <v-select
+                    :items="lineWidthOptions"
+                    label="边缘宽度"
                     color ='brown light-1'
                 ></v-select>
             </v-flex>
@@ -56,13 +74,13 @@
                 v-on:click="undo();"
                 color="blue-grey lighten-1"
             >
-                撤销
+                <v-icon>undo</v-icon>
             </v-btn>
             <v-btn
                 v-on:click="redo();"
                 color="blue-grey lighten-1"
             >
-                重做
+                <v-icon>redo</v-icon>
             </v-btn>
             <v-btn
                 v-on:click="save();"
@@ -71,8 +89,12 @@
                 保存
             </v-btn>
         </v-layout>
-    <v-layout justify-center @dragover="dragOver($event)" @drop="dragFinished($event)">
-        <canvas id="c" width=1500 height=750 ref="canvas"></canvas>
+    <v-layout 
+        justify-center
+        align-space-around
+        @dragover="dragOver($event)" @drop="dragFinished($event)"
+    >
+        <canvas id="c" ref="canvas"></canvas>
     </v-layout>
     </v-content>
 </template>
@@ -202,7 +224,7 @@ export default {
   {
       window.addEventListener('resize',function(event){
           let width = Math.round(document.body.clientWidth*0.75);
-          let height = Math.round(document.body.clientHeight*0.7);
+          let height = Math.round(document.body.clientHeight*0.8);
           console.log(width);console.log(height);
           document.getElementById('c').width = width;
           document.getElementById('c').height = height;
@@ -210,7 +232,7 @@ export default {
           cvs.canvas.dispose();
           cvs = new vCanvas({x:width,y:height},savePack);
       });
-      cvs = new vCanvas({x:Math.round(document.body.clientWidth*0.7),y:Math.round(document.body.clientHeight*0.7)});
+      cvs = new vCanvas({x:Math.round(document.body.clientWidth*0.8),y:Math.round(document.body.clientHeight*0.7)});
       window.addEventListener('addSVG',function(event){
           bus.$emit('showP',event.detail.id);
       });

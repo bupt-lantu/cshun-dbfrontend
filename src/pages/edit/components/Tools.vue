@@ -1,10 +1,10 @@
 <template>
   <v-layout row wrap>
-    <v-layout justify-end align-end>
+    <!-- <v-layout justify-end align-end>
       <v-btn fab dark large color="light-green darken-4">
         <v-icon dark>edit</v-icon>
       </v-btn>
-    </v-layout>
+    </v-layout> -->
     <!-- <v-flex md3 offset-md9>
       <v-toolbar
         dense

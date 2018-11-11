@@ -112,7 +112,7 @@ export default {
   name: 'VillagerList',
   data: () => ({
     tool: false,
-    drawer: null,
+    drawer: false,
     items: [
     { icon: 'arrow_back', text: '返回地点选择' },
     ],
