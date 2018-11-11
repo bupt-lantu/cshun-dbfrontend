@@ -20,16 +20,16 @@
                 添加控制点
             </v-btn>
             <v-btn
-                v-on:click="changeStateTo('connnect');"
+                v-on:click="changeStateTo('connect');"
                 color="brown light-1"
             >
                 连接
             </v-btn>
             <v-btn
-                v-on:click="changeStateTo('delete');"
+                v-on:click="changeStateTo('remove');"
                 color="brown light-1"
             >
-                移除边
+                移除
             </v-btn>
             <v-flex md1>
                 <v-select
@@ -160,6 +160,7 @@ export default {
     let id = event.dataTransfer.getData("text");
     let div=document.getElementById(id);
     let svg_xml=new XMLSerializer().serializeToString(div.childNodes[0]).toString();
+    /*
     fabric.loadSVGFromString(svg_xml, function(objects, options) {
           let obj = fabric.util.groupSVGElements(objects, options);
           obj.set({
@@ -167,8 +168,10 @@ export default {
             top:p.y,
           });
       bus.$emit('showP',id);
-      cvs.addSVG(obj,id);
-      });
+      */
+      cvs.createSVG(svg_xml,p,id);
+      bus.$emit('showP',id);
+      //});
   },
     changeStateTo(sta)
     {
@@ -197,6 +200,14 @@ export default {
   mounted()
   {
       cvs = new vCanvas({x:1000,y:1000});
+      window.addEventListener('addSVG',function(event){
+          console.log(event.detail);
+          bus.$emit('showP',event.detail.id);
+      });
+      window.addEventListener('removeSVG',function(event){
+          console.log(event.detail);
+          bus.$emit('removeP',event.detail.id);
+      });
   }
 }
 </script>

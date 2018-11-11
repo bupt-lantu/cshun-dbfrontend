@@ -68,6 +68,7 @@ export default class vCanvas
             for(let tt of objs)
             {
                 if(tt instanceof fabric.Circle) tt.set({selectable:true,radius:12,strokeWidth:5});
+                if(tt.isSVG==true) tt.set({selectable:true});
                 tt.setCoords();
             }
             if(sta=="remove"||sta=="connect"){this.selectVert(this.vRoot);}
@@ -142,7 +143,7 @@ export default class vCanvas
         else
         {
             this.selectVert(this.vRoot);
-            if(this.state=="remove"&&c instanceof fabric.util.groupSVGElements)
+            if(this.state=="remove"&&c.isSVG)
             {this.remove(c);}
         }
     }
@@ -154,6 +155,7 @@ export default class vCanvas
             p.draw();
             this.moveflag = true;
         }
+        else if(p.isSVG){this.moveflag=true;}
     }
     onMouseMove(e)
     {
@@ -175,7 +177,8 @@ export default class vCanvas
     }
     onMouseUp(e)
     {
-        if(this.state=="editvert"&&this.selectedVert!=this.vRoot&&this.moveflag)//////////////////////////////////////////////////////////
+        if(this.state=="editvert"&&this.moveflag)
+        //if(this.state=="editvert"&&this.selectedVert!=this.vRoot&&this.moveflag)//////////////////////////////////////////////////////////
         {
             this.save();
             this.moveflag = false;
@@ -228,10 +231,21 @@ export default class vCanvas
             originY: 'top'
         });
     }
+    createSVG(str,pos,id,save=true)
+    {
+        let that = this;
+        fabric.loadSVGFromString(str, function(objects, options) {
+            let obj = fabric.util.groupSVGElements(objects, options);
+            obj.set({left:pos.x,top:pos.y,});
+            obj.id = id;
+            obj.isSVG = true;
+            obj.SVGstr = str;
+            that.addSVG(obj,id,save);
+        });
+    }
     addSVG(obj,id,save=true)
     {
-        obj.id = id;
-        this.SVGMap.set(id,obj);
+        this.SVGMap.set(parseInt(id),obj);
         let addSVGEvent = new CustomEvent('addSVG',{detail:{id: id}});
         window.dispatchEvent(addSVGEvent);
         this.add(obj);
@@ -247,7 +261,7 @@ export default class vCanvas
         if(obj!=null) 
         {
             this.canvas.remove(obj);
-            if(obj instanceof fabric.util.groupSVGElements)
+            if(obj.isSVG)
             {
                 let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: obj.id}});
                 window.dispatchEvent(removeSVGEvent);
@@ -374,25 +388,26 @@ export default class vCanvas
     {   
         if(this.state=="restore") return;
         let savePack=null;
-        if(changedSVGid==0)
+        this.vis.clear();
+        this.vertSet.clear();
+        this.edgeSet.clear();
+        this.dfs(this.vRoot,null);
+        let svgArray = new Array();
+        for(let tt of this.SVGMap)
         {
-            this.vis.clear();
-            this.vertSet.clear();
-            this.edgeSet.clear();
-            this.dfs(this.vRoot,null);
-            savePack = {
-                vertset: Array.from(this.vertSet),
-                edgeset: Array.from(this.edgeSet),
-                svgmap: this.SVGMap,    //<-------------------------------------------
-                selectedvertid: this.selectedVert.id,
-                selectedVert2id: this.selectedVert2.id,
-                lineprop: this.lineprop,
-                counter: this.counter,
-                state: this.state,
-                mapprop: this.mapProp
-            }
+            svgArray.push({id: tt[0],svgstr: tt[1].SVGstr,pos:{x: tt[1].left,y: tt[1].top}});
         }
-        else{savePack = this.SVGMap.get(Math.abs(changedSVGid));}
+        savePack = {
+            vertset: Array.from(this.vertSet),
+            edgeset: Array.from(this.edgeSet),
+            svgarray: Array.from(svgArray),    //<-------------------------------------------
+            selectedvertid: this.selectedVert.id,
+            selectedVert2id: this.selectedVert2.id,
+            lineprop: this.lineprop,
+            counter: this.counter,
+            state: this.state,
+            mapprop: this.mapProp
+        }
         this.history.add(savePack,changedSVGid);
     }
     saveToServer()
@@ -404,26 +419,35 @@ export default class vCanvas
     undo()
     {
         if(!this.history.canUndo()) return;
-        let id = this.history.getTopSVGid();
-        if(id!=0)
+        let id = parseInt(this.history.getTopSVGid());
+        if(id>0)
         {
-            let src = this.history.undoSVG();
-            if(id>0){this.remove(this.SVGMap.get(id),false);}
-            else{this.addSVG(JSON.parse(src),-id,false);}
+            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: id}});
+            window.dispatchEvent(removeSVGEvent);
         }
-        else{this.restore(this.history.undo());}
+        else if(id<0)
+        {
+            let addSVGEvent = new CustomEvent('addSVG',{detail:{id: -id}});
+            window.dispatchEvent(addSVGEvent);
+        }
+        this.restore(this.history.undo());
     }
     redo()
     {
         if(!this.history.canRedo()) return;
         let src = this.history.redo();
-        let id = this.history.getTopSVGid();
-        if(id!=0)
+        let id = parseInt(this.history.getTopSVGid());
+        if(id>0)
         {
-            if(id>0){this.addSVG(JSON.parse(src),id,false);}
-            else{this.remove(this.SVGMap.get(-id),false);}
+            let addSVGEvent = new CustomEvent('addSVG',{detail:{id: id}});
+            window.dispatchEvent(addSVGEvent);
         }
-        else{this.restore(src);}
+        else if(id<0)
+        {
+            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: -id}});
+            window.dispatchEvent(removeSVGEvent);
+        }
+        this.restore(src);
     }
     restore(src)
     {
@@ -433,9 +457,10 @@ export default class vCanvas
         this.lineprop = savePack.lineprop;
         this.mapProp = savePack.mapprop;
         this.counter = savePack.counter;
-        this.SVGMap = savePack.svgmap;//<------------------------------------------------
-        for(let tt of this.SVGMap)//<--------------------------------------------------------
-        {this.add(tt[1]);}
+        let svgArray = savePack.svgarray;
+        this.SVGMap.clear();
+        for(let tt of svgArray)
+        {this.createSVG(tt.svgstr,tt.pos,tt.id,false);}
         let vtmap = new Map();
         for(let tt of savePack.vertset)
         {

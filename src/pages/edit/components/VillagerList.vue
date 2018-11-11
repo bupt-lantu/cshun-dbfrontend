@@ -156,6 +156,10 @@ export default {
         let element=this.items2.find((index) => index.id==id);
         element.isInCanvas=true;
     });
+    bus.$on('removeP',(id)=>{
+        let element=this.items2.find((index) => index.id==id);
+        element.isInCanvas=false;
+    });
   },
 
   watch: {
