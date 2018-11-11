@@ -1,6 +1,6 @@
 <template>
-    <v-content v-if="EditBtn">
-        <v-layout justify-space-between row>
+    <v-content>
+        <v-layout justify-space-between row v-if="EditBtn">
             <v-btn
                 v-on:click="changeStateTo('move');"
                 color="brown light-1"
