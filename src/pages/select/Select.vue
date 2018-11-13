@@ -2,21 +2,36 @@
   <v-container>
     <v-layout column wrap>
       <!-- Header -->
-      <v-flex xs6 sm4 md3>
-        <v-layout row justify-space-between>
-        <v-flex xs2 align-content-center>
+      <v-flex xs12 sm6 md6>
+        <v-layout row wrap justify-space-between>
+          <v-flex xs12 sm6 md3>
             <v-card-title>
               <h1>村落选择</h1>
             </v-card-title>
-        </v-flex>
-
-        <v-flex xs2>
-          <v-btn block large color="#48AFF0">查找</v-btn>
-        </v-flex>
+          </v-flex>
+          <!-- Search Field -->
+          <v-flex xs12 sm6 md3>
+            <v-autocomplete
+              v-model="keyword"
+              :items="villages"
+              :search-input.sync="selectedName"
+              :label="'查找'"
+              light
+            >
+              <template slot="no-data">
+                <v-list-tile>
+                  <v-list-tile-title>
+                    找不到合适的村庄
+                  </v-list-tile-title>
+                </v-list-tile>
+              </template>
+            </v-autocomplete>
+          </v-flex>
         </v-layout>
       </v-flex>
       <!-- Header End -->
 
+      <!-- Village Cards -->
       <v-flex xs12 sm12 md6 my-3
       v-for="village in villagesInfo" 
       :key="village.id">
@@ -47,6 +62,9 @@ export default {
   name: "Select",
   data(){
     return {
+      keyword: "",
+      villages: ['第一个村', '第二个村'],
+      selectedName: "",
       villagesInfo: [
         {id:'dsada2312dsaddas231', name: '第一个村', description: '本书是 JavaScript 超级畅销书的最新版。ECMAScript 5 和 HTML5 在标准之争中双双胜出，使大量 专有实现和客户端扩展正式进入规范，同时也为 JavaScript 增添了很多适应未来发展的新特性。本书这 一版除增加 5 章全新内容外，其他章节也有较大幅度的增补和修订，新内容篇幅约占三分之一。全书从 JavaScript 语言实现的各个组成部分'},
         {id:'qwefsaf23121sfafsa3', name: '第二个村', description: '描述二二描述描述描述描述描述描述'}
@@ -54,13 +72,33 @@ export default {
     };
   },
   created: function() {
-    //retrive villages info from backend
+    //retrieve villages info from backend
   },
+
+  watch: {
+    selectedName: function(val) {
+      if(!val)
+        return;
+      this.search(val);
+    }
+  },
+
   methods: {
-    select: function(villageId){
-      //jump to edit page
+    //select a village and jump to its edit page
+    //@params: {string} 'villageId' for redirect
+    select: function(villageId) {
       this.$router.push({ name: 'edit', params: { id: villageId}});
-    } 
+    },
+
+    //search for a village's id according to 'key'
+    //@params: {string} 'key' village's name for searching
+    search: function(key) {
+      console.log('search' + key);
+
+      for(const village of this.villagesInfo)
+        if(key == village.name)
+          this.select(village.id);
+    }
   }
 }
 </script>
