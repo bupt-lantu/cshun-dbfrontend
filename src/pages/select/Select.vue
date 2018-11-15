@@ -53,9 +53,16 @@ export default {
       ]
     };
   },
-  created: function() {
-    //retrive villages info from backend
-  },
+
+  // created(){
+  //   this.$Http.get('village')
+  //   .then(( res )=>{
+  //       this.villagesInfo=res.data.list;
+  //   }).catch((err)=>{
+  //       console.log(err);
+  //   });
+  // },
+
   methods: {
     select: function(villageId){
       //jump to edit page

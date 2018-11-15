@@ -72,11 +72,12 @@ export default {
         //postdata.password = md5(this.LoginParams.password);
         postdata.password = this.LoginParams.password;
         
-        this.$Http.post('https://dev.cshun.gaojianli.me/api/login', postdata)
+        this.$Http.post('login', postdata)
         .then(
           response => {
             console.log("Get Response");
             console.log(response);
+            localStorage.setItem('isLogin', true);
             this.$router.push({ name: 'select'});
             },
           error => {

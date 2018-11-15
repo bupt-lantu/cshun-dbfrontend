@@ -145,6 +145,7 @@ export default {
       this.$emit('CES');
     }
   },
+
   mounted(){
     bus.$on('showP',(id)=>{
         let element=this.items2.find((index) => index.id==id);
