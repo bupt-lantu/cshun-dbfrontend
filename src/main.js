@@ -12,16 +12,21 @@ axios.interceptors.response.use(
       return response;
   },
   error => {
-      if (error.response) {
-          switch (error.response.status) {
-              case 401:
-                  localStorage.removeItem('isLogin');
-                  router.replace({
-                      path: 'login',
-                      query: {redirect: router.currentRoute.fullPath}
-                  })
-          }
-      }
+      // if (error.response) {
+      //     switch (error.response.status) {
+      //         case 401:
+      //             localStorage.removeItem('isLogin');
+      //             router.replace({
+      //                 path: 'login',
+      //                 query: {redirect: router.currentRoute.fullPath}
+      //             })
+      //     }
+      // }
+      localStorage.removeItem('isLogin');
+      router.replace({
+          path: 'login',
+          query: {redirect: router.currentRoute.fullPath}
+        });
       return Promise.reject(error.response.data)   // 返回接口返回的错误信息
   });
 
