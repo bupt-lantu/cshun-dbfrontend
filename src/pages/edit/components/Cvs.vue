@@ -131,26 +131,7 @@ export default {
             linetp: "curve",
             lineColor: "red",
             lineWidth: 5
-        },
-        items: [
-          {
-            action: 'local_activity',
-            title: 'Attractions',
-            items: [
-              { title: 'List Item' }
-            ]
-          },
-          {
-            action: 'restaurant',
-            title: 'Dining',
-            // active: true,
-            items: [
-              { title: 'Breakfast & brunch' },
-              { title: 'New American' },
-              { title: 'Sushi' }
-            ]
-          },
-        ]
+        }
     }
   },
   methods:{
