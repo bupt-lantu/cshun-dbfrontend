@@ -117,7 +117,7 @@ export default {
     { icon: 'arrow_back', text: '返回地点选择' },
     ],
     items2: [
-    { id: 1, text: '小张' ,isInCanvas:false},
+    { id: 1, text: '老张' ,isInCanvas:false},
     { id: 2, text: '赵四' ,isInCanvas:false},
     { id: 3, text: '小李' ,isInCanvas:false}
     ],
