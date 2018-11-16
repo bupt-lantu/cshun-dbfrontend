@@ -118,7 +118,7 @@ export default {
     ],
     items2: [
     { id: 1, text: '老张' ,isInCanvas:false},
-    { id: 2, text: '赵四' ,isInCanvas:false},
+    { id: 2, text: '老赵' ,isInCanvas:false},
     { id: 3, text: '小李' ,isInCanvas:false}
     ],
     loader: null,
