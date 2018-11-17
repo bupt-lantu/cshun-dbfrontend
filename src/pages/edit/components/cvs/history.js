@@ -13,10 +13,9 @@ export default class History
             this.historyStack.slice(0,1);
             this.top--;
         }
-        this.historyStack[++this.top] = JSON.stringify(savePack);
+        this.historyStack[++this.top] = savePack;
         this.changedSVGid[this.top] = changedSVGid;//<--------------------------------------------
         this.historyStack.length = this.top+1;
-        return this.historyStack[this.top];
     }
     canUndo(){return this.top>0;}
     canRedo(){return this.top<this.historyStack.length-1;}

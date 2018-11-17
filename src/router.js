@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Login from '@/pages/login/Login.vue'
 import Select from '@/pages/select/Select.vue'
 import Edit from '@/pages/edit/Edit.vue'
+import ExportImg from '@/pages/edit/components/ExportImg.vue'
 
 Vue.use(Router)
 
@@ -10,7 +11,7 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    
+
     {
       path: '/login',
       name: 'login',
@@ -33,6 +34,11 @@ export default new Router({
       meta:{
         auth:true
       }
+    },
+    {
+      path: '/exportImg',
+      name: 'exportImg',
+      component: ExportImg
     }
   ]
 })

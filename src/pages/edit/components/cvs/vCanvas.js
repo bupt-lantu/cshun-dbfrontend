@@ -3,8 +3,9 @@ import { fabric } from 'fabric';
 import History from './history';
 export default class vCanvas
 {
-    constructor(siz,savepack=null,mapprop=null)
+    constructor(siz,name,savepack=null,mapprop=null)
     {
+        this.name = name;
         this.size = siz;
         this.vRoot = new fabric.Circle({left: 0,top: 0,strokeWidth: 0,radius: 0,});
         this.vRoot.link = new MP(this);
@@ -32,12 +33,6 @@ export default class vCanvas
         this.SVGMap = new Map();
         this.history = new History();
         this.initCanvas();
-        this.canvas.on('mouse:down', this.onClk.bind(this));
-        this.canvas.on('mouse:up',this.onMouseUp.bind(this));
-        this.canvas.on('mouse:move',this.onMouseMove.bind(this));
-        this.canvas.on('object:moving',this.onMove.bind(this));
-        this.canvas.on('object:rotated',this.save.bind(this));
-        this.canvas.on('object:scaled',this.save.bind(this));
         if(savepack!=null){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
         else{this.renderMap();}
         this.changeStateTo("move"); 
@@ -342,7 +337,7 @@ export default class vCanvas
     }
     initCanvas()
     {
-        this.canvas = window.__canvas = new fabric.Canvas('c', { selection: false });
+        this.canvas = window.__canvas = new fabric.Canvas(this.name, { selection: false });
         fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
         fabric.Circle.prototype.linkVert = function(vert,lineprop){
             if(this.link.getEdge(vert)!=undefined) {this.cvs.remove(this.link.getEdge(vert));}
@@ -369,6 +364,19 @@ export default class vCanvas
             this.cvs.add(this);
             this.cvs.renderAll();
         }
+        this.canvas.on('mouse:down', this.onClk.bind(this));
+        this.canvas.on('mouse:up',this.onMouseUp.bind(this));
+        this.canvas.on('mouse:move',this.onMouseMove.bind(this));
+        this.canvas.on('object:moving',this.onMove.bind(this));
+        this.canvas.on('object:rotated',this.save.bind(this));
+        this.canvas.on('object:scaled',this.save.bind(this));
+    }
+    resize(siz)
+    {
+        this.canvas.dispose();
+        this.size = siz;
+        this.initCanvas();
+        this.restore(this.history.getTop());
     }
     dfs(now,fa)
     {
@@ -386,7 +394,7 @@ export default class vCanvas
             if(!this.vis.has(tt[0]))this.dfs(tt[0],now);
         }
     }
-    save(changedSVGid=0)
+    save(changedSVGid=0,record=true)
     {   
         if(this.state=="restore") return;
         let savePack=null;
@@ -415,13 +423,22 @@ export default class vCanvas
             state: this.state,
             mapprop: this.mapProp
         }
-        return this.history.add(savePack,changedSVGid);
+        let ret = JSON.stringify(savePack);
+        if(record) this.history.add(ret,changedSVGid);
+        return ret;
     }
     saveToServer()
     {
-        this.save();
+        this.save(0,false);
         let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:this.history.getTop()}});
         window.dispatchEvent(saveEvent);
+    }
+    export()
+    {
+        console.log("export!!!");
+        document.getElementById(this.name).toBlob(function(blob){
+            saveAs(blob,"map.png");
+        });
     }
     undo()
     {

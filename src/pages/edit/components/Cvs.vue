@@ -88,6 +88,12 @@
             >
                 保存
             </v-btn>
+            <v-btn
+                v-on:click="exportImg();"
+                color="green lighten-1"
+            >
+            导出图片
+            </v-btn>
         </v-layout>
     <v-layout 
         justify-center
@@ -193,6 +199,13 @@ export default {
     {
         cvs.saveToServer();
     },
+    exportImg()
+    {
+        let savePack = cvs.save(0,false);  
+        let routeData = this.$router.resolve({ name: 'exportImg'});
+        sessionStorage.setItem("savePack",savePack);
+        let wd = window.open(routeData.href,'_blank');
+    }
   },
   watch:{
       EditBtn: function()
@@ -209,20 +222,17 @@ export default {
   {
       let wZoom = 0.9,hZoom = 0.9;
       window.addEventListener('resize',function(event){
-          console.log("CHANGE");
           let width = Math.round(document.body.clientWidth*wZoom);
           let height = Math.round((document.body.clientHeight-40)*hZoom);
           document.getElementById('c').width = width;
           document.getElementById('c').height = height;
-          let savePack = cvs.save();
-          cvs.canvas.dispose();
-          cvs = new vCanvas({x:width,y:height},savePack);
+          cvs.resize({x:width,y:height});
       });
       let width = Math.round(document.body.clientWidth*wZoom);
       let height = Math.round((document.body.clientHeight-40)*hZoom);
       document.getElementById('c').width = width;
       document.getElementById('c').height = height;
-      cvs = new vCanvas({x:width,y:height});
+      cvs = new vCanvas({x:width,y:height},'c');
       window.addEventListener('addSVG',function(event){
           bus.$emit('showP',event.detail.id);
       });
