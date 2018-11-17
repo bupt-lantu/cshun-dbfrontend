@@ -202,7 +202,7 @@ export default {
     exportImg()
     {
         let savePack = cvs.save(0,false);  
-        let routeData = this.$router.resolve({ name: 'exportImg'});
+        let routeData = this.$router.push({ name: 'exportImg'});
         sessionStorage.setItem("savePack",savePack);
         let wd = window.open(routeData.href,'_blank');
     }
