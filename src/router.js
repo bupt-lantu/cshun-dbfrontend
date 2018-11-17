@@ -38,7 +38,10 @@ export default new Router({
     {
       path: '/exportImg',
       name: 'exportImg',
-      component: ExportImg
+      component: ExportImg,
+      meta:{
+        auth:true
+      }
     }
   ]
 })
