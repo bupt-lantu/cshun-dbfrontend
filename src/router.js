@@ -4,7 +4,7 @@ import Login from '@/pages/login/Login.vue'
 import Select from '@/pages/select/Select.vue'
 import Edit from '@/pages/edit/Edit.vue'
 import ExportImg from '@/pages/edit/components/ExportImg.vue'
-
+import NotFound from '@/pages/errors/NotFound.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -35,6 +35,7 @@ export default new Router({
         auth:true
       }
     },
+
     {
       path: '/exportImg',
       name: 'exportImg',
@@ -42,6 +43,11 @@ export default new Router({
       meta:{
         auth:true
       }
+    },
+    {
+      path:'*',
+      name:'NotFound',
+      component:NotFound,
     }
   ]
 })
