@@ -40,6 +40,7 @@
                     :items="linetpOptions"
                     label="线条形状"
                     color ='brown light-1'
+                    v-model="linetp"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -47,6 +48,7 @@
                     :items="lineColorOptions"
                     label="线条颜色"
                     color ='brown light-1'
+                    v-model="lineColor"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -54,20 +56,23 @@
                     :items="lineWidthOptions"
                     label="线条宽度"
                     color ='brown light-1'
+                    v-model="lineWidth"
                 ></v-select>
             </v-flex>
             <v-flex md1>
                 <v-select
-                    :items="lineColorOptions"
+                    :items="strokeColorOptions"
                     label="边缘颜色"
                     color ='brown light-1'
+                    v-model="strokeColor"
                 ></v-select>
             </v-flex>
             <v-flex md1>
                 <v-select
-                    :items="lineWidthOptions"
+                    :items="strokeWidthOptions"
                     label="边缘宽度"
                     color ='brown light-1'
+                    v-model="strokeWidth"
                 ></v-select>
             </v-flex>
             <v-btn
@@ -133,10 +138,32 @@ export default {
             {text: '8px', value: 8},
             {text: '9px', value: 9},
         ],
+        strokeColorOptions:[
+            {text: '红色', value: 'red'},
+            {text: '黄色', value: 'yellow'}
+        ],
+        strokeWidthOptions:[
+            {text: '1px', value: 1},
+            {text: '2px', value: 2},
+            {text: '3px', value: 3},
+            {text: '4px', value: 4},
+            {text: '5px', value: 5},
+            {text: '6px', value: 6},
+            {text: '7px', value: 7},
+            {text: '8px', value: 8},
+            {text: '9px', value: 9},
+        ],
+        linetp: "curve",
+        lineColor: "red",
+        lineWidth: 5,
+        strokeColor: "red",
+        strokeWidth: 1,
         lineProp:{
             linetp: "curve",
             lineColor: "red",
-            lineWidth: 5
+            lineWidth: 5,
+            strokeColor: "red",
+            strokeWidth: 1,
         }
     }
   },
@@ -202,7 +229,8 @@ export default {
     exportImg()
     {
         let savePack = cvs.save(0,false);  
-        let routeData = this.$router.push({ name: 'exportImg'});
+        //let routeData = this.$router.push({ name: 'exportImg'});
+        let routeData = this.$router.resolve({ name: 'exportImg'});
         sessionStorage.setItem("savePack",savePack);
         let wd = window.open(routeData.href,'_blank');
     }
@@ -212,11 +240,31 @@ export default {
       {
           if(!this.EditBtn){cvs.changeStateTo("move");}
       },
-      lineProp: function(val)
+      linetp: function(val)
       {
-          console.log(val);
-          setLineProp(val);
-      }
+        this.lineProp.linetp = val;
+        cvs.setLineProp(this.lineProp);
+      },
+      lineColor: function(val)
+      {
+        this.lineProp.lineColor = val;
+        cvs.setLineProp(this.lineProp);
+      },
+      lineWidth: function(val)
+      {
+        this.lineProp.lineWidth = val;
+        cvs.setLineProp(this.lineProp);
+      },
+      strokeColor: function(val)
+      {
+        this.lineProp.strokeColor = val;
+        cvs.setLineProp(this.lineProp);
+      },
+      strokeWidth: function(val)
+      {
+        this.lineProp.strokeWidth = val;
+        cvs.setLineProp(this.lineProp);
+      },
   },
   mounted()
   {

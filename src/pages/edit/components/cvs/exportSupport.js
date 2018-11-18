@@ -31,7 +31,6 @@ export default class exportSupport
 {
     static init()
     {
-        console.log("INIT");
         /**Init canvas-toBlob */
           
         (function(view) {
@@ -298,8 +297,6 @@ export default class exportSupport
             (f.saveAs = a.saveAs = a),
               "undefined" != typeof module && (module.exports = a);
           });
-          console.log("--------------p");
           //# sourceMappingURL=FileSaver.min.js.map
-        console.log("INITTTTTT");
     }
 }

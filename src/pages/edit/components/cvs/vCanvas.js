@@ -21,8 +21,10 @@ export default class vCanvas
         this.moveflag = false;
         this.lineprop = {
             linetp: "curve",
-            lineColor: 'red',
-            lineWidth: 5
+            lineColor: "red",
+            lineWidth: 5,
+            strokeColor: "red",
+            strokeWidth: 1,
         };
         this.selectedVert = this.vRoot;
         this.selectedVert2 = this.vRoot;
@@ -70,7 +72,6 @@ export default class vCanvas
     }
     setLineProp(lineprop)
     {
-        console.log("SET");
         this.lineprop = lineprop;
     }
     onClk(e) 
@@ -291,13 +292,20 @@ export default class vCanvas
     }
     makeLine(p1,p2,lineprop) 
     {
-        let ret = new fabric.Line([p1.get('left'),p1.get('top'),p2.get('left'),p2.get('top')], {
-            fill: lineprop.lineColor,
+        let ret1 = new fabric.Line([p1.get('left'),p1.get('top'),p2.get('left'),p2.get('top')], {
+            stroke: lineprop.strokeColor,
+            strokeWidth: lineprop.strokeWidth*2+lineprop.lineWidth,
+            selectable: false,
+            evented: false,
+        });
+        let ret2 = new fabric.Line([p1.get('left'),p1.get('top'),p2.get('left'),p2.get('top')], {
             stroke: lineprop.lineColor,
             strokeWidth: lineprop.lineWidth,
             selectable: false,
             evented: false,
         });
+        let ret = new fabric.Group([ret1,ret2]);
+        ret.selectable = false;
         ret.lineprop = lineprop;
         return ret;
     }
@@ -323,7 +331,11 @@ export default class vCanvas
             x = Math.round(x1*a+x2*b+x3*c+x4*d);
             y = Math.round(y1*a+y2*b+y3*c+y4*d);
             curve.push(new fabric.Line([prex,prey,x,y],{
-                fill: lineprop.lineColor,
+                stroke: lineprop.strokeColor,
+                strokeWidth: lineprop.strokeWidth*2+lineprop.lineWidth,
+                selectable: false,
+                evented: false,}));
+            curve.push(new fabric.Line([prex,prey,x,y],{
                 stroke: lineprop.lineColor,
                 strokeWidth: lineprop.lineWidth,
                 selectable: false,
@@ -435,7 +447,6 @@ export default class vCanvas
     }
     export()
     {
-        console.log("export!!!");
         document.getElementById(this.name).toBlob(function(blob){
             saveAs(blob,"map.png");
         });

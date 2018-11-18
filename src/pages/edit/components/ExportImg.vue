@@ -33,7 +33,6 @@ export default {
         document.getElementById('e').width = width;
         document.getElementById('e').height = height;
         exportCvs = new vCanvas({x:width,y:height},'e',savePack);
-        console.log(exportSupport);
         exportSupport.init();
   }
 }
