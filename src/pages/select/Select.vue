@@ -4,13 +4,13 @@
       <!-- Header -->
       <v-flex xs12 sm6 md6>
         <v-layout row wrap justify-space-between>
-          <v-flex xs12 sm6 md3>
+          <v-flex xs12 sm4 md3>
             <v-card-title>
               <h1>村落选择</h1>
             </v-card-title>
           </v-flex>
           <!-- Search Field -->
-          <v-flex xs12 sm6 md3>
+          <v-flex xs12 sm4 md3>
             <v-autocomplete
               v-model="keyword"
               :items="villages"
