@@ -45,6 +45,14 @@
             </v-flex>
             <v-flex md1>
                 <v-select
+                    :items="lineModeOptions"
+                    label="线条样式"
+                    color ='brown light-1'
+                    v-model="lineMode"
+                ></v-select>
+            </v-flex>
+            <v-flex md1>
+                <v-select
                     :items="lineColorOptions"
                     label="线条颜色"
                     color ='brown light-1'
@@ -123,6 +131,10 @@ export default {
             {text: '曲线', value: 'curve'},
             {text: '直线', value: 'line'}
         ],
+        lineModeOptions:[
+            {text: '实线', value: 'full'},
+            {text: '虚线', value: 'dashed'}
+        ],
         lineColorOptions:[
             {text: '红色', value: 'red'},
             {text: '黄色', value: 'yellow'}
@@ -154,12 +166,14 @@ export default {
             {text: '9px', value: 9},
         ],
         linetp: "curve",
+        lineMode: "full",
         lineColor: "red",
         lineWidth: 5,
         strokeColor: "red",
         strokeWidth: 1,
         lineProp:{
             linetp: "curve",
+            lineMode: "full",
             lineColor: "red",
             lineWidth: 5,
             strokeColor: "red",
@@ -242,28 +256,27 @@ export default {
       },
       linetp: function(val)
       {
-        this.lineProp.linetp = val;
-        cvs.setLineProp(this.lineProp);
+        cvs.setLineProp("linetp",val);
+      },
+      lineMode: function(val)
+      {
+          cvs.setLineProp("lineMode",val);
       },
       lineColor: function(val)
       {
-        this.lineProp.lineColor = val;
-        cvs.setLineProp(this.lineProp);
+        cvs.setLineProp("lineColor",val);
       },
       lineWidth: function(val)
       {
-        this.lineProp.lineWidth = val;
-        cvs.setLineProp(this.lineProp);
+        cvs.setLineProp("lineWidth",val);
       },
       strokeColor: function(val)
       {
-        this.lineProp.strokeColor = val;
-        cvs.setLineProp(this.lineProp);
+        cvs.setLineProp("strokeColor",val);
       },
       strokeWidth: function(val)
       {
-        this.lineProp.strokeWidth = val;
-        cvs.setLineProp(this.lineProp);
+        cvs.setLineProp("strokeWidth",val);
       },
   },
   mounted()

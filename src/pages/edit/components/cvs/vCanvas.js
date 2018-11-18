@@ -21,6 +21,7 @@ export default class vCanvas
         this.moveflag = false;
         this.lineprop = {
             linetp: "curve",
+            lineMode: "fill",
             lineColor: "red",
             lineWidth: 5,
             strokeColor: "red",
@@ -70,9 +71,9 @@ export default class vCanvas
         this.state = sta;
         this.renderAll();
     }
-    setLineProp(lineprop)
+    setLineProp(name,prop)
     {
-        this.lineprop = lineprop;
+        this.lineprop[name] = prop;
     }
     onClk(e) 
     {
@@ -112,23 +113,7 @@ export default class vCanvas
             {
                 this.selectVert(c);
                 if(this.selectedVert==this.vRoot||this.selectedVert2==this.vRoot) return;
-                let edg = this.selectedVert.link.getEdge(this.selectedVert2);
-                if(edg==undefined) return;
-                this.remove(edg);
-                this.selectedVert.link.remove(this.selectedVert2);
-                this.selectedVert2.link.remove(this.selectedVert);
-                if(!this.selectedVert.link.checkLink()) 
-                {
-                    this.vRoot.link.remove(this.selectedVert);
-                    this.remove(this.selectedVert);
-                }
-                else{this.selectedVert.linkVert(this.vRoot,this.lineprop);}
-                if(!this.selectedVert2.link.checkLink()) 
-                {
-                    this.vRoot.link.remove(this.selectedVert2);
-                    this.remove(this.selectedVert2);
-                }
-                else{this.selectedVert2.linkVert(this.vRoot,this.lineprop);}
+                this.removeEdge(this.selectedVert,this.selectedVert2);
                 this.selectVert(this.vRoot);// the render instruction is included in the select method
                 this.save();/////////////////////////////////////////////////////////////////////////////////////
             }
@@ -208,6 +193,26 @@ export default class vCanvas
             this.selectedVert.set({fill:'blue',stroke:'blue'});
         }
         this.renderAll();
+    }
+    removeEdge(v1,v2)
+    {
+        let edg = v1.link.getEdge(v2);
+        if(edg==undefined) return;
+        this.remove(edg);
+        v1.link.remove(v2);
+        v2.link.remove(v1);
+        if(!v1.link.checkLink()) 
+        {
+            this.vRoot.link.remove(v1);
+            this.remove(v1);
+        }
+        else{v1.linkVert(this.vRoot,this.lineprop);}
+        if(!v2.link.checkLink()) 
+        {
+            this.vRoot.link.remove(v2);
+            this.remove(v2);
+        }
+        else{v2.linkVert(this.vRoot,this.lineprop);}
     }
     renderAll()
     {
@@ -293,20 +298,24 @@ export default class vCanvas
     makeLine(p1,p2,lineprop) 
     {
         let ret1 = new fabric.Line([p1.get('left'),p1.get('top'),p2.get('left'),p2.get('top')], {
-            stroke: lineprop.strokeColor,
-            strokeWidth: lineprop.strokeWidth*2+lineprop.lineWidth,
-            selectable: false,
-            evented: false,
+            stroke: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth*2+lineprop.lineWidth,
+            selectable: false, evented: false,
         });
         let ret2 = new fabric.Line([p1.get('left'),p1.get('top'),p2.get('left'),p2.get('top')], {
-            stroke: lineprop.lineColor,
-            strokeWidth: lineprop.lineWidth,
-            selectable: false,
-            evented: false,
+            stroke: lineprop.lineColor, strokeWidth: lineprop.lineWidth,
+            selectable: false, evented: false,
         });
+        if(lineprop.lineMode=="dashed")
+        {
+            ret1.strokeDashArray = [30,10];
+            ret2.strokeDashArray = [30,10];
+        }
         let ret = new fabric.Group([ret1,ret2]);
         ret.selectable = false;
-        ret.lineprop = lineprop;
+        ret.lineprop = { linetp: lineprop.linetp, lineMode: lineprop.lineMode,
+                        lineColor: lineprop.lineColor, lineWidth: lineprop.lineWidth,
+                        strokeColor: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth,
+                    };
         return ret;
     }
     makeCurve(p1,p2,p3,p4,tension,lineprop)
@@ -316,13 +325,17 @@ export default class vCanvas
         let x2 = p2.left; let y2 = p2.top;
         let x3 = p3.left; let y3 = p3.top;
         let x4 = p4.left; let y4 = p4.top;
-        let dist = Math.sqrt((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2));
         let i1,i2,i3,x,y,a,b,c,d;
         let prex = Math.round(x2),prey = Math.round(y2);
         let curve = [];
-        for(let i=1;i<=10;i++)
+        let dist = Math.sqrt((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2));
+        let seg = 5;
+        if(dist>500){seg = 2;}
+        else if(dist>250){seg = 3;}
+        else if(dist > 90){seg = 4;}
+        for(let i=1;i<=15;i++)
         {
-            i1 = i/10;
+            i1 = i/15;
             i2 = i1*i1; i3 = i2*i1;
             a = -s*i3+2*s*i2-s*i1;
             b = (2-s)*i3+(s-3)*i2+1;
@@ -330,21 +343,27 @@ export default class vCanvas
             d = s*i3-s*i2;
             x = Math.round(x1*a+x2*b+x3*c+x4*d);
             y = Math.round(y1*a+y2*b+y3*c+y4*d);
+            if((lineprop.lineMode=="dashed") && (i%seg==0)) 
+            {
+                prex = x; prey = y;
+                continue;
+            } 
             curve.push(new fabric.Line([prex,prey,x,y],{
-                stroke: lineprop.strokeColor,
-                strokeWidth: lineprop.strokeWidth*2+lineprop.lineWidth,
-                selectable: false,
-                evented: false,}));
+                stroke: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth*2+lineprop.lineWidth,
+                //strokeDashArray: [20,5],
+                selectable: false, evented: false,}));
             curve.push(new fabric.Line([prex,prey,x,y],{
-                stroke: lineprop.lineColor,
-                strokeWidth: lineprop.lineWidth,
-                selectable: false,
-                evented: false,}));
+                stroke: lineprop.lineColor, strokeWidth: lineprop.lineWidth,
+                //strokeDashArray: [20,5],
+                selectable: false, evented: false,}));
             prex = x; prey = y;
         }
         let ret = new fabric.Group(curve);
         ret.selectable = false;
-        ret.lineprop = lineprop;
+        ret.lineprop = { linetp: lineprop.linetp, lineMode: lineprop.lineMode,
+            lineColor: lineprop.lineColor, lineWidth: lineprop.lineWidth,
+            strokeColor: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth,
+        };
         return ret;
     }
     initCanvas()
