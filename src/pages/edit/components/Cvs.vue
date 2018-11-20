@@ -101,12 +101,6 @@
             >
                 保存
             </v-btn>
-            <v-btn
-                v-on:click="exportImg();"
-                color="green lighten-1"
-            >
-            导出图片
-            </v-btn>
         </v-layout>
     <v-layout 
         justify-center
@@ -300,6 +294,10 @@ export default {
       window.addEventListener('removeSVG',function(event){
           bus.$emit('removeP',event.detail.id);
       });
+      window.addEventListener('exportImg',()=>{
+          console.log("EXPORT");
+          this.exportImg();
+      })
   }
 }
 </script>

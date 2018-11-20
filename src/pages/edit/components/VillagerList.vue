@@ -141,6 +141,11 @@ export default {
       this.tool = !this.tool;
       console.log("tool:"+this.tool);
       this.$emit('CES');
+    },
+    ExportImg()
+    {
+      let exportImgEvent = new Event("exportImg");
+      window.dispatchEvent(exportImgEvent);
     }
   },
   mounted(){

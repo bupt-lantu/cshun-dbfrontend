@@ -11,13 +11,6 @@
             <v-layout align-center justify-center>
                 <v-spacer></v-spacer>
                 <v-btn
-                    @click="goBackToEdit()"
-                    color="blue-grey"
-                >
-                    返回编辑页
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn
                     @click="exportImg();"
                     color="green darken-3"
                 >
@@ -42,9 +35,6 @@ export default {
   methods:{
     exportImg: function(){
           exportCvs.export();
-    },
-    goBackToEdit(){
-      this.$router.push({ name: 'edit'});
     }
   },
   watch:{
