@@ -1,14 +1,34 @@
 <template>
-    <v-content>
-        预览
-        <v-btn
-            v-on:click="exportImg();"
-            color="brown light-1"
-        >
-        导出图片
-        </v-btn>
-        <canvas id="e"></canvas>
-    </v-content>
+    <v-app dark>
+        <v-content>
+            <v-toolbar
+                color="teal"
+                dense
+                fixed
+                clipped-left
+                app
+            >
+            <v-layout align-center justify-center>
+                <v-spacer></v-spacer>
+                <v-btn
+                    @click="goBackToEdit()"
+                    color="blue-grey"
+                >
+                    返回编辑页
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                    @click="exportImg();"
+                    color="green darken-3"
+                >
+                    确认导出
+                </v-btn>
+                <v-spacer></v-spacer>
+            </v-layout>
+            </v-toolbar>
+            <canvas id="e"></canvas>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
@@ -20,9 +40,12 @@ export default {
   name: 'ExportImg',
   props: ['savePack'],
   methods:{
-      exportImg: function(){
+    exportImg: function(){
           exportCvs.export();
-    } 
+    },
+    goBackToEdit(){
+      this.$router.push({ name: 'edit'});
+    }
   },
   watch:{
   },

@@ -84,7 +84,7 @@
         ></v-text-field>
         <v-btn 
           color="blue-grey"
-          @click="ChangeEditState"
+          @click="ChangeEditState()"
         >
           <span v-if="tool">退出编辑</span>
           <span v-else>编辑模式</span>
@@ -97,9 +97,7 @@
         >导出数据</v-btn>
         <v-btn
           color="light-green"
-          :loading="loading2"
-          :disabled="loading2"
-          @click.native="loader = 'loading2'"
+          @click="ExportImg()"
         >导出长图</v-btn>
       </v-layout>
     </v-toolbar>
@@ -108,6 +106,8 @@
 
 <script>
 import {bus} from '../../../bus.js'
+// import vCanvas  from './cvs/vCanvas.js';
+// import cvs from '../Cvs'
 export default {
   name: 'VillagerList',
   data: () => ({
@@ -134,18 +134,15 @@ export default {
     goBackToSelect(){
       this.$router.push({ name: 'select'});
     },
-    
     dragStart(event){
         event.dataTransfer.setData("text/plain", event.target.id);
     },
-
     ChangeEditState(){
       this.tool = !this.tool;
       console.log("tool:"+this.tool);
       this.$emit('CES');
     }
   },
-
   mounted(){
     bus.$on('showP',(id)=>{
         let element=this.items2.find((index) => index.id==id);
