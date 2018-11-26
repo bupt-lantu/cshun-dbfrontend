@@ -18,6 +18,9 @@ export default new Vuex.Store({
     },
     setVillagers(state,obj){
       state.villagers=obj;
+      let index=0;
+      for(let obj of state.villagers)
+        obj.id=++index;
     },
     setCanvas(state,obj){
       state.canvas=obj;
@@ -26,12 +29,12 @@ export default new Vuex.Store({
       state.currentVillageId=id;
     },
     updateVillager(state,payload){
-      let tmp=[...state.villagers];
-      let ele=tmp.find((obj)=> obj._id==payload.id);
-      ele.isInCanvas=payload.isIn;
-      state.villagers=[...tmp];
-      // let ele=state.villagers.find((obj)=> obj._id==payload.id);
+      // let tmp=[...state.villagers];
+      // let ele=tmp.find((obj)=> obj.id==payload.id);
       // ele.isInCanvas=payload.isIn;
+      // state.villagers=[...tmp];
+      let ele=state.villagers.find((obj)=> obj.id==payload.id);
+      ele.isInCanvas=payload.isIn;
     }
   },
 
