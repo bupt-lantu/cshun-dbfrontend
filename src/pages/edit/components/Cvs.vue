@@ -295,7 +295,6 @@ export default {
           bus.$emit('removeP',event.detail.id);
       });
       window.addEventListener('exportImg',()=>{
-          console.log("EXPORT");
           this.exportImg();
       })
   }

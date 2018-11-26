@@ -33,6 +33,7 @@ export default class vCanvas
         this.vis = new Set();
         this.vertSet = new Set();
         this.edgeSet = new Set();
+        this.SVGIdArray = new Array();
         this.SVGMap = new Map();
         this.history = new History();
         this.initCanvas();
@@ -239,17 +240,23 @@ export default class vCanvas
         fabric.loadSVGFromString(str, function(objects, options) {
             let obj = fabric.util.groupSVGElements(objects, options);
             obj.set({left:pos.x,top:pos.y,});
-            if(SVGprop) obj.set(SVGprop);
-            obj.id = id;
+            let numId = that.SVGIdArray.indexOf(id);
+            if(numId==-1)
+            {
+                numId = that.SVGIdArray.length+1;//CAUTION! numId MUST NOT BE 0!!!
+                that.SVGIdArray.push(id);
+            }
+            else{numId++;}
+            obj.id = numId;
             obj.isSVG = true;
             obj.SVGstr = str;
-            that.addSVG(obj,id,save);
+            that.addSVG(obj,numId,save);
         });
     }
     addSVG(obj,id,save=true)
     {
         this.SVGMap.set(parseInt(id),obj);
-        let addSVGEvent = new CustomEvent('addSVG',{detail:{id: id}});
+        let addSVGEvent = new CustomEvent('addSVG',{detail:{id: this.SVGIdArray[id-1]}});
         window.dispatchEvent(addSVGEvent);
         this.add(obj);
         if(save){this.save(id);}
@@ -266,7 +273,7 @@ export default class vCanvas
             this.canvas.remove(obj);
             if(obj.isSVG)
             {
-                let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: obj.id}});
+                let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[obj.id-1]}});
                 window.dispatchEvent(removeSVGEvent);
                 this.SVGMap.delete(parseInt(obj.id));
                 if(save) this.save(-obj.id);
@@ -446,7 +453,8 @@ export default class vCanvas
         savePack = {
             vertset: Array.from(this.vertSet),
             edgeset: Array.from(this.edgeSet),
-            svgarray: Array.from(svgArray),    //<-------------------------------------------
+            svgarray: svgArray,    //<-------------------------------------------
+            svgidarray: this.SVGIdArray,
             selectedvertid: this.selectedVert.id,
             selectedVert2id: this.selectedVert2.id,
             lineprop: this.lineprop,
@@ -460,8 +468,9 @@ export default class vCanvas
     }
     saveToServer()
     {
-        this.save(0,false);
-        let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:this.history.getTop()}});
+        let savePack = this.save(0,false);
+        //let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:this.history.getTop()}});
+        let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:savePack}});
         window.dispatchEvent(saveEvent);
     }
     export()
@@ -476,7 +485,7 @@ export default class vCanvas
         let id = parseInt(this.history.getTopSVGid());
         if(id>0)
         {
-            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: id}});
+            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[id-1]}});
             window.dispatchEvent(removeSVGEvent);
         }
         this.restore(this.history.undo());
@@ -488,7 +497,7 @@ export default class vCanvas
         let id = parseInt(this.history.getTopSVGid());
         if(id<0)
         {
-            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: -id}});
+            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[-id-1]}});
             window.dispatchEvent(removeSVGEvent);
         }
         this.restore(src);
@@ -501,10 +510,11 @@ export default class vCanvas
         this.lineprop = savePack.lineprop;
         this.mapProp = savePack.mapprop;
         this.counter = savePack.counter;
+        this.SVGIdArray = savePack.svgidarray;
         let svgArray = savePack.svgarray;
         this.SVGMap.clear();
         for(let tt of svgArray)
-        {this.createSVG(tt.svgstr,tt.pos,tt.id,false,tt.prop);}
+        {this.createSVG(tt.svgstr,tt.pos,this.SVGIdArray[parseInt(tt.id-1)],false,tt.prop);}
         let vtmap = new Map();
         for(let tt of savePack.vertset)
         {
