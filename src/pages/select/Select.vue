@@ -58,27 +58,25 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "Select",
   data(){
     return {
       keyword: "",
-      villages: [],
+      // villages: [],
       selectedName: "",
-      villagesInfo: []
+      // villagesInfo: []
     };
   },
-  created(){
-      this.$Http.get('village')
-      .then(( res )=>{
-          this.villagesInfo=res.data.list;         
-          this.villagesInfo.map((obj)=>{ 
-            // obj.description='描述二二描述描述描述描述描述描述,然而没有描述没有描述，超级单调';
-            this.villages.push(obj.name);
-          });
-      }).catch((err)=>{
-          console.log(err);
-      });
+  computed:{
+    ...mapGetters([
+      'villagesInfo',
+      'villages'
+    ]),
+  },
+  mounted(){
+      this.$store.dispatch('getVillagesInfo');
     },
 
   watch: {
@@ -93,6 +91,7 @@ export default {
     //select a village and jump to its edit page
     //@params: {string} 'villageId' for redirect
     select: function(villageId) {
+      this.$store.dispatch('setCurrentVillageId',villageId);
       this.$router.push({ name: 'edit', params: { id: villageId}});
     },
 

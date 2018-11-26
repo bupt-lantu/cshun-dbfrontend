@@ -21,11 +21,11 @@
           村户详细信息
         </v-subheader>
         <v-list>
-          <v-list-tile v-for="item in items2" :key="item.text" v-show="!item.isInCanvas" avatar>
+          <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <!-- <v-list-tile-action>
               <v-icon color="grey darken-1">add_circle_outline</v-icon>
             </v-list-tile-action> -->
-            <v-list-tile-action :id="item.id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
+            <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
               <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="6" rx="2" ry="2" width="100" height="36" 
@@ -33,11 +33,11 @@
                   stroke-width:5;opacity:0.5"
                 ></rect>
                 <text x="45" y="30">
-                  {{item.id}}
+                  {{ index-'0'+1 }}
                 </text>
               </svg>
             </v-list-tile-action>
-            <v-list-tile-title v-text="item.text"></v-list-tile-title>
+            <v-list-tile-title v-text="item.name"></v-list-tile-title>
           </v-list-tile>
         </v-list>
         <v-list-tile class="mt-3">
@@ -106,6 +106,7 @@
 
 <script>
 import {bus} from '../../../bus.js'
+import { mapGetters } from 'vuex'
 // import vCanvas  from './cvs/vCanvas.js';
 // import cvs from '../Cvs'
 export default {
@@ -116,19 +117,25 @@ export default {
     items: [
     { icon: 'arrow_back', text: '返回地点选择' },
     ],
-    items2: [
-    { id: 1, text: '老张' ,isInCanvas:false},
-    { id: 2, text: '老赵' ,isInCanvas:false},
-    { id: 3, text: '老李' ,isInCanvas:false}
-    ],
+    // items2: [
+    // { id: 1, text: '老张' ,isInCanvas:false},
+    // { id: 2, text: '老赵' ,isInCanvas:false},
+    // { id: 3, text: '老李' ,isInCanvas:false}
+    // ],
     loader: null,
     loading: false,
     loading2: false,
     loading3: false,
     loading4: false
   }),
+  computed:{
+    ...mapGetters([
+      'villagers',
+    ]),
+  },
   props: {
-    source: String
+    source: String,
+    villageId:String
   },
   methods:{
     goBackToSelect(){
@@ -148,14 +155,19 @@ export default {
       window.dispatchEvent(exportImgEvent);
     }
   },
+  created(){
+    this.$store.dispatch('getVillagers');
+  },
   mounted(){
     bus.$on('showP',(id)=>{
-        let element=this.items2.find((index) => index.id==id);
-        element.isInCanvas=true;
+        // let element=this.villagers.find((index) => index._id==id);
+        // element.isInCanvas=true;
+        this.$store.dispatch('updateVillager',{ id ,isIn:true });
     });
     bus.$on('removeP',(id)=>{
-        let element=this.items2.find((index) => index.id==id);
-        element.isInCanvas=false;
+        // let element=this.villagers.find((index) => index._id==id);
+        // element.isInCanvas=false;
+        this.$store.dispatch('updateVillager',{ id, isIn:false});
     });
   },
 
