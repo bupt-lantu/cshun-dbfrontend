@@ -88,7 +88,7 @@ export default {
           response => {
             console.log("Get Response");
             console.log(response);
-            localStorage.setItem('isLogin', true);
+            sessionStorage.setItem('isLogin', true);
             this.$router.push({ name: 'select'});
           },
           error => {

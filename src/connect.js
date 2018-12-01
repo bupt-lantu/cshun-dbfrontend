@@ -17,9 +17,9 @@ axios.interceptors.response.use(
         //             })
         //     }
         // }
-        localStorage.removeItem('isLogin');
+        sessionStorage.removeItem('isLogin');
         router.replace({
-            path: 'login',
+            path: '/login',
             query: {redirect: router.currentRoute.fullPath}
           });
         return Promise.reject(error.response.data)   // 返回接口返回的错误信息
