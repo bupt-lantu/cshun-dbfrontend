@@ -81,10 +81,11 @@ export default class vCanvas
         if (this.state == "addvert") 
         {
             let c = this.makeCircle(e.pointer,++this.counter,this);
-            c.linkVert(this.selectedVert,this.lineprop);
+            //c.linkVert(this.selectedVert,this.lineprop);
+            c.addlk(this.selectedVert,this.lineprop);
             if(this.selectedVert!=this.vRoot) this.selectedVert.draw();
             this.add(c);
-            this.renderAll();
+            //this.renderAll();
             this.selectVert(c);
             this.save();////////////////////////////////////////////////////////////////////
             return;
@@ -105,7 +106,8 @@ export default class vCanvas
             {
                 this.selectVert(c);
                 if(this.selectedVert==this.vRoot||this.selectedVert2==this.vRoot) return;
-                this.selectedVert.linkVert(this.selectedVert2,this.lineprop);
+                //this.selectedVert.linkVert(this.selectedVert2,this.lineprop);
+                this.selectedVert.addlk(this.selectedVert2,this.lineprop);
                 this.selectedVert.draw();
                 this.selectVert(this.vRoot);
                 this.save();////////////////////////////////////////////////////////////
@@ -132,6 +134,7 @@ export default class vCanvas
         if(p instanceof fabric.Circle)
         {
             p.draw();
+            this.renderAll();
             this.moveflag = true;
         }
         else if(p.isSVG)
@@ -207,13 +210,15 @@ export default class vCanvas
             this.vRoot.link.remove(v1);
             this.remove(v1);
         }
-        else{v1.linkVert(this.vRoot,this.lineprop);}
+        //else{v1.linkVert(this.vRoot,this.lineprop);}
+        else{v1.addlk(this.vRoot,this.lineprop);}
         if(!v2.link.checkLink()) 
         {
             this.vRoot.link.remove(v2);
             this.remove(v2);
         }
-        else{v2.linkVert(this.vRoot,this.lineprop);}
+        //else{v2.linkVert(this.vRoot,this.lineprop);}
+        else{v2.addlk(this.vRoot,this.lineprop);}
     }
     renderAll()
     {
@@ -377,12 +382,24 @@ export default class vCanvas
     {
         this.canvas = window.__canvas = new fabric.Canvas(this.name, { selection: false });
         fabric.Object.prototype.originX = fabric.Object.prototype.originY = 'center';
+        fabric.Circle.prototype.addlk = function(vert,lineprop){
+            let lp = { linetp: lineprop.linetp, lineMode: lineprop.lineMode,
+                lineColor: lineprop.lineColor, lineWidth: lineprop.lineWidth,
+                strokeColor: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth,
+            };
+            let edg = {lineprop: lp};
+            //console.log(vert);
+            this.link.add(vert,edg); vert.link.add(this,edg);
+        }
         fabric.Circle.prototype.linkVert = function(vert,lineprop){
             if(this.link.getEdge(vert)!=undefined) {this.cvs.remove(this.link.getEdge(vert));}
             else
             {
-                this.link.add(vert,null);
-                vert.link.add(this,null);
+                
+                console.log(vert);
+                this.addlk(vert,lineprop);
+                //this.link.add(vert,null);
+                //vert.link.add(this,null);
             }
             let edg;
             if(lineprop.linetp=="line"){edg = this.cvs.makeLine(this,vert,lineprop);}
@@ -400,7 +417,7 @@ export default class vCanvas
             for(let tt of this.link.map)  
             {this.linkVert(tt[0],tt[1].lineprop);}
             this.cvs.add(this);
-            this.cvs.renderAll();
+            //this.cvs.renderAll();
         }
         this.canvas.on('mouse:down', this.onClk.bind(this));
         this.canvas.on('mouse:up',this.onMouseUp.bind(this));
@@ -527,7 +544,8 @@ export default class vCanvas
             vtmap.set(tt.id,circ);
         }
         for(let tt of savePack.edgeset)
-        {vtmap.get(tt.id1).linkVert(vtmap.get(tt.id2),tt.lineprop);}
+        //{vtmap.get(tt.id1).linkVert(vtmap.get(tt.id2),tt.lineprop);}
+        {vtmap.get(tt.id1).addlk(vtmap.get(tt.id2),tt.lineprop);}
         for(let tt of vtmap) 
         {if(tt[0]!=0)tt[1].draw();}
         this.renderMap();
