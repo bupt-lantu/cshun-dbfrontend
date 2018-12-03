@@ -34,12 +34,12 @@
       <!-- Village Cards -->
       <v-flex xs12 sm12 md6 my-3
       v-for="village in villagesInfo" 
-      :key="village.id">
+      :key="village._id">
         <v-hover>
           <v-card 
           slot-scope="{ hover }"
           class="village-card"
-          @click.native="select(village.id)">
+          @click.native="select(village._id)">
             <v-card-title primary-title 
             class="village-title"
             :class="{ titleHovered: hover }">
@@ -102,7 +102,7 @@ export default {
 
       for(const village of this.villagesInfo)
         if(key == village.name)
-          this.select(village.id);
+          this.select(village._id);
     }
   }
 }
