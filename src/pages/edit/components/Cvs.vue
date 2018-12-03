@@ -215,7 +215,7 @@ export default {
       bus.$emit('showP',id);
       */
       cvs.createSVG(svg_xml,p,id);
-      bus.$emit('showP',id);
+      //bus.$emit('showP',id);
       //});
   },
     changeStateTo(sta)
@@ -246,6 +246,7 @@ export default {
   watch:{
       EditBtn: function()
       {
+          if(this.EditBtn){cvs.changeStateTo("editvert");}
           if(!this.EditBtn){cvs.changeStateTo("move");}
       },
       linetp: function(val)

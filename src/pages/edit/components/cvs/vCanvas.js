@@ -78,18 +78,7 @@ export default class vCanvas
     }
     onClk(e) 
     {
-        if (this.state == "addvert") 
-        {
-            let c = this.makeCircle(e.pointer,++this.counter,this);
-            //c.linkVert(this.selectedVert,this.lineprop);
-            c.addlk(this.selectedVert,this.lineprop);
-            if(this.selectedVert!=this.vRoot) this.selectedVert.draw();
-            this.add(c);
-            //this.renderAll();
-            this.selectVert(c);
-            this.save();////////////////////////////////////////////////////////////////////
-            return;
-        }
+        if(this.state == "addvert") return;
         if(this.state=="move")
         {
             this.mouseDown = true;
@@ -163,6 +152,18 @@ export default class vCanvas
     }
     onMouseUp(e)
     {
+        if (this.state == "addvert") 
+        {
+            let c = this.makeCircle(e.pointer,++this.counter,this);
+            //c.linkVert(this.selectedVert,this.lineprop);
+            c.addlk(this.selectedVert,this.lineprop);
+            if(this.selectedVert!=this.vRoot) this.selectedVert.draw();
+            this.add(c);
+            //this.renderAll();
+            this.selectVert(c);
+            this.save();////////////////////////////////////////////////////////////////////
+            return;
+        }
         if(this.state=="editvert"&&this.moveflag)
         //if(this.state=="editvert"&&this.selectedVert!=this.vRoot&&this.moveflag)//////////////////////////////////////////////////////////
         {
@@ -241,6 +242,7 @@ export default class vCanvas
     }
     createSVG(str,pos,id,save=true,SVGprop=null)
     {
+        if(this.state=="move") return;
         let that = this;
         fabric.loadSVGFromString(str, function(objects, options) {
             let obj = fabric.util.groupSVGElements(objects, options);
