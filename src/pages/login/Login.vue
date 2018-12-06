@@ -1,4 +1,8 @@
 <template>
+  <v-app
+    class="login"
+    light
+  >
   <div id="Login">
   
     <v-container>
@@ -41,6 +45,7 @@
     </v-container>
 
   </div>
+  </v-app>
 </template>
 
 <script>

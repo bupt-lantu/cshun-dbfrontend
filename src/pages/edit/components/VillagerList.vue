@@ -23,7 +23,7 @@
         <v-list>
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
-              <template v-if="index-'0'==0">
+              <template v-if="(index-'0')%6==0">
                 <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
@@ -35,7 +35,7 @@
                   </text>
                 </svg>
               </template>
-              <template v-if="index-'0'==1">
+              <template v-else-if="(index-'0')%6==1">
                 <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
@@ -47,7 +47,7 @@
                   </text>
                 </svg>
               </template>
-              <template v-else-if="index-'0'==2">
+              <template v-else-if="(index-'0')%6==2">
                 <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
@@ -59,7 +59,7 @@
                   </text>
                 </svg>
               </template>
-              <template v-else-if="index-'0'==3">
+              <template v-else-if="(index-'0')%6==3">
                 <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
@@ -71,7 +71,7 @@
                   </text>
                 </svg>
               </template>
-              <template v-else-if="index-'0'==4">
+              <template v-else-if="(index-'0')%6==4">
                 <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
@@ -83,7 +83,7 @@
                   </text>
                 </svg>
               </template>
-              <template v-else-if="index-'0'==5">
+              <template v-else-if="(index-'0')%6==5">
                 <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
