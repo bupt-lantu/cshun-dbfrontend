@@ -22,20 +22,79 @@
         </v-subheader>
         <v-list>
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
-            <!-- <v-list-tile-action>
-              <v-icon color="grey darken-1">add_circle_outline</v-icon>
-            </v-list-tile-action> -->
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
-              <svg width="100%" height="100%" version="1.1"
+              <template v-if="index-'0'==0">
+                <svg width="100%" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="6" rx="2" ry="2" width="100" height="36" 
-                  style="fill:orange;stroke:brown;
-                  stroke-width:5;opacity:0.5"
-                ></rect>
-                <text x="45" y="30">
-                  {{ index-'0'+1 }}
-                </text>
-              </svg>
+                  <rect x="2" y="6" width="100" height="36" 
+                    style="fill:green;stroke:blue;
+                    stroke-width:5;opacity:0.5"
+                  ></rect>
+                  <text x="45" y="30">
+                    {{ index-'0'+1 }}
+                  </text>
+                </svg>
+              </template>
+              <template v-if="index-'0'==1">
+                <svg width="100%" height="100%" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="100" height="36" 
+                    style="fill:green;stroke:blue;
+                    stroke-width:5;opacity:0.5"
+                  ></rect>
+                  <text x="45" y="30">
+                    {{ index-'0'+1 }}
+                  </text>
+                </svg>
+              </template>
+              <template v-else-if="index-'0'==2">
+                <svg width="100%" height="100%" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="100" height="36" 
+                    style="fill:yellow;stroke:black;
+                    stroke-width:5;opacity:0.5"
+                  ></rect>
+                  <text x="45" y="30">
+                    {{ index-'0'+1 }}
+                  </text>
+                </svg>
+              </template>
+              <template v-else-if="index-'0'==3">
+                <svg width="100%" height="100%" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="100" height="36" 
+                    style="fill:orange;stroke:brown;
+                    stroke-width:5;opacity:0.5"
+                  ></rect>
+                  <text x="45" y="30">
+                    {{ index-'0'+1 }}
+                  </text>
+                </svg>
+              </template>
+              <template v-else-if="index-'0'==4">
+                <svg width="100%" height="100%" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="100" height="36" 
+                    style="fill:red;stroke:brown;
+                    stroke-width:5;opacity:0.5"
+                  ></rect>
+                  <text x="45" y="30">
+                    {{ index-'0'+1 }}
+                  </text>
+                </svg>
+              </template>
+              <template v-else-if="index-'0'==5">
+                <svg width="100%" height="100%" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="100" height="36" 
+                    style="fill:#8BC34A;stroke:brown;
+                    stroke-width:5;opacity:0.5"
+                  ></rect>
+                  <text x="45" y="30">
+                    {{ index-'0'+1 }}
+                  </text>
+                </svg>
+              </template>
             </v-list-tile-action>
             <v-list-tile-title v-text="item.name"></v-list-tile-title>
           </v-list-tile>
