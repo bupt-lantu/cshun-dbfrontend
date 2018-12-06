@@ -33,10 +33,11 @@
             </v-flex>
           </v-layout>
         </v-flex>
+      </v-layout>
         <!-- Header End -->
-
+      <v-layout wrap>
         <!-- Village Cards -->
-        <v-flex xs12 sm12 md6 my-3
+        <v-flex xs6 pa-4
         v-for="village in villagesInfo" 
         :key="village._id">
           <v-hover>
@@ -50,19 +51,18 @@
                 <h2 style="font-size:22px">{{village.name}}</h2>
               </v-card-title>
                 <v-layout v-layout align-center justify-space-around>
-                      <p style="font-size:18px"><b>户数:</b> {{village.family}}户</p>
-                      <p style="font-size:18px"><b>人数:</b> {{ village.villagerNum }}人</p>
-                      <p style="font-size:18px"><b>系统贫困户数:</b> {{ village.sysPoorFamily }}</p>
-                      <p style="font-size:18px"><b>系统贫困人数:</b> {{ village.sysPoorVillager }}</p>
-                      <p style="font-size:18px"><b>未脱贫户数:</b> {{ village.notOutPovertyFamily }}</p>
-                      <p style="font-size:18px"><b>未脱贫人数:</b> {{ village.notOutPovertyVillager }}</p>
-                      <p style="font-size:18px"><b>低保户数:</b> {{ village.lowProtectFamily }}</p>
-                      <p style="font-size:18px"><b>低保人数:</b> {{ village.lowProtectVillager }}</p>
+                      <p style="font-size:16px"><b>户数:</b> {{village.family}}</p>
+                      <p style="font-size:16px"><b>人数:</b> {{ village.villagerNum }}</p>
+                      <p style="font-size:16px"><b>系统贫困户数:</b> {{ village.sysPoorFamily }}</p>
+                      <p style="font-size:16px"><b>系统贫困人数:</b> {{ village.sysPoorVillager }}</p>
+                      <p style="font-size:16px"><b>未脱贫户数:</b> {{ village.notOutPovertyFamily }}</p>
+                      <p style="font-size:16px"><b>未脱贫人数:</b> {{ village.notOutPovertyVillager }}</p>
+                      <p style="font-size:16px"><b>低保户数:</b> {{ village.lowProtectFamily }}</p>
+                      <p style="font-size:16px"><b>低保人数:</b> {{ village.lowProtectVillager }}</p>
                 </v-layout> 
             </v-card>
           </v-hover>
         </v-flex>
-
       </v-layout>
     </v-container>
   </v-app>

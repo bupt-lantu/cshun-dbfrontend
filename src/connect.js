@@ -7,7 +7,6 @@ axios.interceptors.response.use(
     response => {
         if(response.data.code && response.data.code===401)
         {
-            alert(response.data.msg);
             sessionStorage.removeItem('isLogin');
             router.replace({
                 path: 'login',

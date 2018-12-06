@@ -10,7 +10,7 @@ Vue.config.productionTip = false;
 /* 登入拦截 */
 router.beforeEach((to, from, next) => {
   if (to.meta.auth) {
-    if (!sessionStorage.getItem('isLogin')) {
+     if (!sessionStorage.getItem('isLogin')) {
       next({
         path: 'login',
          query: {redirect: to.fullPath}  // 将跳转首页时的路由path作为参数，登录成功后跳转到该路由
