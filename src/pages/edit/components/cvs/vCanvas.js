@@ -63,7 +63,7 @@ export default class vCanvas
         {
             for(let tt of objs)
             {
-                if(tt instanceof fabric.Circle) tt.set({selectable:true,radius:12,strokeWidth:5});
+                if(tt instanceof fabric.Circle) tt.set({selectable:true,radius:tt.r,strokeWidth:5});
                 if(tt.isSVG==true) tt.set({selectable:true});
                 tt.setCoords();
             }
@@ -292,18 +292,19 @@ export default class vCanvas
     {
         this.canvas.sendToBack(obj);
     }
-    makeCircle(pos,id,cvs) 
+    makeCircle(pos,id,cvs,radius=7) 
     {
         let c = new fabric.Circle({
             left: pos.x,
             top: pos.y,
             strokeWidth: 5,
-            radius: 12,
+            radius: radius,
             fill: 'red',
             stroke: 'red',
             hasControls: false,
             hasBorders: true
         });
+        c.r = radius;
         c.cvs = cvs;  
         c.id = id;
         c.link = new MP(this);
@@ -438,7 +439,7 @@ export default class vCanvas
     dfs(now,fa)
     {
         this.vis.add(now);
-        this.vertSet.add({id:now.id,left:now.left,top:now.top});
+        this.vertSet.add({id:now.id,r:now.r,left:now.left,top:now.top});
         for(let tt of now.link.map)
         {
             if(tt[0]!=fa)
@@ -537,7 +538,7 @@ export default class vCanvas
         let vtmap = new Map();
         for(let tt of savePack.vertset)
         {
-            let circ = this.makeCircle({x:tt.left,y:tt.top},tt.id,this);
+            let circ = this.makeCircle({x:tt.left,y:tt.top},tt.id,this,tt.r);
             if(tt.id==0) {this.vRoot = circ;}
             if(tt.id==savePack.selectedvertid)
             {this.selectedVert = circ;circ.set({fill:'blue',stroke:'blue'});}
