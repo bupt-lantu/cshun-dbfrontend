@@ -38,7 +38,7 @@ export default class vCanvas
         this.SVGMap = new Map();
         this.history = new History();
         this.initCanvas();
-        if(savepack!=null){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
+        if(savepack){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
         else{this.renderMap();}
         this.changeStateTo("move"); 
         this.save();
@@ -91,6 +91,7 @@ export default class vCanvas
             this.mouseDown = true;
             this.freeDrawPth.length = 0;
             let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
+            now.selectable = false;
             now.addlk(this.vRoot,this.lineprop);this.add(now); this.renderAll();
             this.freeDrawPth.push(now);
             this.mousePos = e.pointer;
@@ -189,6 +190,7 @@ export default class vCanvas
             if(Math.abs(e.pointer.x-this.mousePos.x)>=20||Math.abs(e.pointer.y-this.mousePos.y)>=20)
             {
                 let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
+                now.selectable = false;
                 let pre = this.freeDrawPth[this.freeDrawPth.length-1];
                 this.add(now); now.addlk(pre,this.lineprop);
                 pre.draw();
@@ -447,7 +449,8 @@ export default class vCanvas
     }
     makeFreeCurve()
     {
-        if(this.freeDrawPth.length==1) this.remove(thsi.freeDrawPth[0]);
+        console.log(this.freeDrawPth.length);
+        if(this.freeDrawPth.length==1) {this.remove(this.freeDrawPth[0]);}
         if(this.freeDrawPth.length==2){return;}
         else
         {
