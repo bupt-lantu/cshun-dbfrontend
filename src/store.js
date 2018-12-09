@@ -8,8 +8,8 @@ export default new Vuex.Store({
       canvas:{},
       villagesInfo:[],
       villages:[],
-      villagers:{},
-      currentVillageId:'5beb02d356e9d72429351209',
+      villagers:[],
+      currentVillageId:'',
   },
 
   mutations: {
@@ -62,10 +62,11 @@ export default new Vuex.Store({
       });
     },
 
-    getVillagers(context){
-      axios.get(`village/${context.state.currentVillageId}?villagerInfo=true`).then((res) =>{
+    getVillagers(context,id){
+      axios.get(`village/${id}?villagerInfo=true`).then((res) =>{
         context.commit('setVillagers',res.data.villagers);
         context.commit('setCanvas',res.data.canvas);
+        context.commit('setCurrentVillageId',id);
       }).catch((err)=>{
         console.log(err);
       });
@@ -74,19 +75,36 @@ export default new Vuex.Store({
       context.commit('setCurrentVillageId',id);
     },
     updateVillager(context,payload){
-      // let postData={};
-      // postData.isInCanvas=isIn;
-      // axios.post('villager/${id}', postData)
-      //   .then(
-      //     response => {
-      //       context.commit('updateVillager',id,isIn);
-      //       console.log(response);
-      //     },
-      //     error => {
-      //       console.log(error);
-      //     }
-      // );
       context.commit('updateVillager',payload);
+    },
+    updateVillagerAll(context){
+      for(let villager of context.state.villagers){
+          let postData={};
+          postData.isInCanvas=villager.isInCanvas;
+          axios.post(`villager/${villager._id}`, postData)
+          .then(
+            () => {
+              // console.log(response);
+            },
+            error => {
+              // alert(error);
+              console.log(error);
+            }
+        );
+      }
+    },
+    sentCanvas(context,payload){
+      let postData={};
+      postData.canvas=payload;
+      axios.post(`village/${context.state.currentVillageId}`,postData)
+      .then(
+        ()=> { 
+              context.commit('setCanvas',payload); 
+            },
+        (error) => {
+            console.log(error);
+        }
+      );
     },
   }
 })

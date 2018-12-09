@@ -215,9 +215,6 @@ export default {
     }
   },
   created(){
-    this.$store.dispatch('getVillagers');
-  },
-  mounted(){
     bus.$on('showP',(id)=>{
         // let element=this.villagers.find((index) => index._id==id);
         // element.isInCanvas=true;
@@ -227,6 +224,10 @@ export default {
         // let element=this.villagers.find((index) => index._id==id);
         // element.isInCanvas=false;
         this.$store.dispatch('updateVillager',{ id, isIn:false});
+    });
+    bus.$on('save',(payload)=>{
+        this.$store.dispatch('sentCanvas',payload);
+        this.$store.dispatch('updateVillagerAll');
     });
   },
 

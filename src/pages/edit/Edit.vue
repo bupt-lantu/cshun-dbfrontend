@@ -11,7 +11,6 @@
 </template>
 
 <script>
-
 import EditTools from './components/Tools'
 import VillagerList from './components/VillagerList'
 import Cvs from './components/Cvs'
@@ -26,6 +25,9 @@ export default {
       EditTools: EditTools,
       VillagerList: VillagerList,
       Cvs: Cvs,
+  },
+  created(){
+    this.$store.dispatch('getVillagers',this.$route.params.id);
   },
   methods: {
     ChangeEditState () {

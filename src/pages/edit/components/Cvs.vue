@@ -115,6 +115,7 @@
 <script>
 import  vCanvas  from './cvs/vCanvas.js';
 import {bus} from '../../../bus.js'
+import { mapGetters } from 'vuex'
 var cvs;
 export default {
   name: 'Cvs',
@@ -203,6 +204,7 @@ export default {
     event.preventDefault();
     let p=this.canvasMousePos(this.$refs.canvas,event);
     let id = event.dataTransfer.getData("text");
+    alert(id); 
     let div=document.getElementById(id);
     let svg_xml=new XMLSerializer().serializeToString(div.childNodes[0]).toString();
     /*
@@ -274,6 +276,11 @@ export default {
         cvs.setLineProp("strokeWidth",val);
       },
   },
+  computed:{
+    ...mapGetters([
+      'canvas',
+    ]),
+  },
   mounted()
   {
       let wZoom = 0.9,hZoom = 0.9;
@@ -288,7 +295,8 @@ export default {
       let height = Math.round((document.body.clientHeight-40)*hZoom);
       document.getElementById('c').width = width;
       document.getElementById('c').height = height;
-      cvs = new vCanvas({x:width,y:height},'c');
+      cvs = new vCanvas({x:width,y:height},'c',this.canvas);
+      alert(cvs.toString());
       window.addEventListener('addSVG',function(event){
           bus.$emit('showP',event.detail.id);
       });
@@ -297,7 +305,10 @@ export default {
       });
       window.addEventListener('exportImg',()=>{
           this.exportImg();
-      })
+      });
+      window.addEventListener('saveToServer',(event)=>{
+          bus.$emit('save',event.detail.savePack);
+      });
   }
 }
 </script>

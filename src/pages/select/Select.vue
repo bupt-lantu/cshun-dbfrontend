@@ -35,7 +35,7 @@
         </v-flex>
         <!-- Header End -->
         <!-- Village Cards -->
-        <v-flex xs12 sm12 md6 my-3
+        <v-flex xs6 mt-3
         v-for="village in villagesInfo" 
         :key="village._id">
           <v-hover>
