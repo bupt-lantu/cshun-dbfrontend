@@ -18,6 +18,12 @@
                 选择 | 移动对象
             </v-btn>
             <v-btn
+                v-on:click="changeStateTo('freedraw');"
+                color="brown light-1"
+            >
+                自由绘制
+            </v-btn>
+            <v-btn
                 v-on:click="changeStateTo('addvert');"
                 color="brown light-1"
             >

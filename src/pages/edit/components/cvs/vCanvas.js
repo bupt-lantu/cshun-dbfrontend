@@ -30,6 +30,7 @@ export default class vCanvas
         this.selectedVert = this.vRoot;
         this.selectedVert2 = this.vRoot;
         this.counter = 0;
+        this.freeDrawPth = new Array();
         this.vis = new Set();
         this.vertSet = new Set();
         this.edgeSet = new Set();
@@ -37,12 +38,12 @@ export default class vCanvas
         this.SVGMap = new Map();
         this.history = new History();
         this.initCanvas();
-        if(savepack){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
+        if(savepack!=null){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
         else{this.renderMap();}
         this.changeStateTo("move"); 
         this.save();
     }
-    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore
+    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw
     {
         if(sta=="restore")
         {
@@ -50,7 +51,7 @@ export default class vCanvas
             return;
         }
         let objs = this.canvas.getObjects();
-        if(sta=="move")
+        if(sta=="move"||sta=="freedraw")
         {
             this.selectVert(this.vRoot);
             for(let tt of objs) 
@@ -82,6 +83,16 @@ export default class vCanvas
         if(this.state=="move")
         {
             this.mouseDown = true;
+            this.mousePos = e.pointer;
+            return;
+        }
+        if(this.state=="freedraw")
+        {
+            this.mouseDown = true;
+            this.freeDrawPth.length = 0;
+            let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
+            now.addlk(this.vRoot,this.lineprop);this.add(now); this.renderAll();
+            this.freeDrawPth.push(now);
             this.mousePos = e.pointer;
             return;
         }
@@ -155,25 +166,17 @@ export default class vCanvas
     }
     onMouseMove(e)
     {
-        if(this.mouseDown&&this.state=="move")
+        if(!this.mouseDown) return;
+        if(this.state=="move")
         {
             let det = {x: e.pointer.x-this.mousePos.x,y: e.pointer.y-this.mousePos.y};
             if(Math.abs(det.x)>10||Math.abs(det.y)>10)
             {
-                /*
-                this.mapProp.mapPos.x+=det.x;
-                if(this.mapProp.mapPos.x>0){this.mapProp.mapPos.x=0;}
-                else if(this.mapProp.mapPos.x<this.size.x-this.mapProp.mapSize.x){this.mapProp.mapPos.x=this.size.x-this.mapProp.mapSize.x;} 
-                this.mapProp.mapPos.y+=det.y;
-                if(this.mapProp.mapPos.y>0){this.mapProp.mapPos.y=0;}
-                else if(this.mapProp.mapPos.y<this.size.y-this.mapProp.mapSize.y){this.mapProp.mapPos.y=this.size.y-this.mapProp.mapSize.y;}
-                this.renderMap();
-                */
                 this.moveMap(det.x,det.y);
                 this.mousePos = e.pointer;
             }
         }
-        if(this.mouseDown&&this.state=="addvert")
+        else if(this.state=="addvert")
         {
             if(e.pointer.x<10){this.moveMap(5,0);}
             else if(e.pointer.x>this.size.x+10){this.moveMap(-5,0);}
@@ -181,30 +184,43 @@ export default class vCanvas
             else if(e.pointer.y>this.size.y+10){this.moveMap(0,-5);}
             console.log(e.pointer);
         }
+        else if(this.state=="freedraw")
+        {
+            if(Math.abs(e.pointer.x-this.mousePos.x)>=20||Math.abs(e.pointer.y-this.mousePos.y)>=20)
+            {
+                let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
+                let pre = this.freeDrawPth[this.freeDrawPth.length-1];
+                this.add(now); now.addlk(pre,this.lineprop);
+                pre.draw();
+                this.renderAll();
+                this.mousePos = e.pointer;
+                this.freeDrawPth.push(now);
+            }
+        }
     }
     onMouseUp(e)
     {
         if (this.state == "addvert") 
         {
             let c = this.makeCircle(e.pointer,++this.counter,this);
-            //c.linkVert(this.selectedVert,this.lineprop);
             c.addlk(this.selectedVert,this.lineprop);
             if(this.selectedVert!=this.vRoot) this.selectedVert.draw();
             this.add(c);
-            //this.renderAll();
             this.selectVert(c);
-            this.save();////////////////////////////////////////////////////////////////////
+            this.save();
             this.mouseDown = false;
-            return;
         }
-        if(this.state=="editvert"&&this.moveflag)
-        //if(this.state=="editvert"&&this.selectedVert!=this.vRoot&&this.moveflag)//////////////////////////////////////////////////////////
+        else if(this.state=="editvert"&&this.moveflag)
         {
             this.save();
             this.moveflag = false;
         }
-        else if(this.state=="move")
-        {this.mouseDown = false;}
+        else if(this.state=="move"){this.mouseDown = false;}
+        else if(this.state=="freedraw")
+        {
+            this.mouseDown = false;
+            this.makeFreeCurve();
+        }
     }
     selectVert(vert)
     {
@@ -232,13 +248,18 @@ export default class vCanvas
         }
         this.renderAll();
     }
-    removeEdge(v1,v2)
+    removeE(v1,v2)
     {
         let edg = v1.link.getEdge(v2);
-        if(edg==undefined) return;
+        if(edg==undefined) return false;
         this.remove(edg);
         v1.link.remove(v2);
         v2.link.remove(v1);
+        return true;
+    }
+    removeEdge(v1,v2)
+    {
+        if(!this.removeE(v1,v2)) return;
         if(!v1.link.checkLink()) 
         {
             this.vRoot.link.remove(v1);
@@ -340,7 +361,7 @@ export default class vCanvas
         let c = new fabric.Circle({
             left: pos.x,
             top: pos.y,
-            strokeWidth: 5,
+            strokeWidth: 0,
             radius: radius,
             fill: 'red',
             stroke: 'red',
@@ -424,6 +445,43 @@ export default class vCanvas
         };
         return ret;
     }
+    makeFreeCurve()
+    {
+        if(this.freeDrawPth.length==1) this.remove(thsi.freeDrawPth[0]);
+        if(this.freeDrawPth.length==2){return;}
+        else
+        {
+            let pre = this.freeDrawPth[0];
+            console.log(pre.id);
+            let x1,x2,y1,y2,i;
+            let eps = 0.985;
+            for(i=1;i<this.freeDrawPth.length-1;i++)
+            {
+                let now = this.freeDrawPth[i];
+                x1 = now.left - this.freeDrawPth[i-1].left;
+                y1 = now.top - this.freeDrawPth[i-1].top;
+                x2 = this.freeDrawPth[i+1].left - this.freeDrawPth[i-1].left;
+                y2 = this.freeDrawPth[i+1].top - this.freeDrawPth[i-1].top;
+                if((x1*x2+y1*y2)*(x1*x2+y1*y2)/((x1*x1+y1*y1)*(x2*x2+y2*y2))<eps)
+                {
+                    now.linkVert(pre,this.lineprop);
+                    pre.draw();
+                    pre = now;
+                }
+                else
+                {
+                    this.removeE(now,this.freeDrawPth[i-1]);
+                    this.removeE(now,this.freeDrawPth[i+1]);
+                    this.remove(now);
+                }
+            }
+            let now = this.freeDrawPth[i];
+            now.linkVert(pre,this.lineprop);
+            pre.draw();
+        }
+        this.renderAll();
+        this.save();
+    }
     initCanvas()
     {
         this.canvas = window.__canvas = new fabric.Canvas(this.name, { selection: false });
@@ -441,8 +499,6 @@ export default class vCanvas
             if(this.link.getEdge(vert)!=undefined) {this.cvs.remove(this.link.getEdge(vert));}
             else
             {
-                
-                console.log(vert);
                 this.addlk(vert,lineprop);
                 //this.link.add(vert,null);
                 //vert.link.add(this,null);
