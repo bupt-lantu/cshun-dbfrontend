@@ -38,7 +38,7 @@ export default class vCanvas
         this.SVGMap = new Map();
         this.history = new History();
         this.initCanvas();
-        if(savepack!=null){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
+        if(savepack){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
         else{this.renderMap();}
         this.changeStateTo("move"); 
         this.save();

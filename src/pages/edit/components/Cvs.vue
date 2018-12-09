@@ -171,7 +171,8 @@ export default {
         lineColor: "red",
         lineWidth: 5,
         strokeColor: "red",
-        strokeWidth: 1,
+        strokeWidth: 1
+        /*
         lineProp:{
             linetp: "curve",
             lineMode: "full",
@@ -180,6 +181,7 @@ export default {
             strokeColor: "red",
             strokeWidth: 1,
         }
+        */
     }
   },
   methods:{
@@ -306,6 +308,12 @@ export default {
       {
             let canvasStr=sessionStorage.getItem(`canvas${this.editId}`);
             cvs = new vCanvas({x:width,y:height},'c',canvasStr);
+            this.linetp=cvs.lineprop.linetp;
+            this.lineMode=cvs.lineprop.lineMode;
+            this.lineColor=cvs.lineprop.lineColor;
+            this.lineWidth=cvs.lineprop.lineWidth;
+            this.strokeColor=cvs.lineprop.strokeColor;
+            this.strokeWidth=cvs.lineprop.strokeWidth;
       }
         else
         {
