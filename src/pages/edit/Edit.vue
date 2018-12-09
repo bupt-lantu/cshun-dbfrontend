@@ -4,7 +4,7 @@
     dark
   > 
     <villager-list @CES = "ChangeEditState"></villager-list>
-    <cvs :EditBtn = "!isedit"></cvs>
+    <cvs :EditBtn = "!isedit" :editId="this.$route.params.id"></cvs>
     <edit-tools></edit-tools>
   
   </v-app>
@@ -25,9 +25,6 @@ export default {
       EditTools: EditTools,
       VillagerList: VillagerList,
       Cvs: Cvs,
-  },
-  created(){
-    this.$store.dispatch('getVillagers',this.$route.params.id);
   },
   methods: {
     ChangeEditState () {

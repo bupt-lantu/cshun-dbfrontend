@@ -98,7 +98,7 @@ export default {
       if(!val)
         return;
       this.search(val);
-    }
+    },  
   },
 
   methods: {

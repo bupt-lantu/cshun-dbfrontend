@@ -119,7 +119,7 @@ import { mapGetters } from 'vuex'
 var cvs;
 export default {
   name: 'Cvs',
-  props: ['EditBtn'],
+  props: ['EditBtn','editId'],
   data () {
     return {
         linetpOptions:[
@@ -204,7 +204,7 @@ export default {
     event.preventDefault();
     let p=this.canvasMousePos(this.$refs.canvas,event);
     let id = event.dataTransfer.getData("text");
-    alert(id); 
+    // alert(id); 
     let div=document.getElementById(id);
     let svg_xml=new XMLSerializer().serializeToString(div.childNodes[0]).toString();
     /*
@@ -276,11 +276,11 @@ export default {
         cvs.setLineProp("strokeWidth",val);
       },
   },
-  computed:{
-    ...mapGetters([
-      'canvas',
-    ]),
-  },
+//   computed:{
+//     ...mapGetters([
+//       'currentVillageId',
+//     ]),
+//   },
   mounted()
   {
       let wZoom = 0.9,hZoom = 0.9;
@@ -295,8 +295,18 @@ export default {
       let height = Math.round((document.body.clientHeight-40)*hZoom);
       document.getElementById('c').width = width;
       document.getElementById('c').height = height;
-      cvs = new vCanvas({x:width,y:height},'c',this.canvas);
-      alert(cvs.toString());
+      this.$store.dispatch('getVillagers',this.editId).then(()=>{
+      if(sessionStorage.getItem(`canvas${this.editId}`))
+      {
+            let canvasStr=sessionStorage.getItem(`canvas${this.editId}`);
+            cvs = new vCanvas({x:width,y:height},'c',canvasStr);
+      }
+        else
+        {
+            canvasStr="";
+            cvs = new vCanvas({x:width,y:height},'c',canvasStr);
+        }
+      });    
       window.addEventListener('addSVG',function(event){
           bus.$emit('showP',event.detail.id);
       });

@@ -5,17 +5,22 @@ axios.defaults.baseURL='https://dev.cshun.gaojianli.me/api';
 
 axios.interceptors.response.use(
     response => {
-        if(response.data.code && response.data.code===401)
-        {
-            alert(response.data.msg);
-            sessionStorage.removeItem('isLogin');
-            router.replace({
-                path: 'login',
-                query: {redirect: router.currentRoute.fullPath}
-            });
+         return response;
+    },
+    error => {
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                alert("请重新登录");
+                console.log(error);
+                sessionStorage.removeItem('isLogin');
+                router.replace({
+                    path: '/login',
+                    query: {redirect: router.currentRoute.fullPath}
+                });
+            }
         }
-        else
-            return response;
+        return Promise.reject(error.response.data)   // 返回接口返回的错误信息
     }
 );
 

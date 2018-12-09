@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-      canvas:{},
+      // canvas:'',
       villagesInfo:[],
       villages:[],
       villagers:[],
@@ -19,9 +19,9 @@ export default new Vuex.Store({
     setVillagers(state,obj){
       state.villagers=obj;
     },
-    setCanvas(state,obj){
-      state.canvas=obj;
-    },
+    // setCanvas(state,obj){
+    //   state.canvas=obj;
+    // },
     setCurrentVillageId(state,id){
       state.currentVillageId=id;
     },
@@ -45,9 +45,9 @@ export default new Vuex.Store({
     villagers(state){
       return state.villagers;
     },
-    canvas(state){
-      return state.canvas;
-    }
+    currentVillageId(state){
+      return state.currentVillageId;
+    },
   },
 
   actions: {
@@ -63,14 +63,22 @@ export default new Vuex.Store({
     },
 
     getVillagers(context,id){
-      axios.get(`village/${id}?villagerInfo=true`).then((res) =>{
+      context.commit('setCurrentVillageId',id);
+      // axios.get(`village/${id}?villagerInfo=true`).then((res) =>{
+      //   context.commit('setVillagers',res.data.villagers);
+      //   sessionStorage.setItem(`canvas${context.state.currentVillageId}`,res.data.canvas);
+      // }).catch((err)=>{
+      //   console.log(err);
+      // });
+      return new Promise(async (resolve, reject)=>{
+        // context.commit('setCurrentVillageId',id);
+        const res=await axios.get(`village/${id}?villagerInfo=true`);
+        if(!res)
+          reject();
         context.commit('setVillagers',res.data.villagers);
-        context.commit('setCanvas',res.data.canvas);
-        context.commit('setCurrentVillageId',id);
-      }).catch((err)=>{
-        console.log(err);
-      });
-    },
+        await sessionStorage.setItem(`canvas${context.state.currentVillageId}`,res.data.canvas);
+        resolve();
+      })},
     setCurrentVillageId(context,id){
       context.commit('setCurrentVillageId',id);
     },
@@ -99,7 +107,8 @@ export default new Vuex.Store({
       axios.post(`village/${context.state.currentVillageId}`,postData)
       .then(
         ()=> { 
-              context.commit('setCanvas',payload); 
+              // context.commit('setCanvas',payload); 
+              sessionStorage.setItem(`canvas${context.state.currentVillageId}`,payload);
             },
         (error) => {
             console.log(error);
