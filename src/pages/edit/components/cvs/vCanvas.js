@@ -104,6 +104,13 @@ export default class vCanvas
             else if(this.state == "remove")
             {
                 this.selectVert(c);
+                if(this.selectedVert!=this.vRoot && !this.selectedVert.link.checkLink()) 
+                {
+                    this.vRoot.link.remove(this.selectedVert);
+                    this.remove(this.selectedVert);
+                    this.selectVert(this.vRoot);
+                    return;
+                }
                 if(this.selectedVert==this.vRoot||this.selectedVert2==this.vRoot) return;
                 this.removeEdge(this.selectedVert,this.selectedVert2);
                 this.selectVert(this.vRoot);// the render instruction is included in the select method
