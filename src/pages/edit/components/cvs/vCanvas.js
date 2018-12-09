@@ -78,7 +78,7 @@ export default class vCanvas
     }
     onClk(e) 
     {
-        if(this.state == "addvert") return;
+        if(this.state == "addvert") {this.mouseDown = true;return;}
         if(this.state=="move")
         {
             this.mouseDown = true;
@@ -129,14 +129,28 @@ export default class vCanvas
         let p = e.target;
         if(p instanceof fabric.Circle)
         {
-            p.draw();
-            this.renderAll();
+            if(p.left<10||p.left>this.size.x+10||p.top<10||p.top>this.size.y+10)
+            {
+                if(p.left<10){p.left+=3;p.draw();this.moveMap(5,0);}
+                else if(p.left>this.size.x+10){p.left-=3;p.draw();this.moveMap(-5,0);}
+                if(p.top<10){p.top+=3;p.draw();this.moveMap(0,5);}
+                else if(p.top>this.size.y+10){p.top-=3;p.draw();this.moveMap(0,-5);}
+            }   
+            else
+            {
+                p.draw();
+                this.renderAll();
+            }
             this.moveflag = true;
         }
         else if(p.isSVG)
         {
             this.moveflag=true;
             p.rlPos = {x: p.left-this.mapProp.mapPos.x,y: p.top-this.mapProp.mapPos.y};
+            if(p.left<10){p.left+=3;this.moveMap(5,0);}
+            else if(p.left>this.size.x+10){p.left-=3;this.moveMap(-5,0);}
+            if(p.top<10){p.top+=3;this.moveMap(0,5);}
+            else if(p.top>this.size.y+10){p.top-=3;this.moveMap(0,-5);}
         }
     }
     onMouseMove(e)
@@ -146,6 +160,7 @@ export default class vCanvas
             let det = {x: e.pointer.x-this.mousePos.x,y: e.pointer.y-this.mousePos.y};
             if(Math.abs(det.x)>10||Math.abs(det.y)>10)
             {
+                /*
                 this.mapProp.mapPos.x+=det.x;
                 if(this.mapProp.mapPos.x>0){this.mapProp.mapPos.x=0;}
                 else if(this.mapProp.mapPos.x<this.size.x-this.mapProp.mapSize.x){this.mapProp.mapPos.x=this.size.x-this.mapProp.mapSize.x;} 
@@ -153,8 +168,18 @@ export default class vCanvas
                 if(this.mapProp.mapPos.y>0){this.mapProp.mapPos.y=0;}
                 else if(this.mapProp.mapPos.y<this.size.y-this.mapProp.mapSize.y){this.mapProp.mapPos.y=this.size.y-this.mapProp.mapSize.y;}
                 this.renderMap();
+                */
+                this.moveMap(det.x,det.y);
                 this.mousePos = e.pointer;
             }
+        }
+        if(this.mouseDown&&this.state=="addvert")
+        {
+            if(e.pointer.x<10){this.moveMap(5,0);}
+            else if(e.pointer.x>this.size.x+10){this.moveMap(-5,0);}
+            if(e.pointer.y<10){this.moveMap(0,5);}
+            else if(e.pointer.y>this.size.y+10){this.moveMap(0,-5);}
+            console.log(e.pointer);
         }
     }
     onMouseUp(e)
@@ -169,6 +194,7 @@ export default class vCanvas
             //this.renderAll();
             this.selectVert(c);
             this.save();////////////////////////////////////////////////////////////////////
+            this.mouseDown = false;
             return;
         }
         if(this.state=="editvert"&&this.moveflag)
@@ -232,6 +258,12 @@ export default class vCanvas
     {
         this.canvas.renderAll();
     }
+    moveMap(x,y)
+    {
+        this.mapProp.mapPos.x+=x;
+        this.mapProp.mapPos.y+=y;
+        this.renderMap();
+    }
     renderMap()// calculate the relative position
     {
         let objs = this.canvas.getObjects();
@@ -239,13 +271,17 @@ export default class vCanvas
         {
             tt.left = this.mapProp.mapPos.x+tt.rlPos.x;
             tt.top = this.mapProp.mapPos.y+tt.rlPos.y;
+            tt.setCoords();
         }
+        this.canvas.renderAll();
+        /*
         this.canvas.setBackgroundImage(this.mapProp.mapSrc, this.canvas.renderAll.bind(this.canvas), {
             left: this.mapProp.mapPos.x,
             top: this.mapProp.mapPos.y,
             originX: 'left',
             originY: 'top'
         });
+        */
     }
     createSVG(str,pos,id,save=true,SVGprop=null)
     {
