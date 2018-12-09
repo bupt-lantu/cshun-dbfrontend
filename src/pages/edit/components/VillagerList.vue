@@ -24,7 +24,7 @@
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
               <template v-if="(index-'0')%6==0">
-                <svg width="100%" height="100%" version="1.1"
+                <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:green;stroke:blue;
@@ -35,8 +35,8 @@
                   </text>
                 </svg>
               </template>
-              <template v-else-if="(index-'0')%6==1">
-                <svg width="100%" height="100%" version="1.1"
+              <template v-else-if="(index-'0')%6==1" flat>
+                <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:green;stroke:blue;
@@ -48,7 +48,7 @@
                 </svg>
               </template>
               <template v-else-if="(index-'0')%6==2">
-                <svg width="100%" height="100%" version="1.1"
+                <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:yellow;stroke:black;
@@ -60,7 +60,7 @@
                 </svg>
               </template>
               <template v-else-if="(index-'0')%6==3">
-                <svg width="100%" height="100%" version="1.1"
+                <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:orange;stroke:brown;
@@ -72,7 +72,7 @@
                 </svg>
               </template>
               <template v-else-if="(index-'0')%6==4">
-                <svg width="100%" height="100%" version="1.1"
+                <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:red;stroke:brown;
@@ -84,7 +84,7 @@
                 </svg>
               </template>
               <template v-else-if="(index-'0')%6==5">
-                <svg width="100%" height="100%" version="1.1"
+                <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:#8BC34A;stroke:brown;
@@ -96,7 +96,11 @@
                 </svg>
               </template>
             </v-list-tile-action>
-            <v-list-tile-title v-text="item.name"></v-list-tile-title>
+            <v-spacer></v-spacer>
+            <!-- <v-list-tile-title v-text="item.name"></v-list-tile-title> -->
+            <v-list-tile-title>
+              {{"&emsp;&emsp;&emsp;"+item.name}}
+            </v-list-tile-title>
           </v-list-tile>
         </v-list>
         <v-list-tile class="mt-3">
