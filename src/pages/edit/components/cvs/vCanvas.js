@@ -187,7 +187,7 @@ export default class vCanvas
         }
         else if(this.state=="freedraw")
         {
-            if(Math.abs(e.pointer.x-this.mousePos.x)>=20||Math.abs(e.pointer.y-this.mousePos.y)>=20)
+            if(Math.abs(e.pointer.x-this.mousePos.x)>=30||Math.abs(e.pointer.y-this.mousePos.y)>=30)
             {
                 let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
                 now.selectable = false;
@@ -221,7 +221,7 @@ export default class vCanvas
         else if(this.state=="freedraw")
         {
             this.mouseDown = false;
-            this.makeFreeCurve();
+            //this.makeFreeCurve();
         }
     }
     selectVert(vert)
