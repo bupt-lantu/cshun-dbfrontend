@@ -42,7 +42,7 @@
             <v-card 
             slot-scope="{ hover }"
             class="village-card"
-            @click.native="select(village._id)">
+            @click.native="select(village._id,village.name)">
               <v-card-title primary-title 
               class="village-title"
               :class="{ titleHovered: hover }">
@@ -79,7 +79,7 @@ export default {
     return {
       keyword: "",
       // villages: [],
-      selectedName: "",
+      selectedName: ""
       // villagesInfo: []
     };
   },
@@ -104,8 +104,9 @@ export default {
   methods: {
     //select a village and jump to its edit page
     //@params: {string} 'villageId' for redirect
-    select: function(villageId) {
+    select: function(villageId,villageName) {
       this.$store.dispatch('setCurrentVillageId',villageId);
+      this.$store.dispatch('setCurrentVillageName',villageName);
       this.$router.push({ name: 'edit', params: { id: villageId}});
     },
 

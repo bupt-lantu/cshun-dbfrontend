@@ -7,16 +7,6 @@
       app
     >
       <v-list dense>
-        <v-list-tile v-for="item in items" :key="item.text" @click="goBackToSelect">
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>
-              {{ item.text }}
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
         <v-subheader class="mt-3 grey--text text--darken-1">
           村户详细信息
         </v-subheader>
@@ -128,12 +118,24 @@
       clipped-left
       app
     >
+      <v-list-tile v-for="item in items" :key="item.text" @click="goBackToSelect">
+        <v-list-tile-action>
+          <v-icon>{{ item.icon }}</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ item.text }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       <v-toolbar-side-icon @click.stop="drawer = !drawer">
         <v-icon v-if="drawer" large>keyboard_arrow_up</v-icon>
         <v-icon v-else large>keyboard_arrow_down</v-icon>
       </v-toolbar-side-icon>
       <v-toolbar-title class="mr-5 align-center">
-        <span class="title">可视化数据库编辑页</span>
+        <span class="title">
+          {{currentVillageName}}
+        </span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-layout row align-center style="max-width: 650px">
@@ -194,6 +196,7 @@ export default {
   computed:{
     ...mapGetters([
       'villagers',
+      'currentVillageName',
     ]),
   },
   props: {

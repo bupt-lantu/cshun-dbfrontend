@@ -10,6 +10,7 @@ export default new Vuex.Store({
       villages:[],
       villagers:[],
       currentVillageId:'',
+      currentVillageName:''
   },
 
   mutations: {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     // },
     setCurrentVillageId(state,id){
       state.currentVillageId=id;
+    },
+    setCurrentVillageName(state,name){
+      state.currentVillageName=name;
     },
     updateVillager(state,payload){
       let tmp=[...state.villagers];
@@ -48,6 +52,9 @@ export default new Vuex.Store({
     currentVillageId(state){
       return state.currentVillageId;
     },
+    currentVillageName(state){
+      return state.currentVillageName;
+    }
   },
 
   actions: {
@@ -81,6 +88,9 @@ export default new Vuex.Store({
       })},
     setCurrentVillageId(context,id){
       context.commit('setCurrentVillageId',id);
+    },
+    setCurrentVillageName(context,name){
+      context.commit('setCurrentVillageName',name);
     },
     updateVillager(context,payload){
       context.commit('updateVillager',payload);
