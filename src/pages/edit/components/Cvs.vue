@@ -243,6 +243,7 @@ export default {
     save()
     {
         cvs.saveToServer();
+        alert("保存成功");
     },
     exportImg()
     {
