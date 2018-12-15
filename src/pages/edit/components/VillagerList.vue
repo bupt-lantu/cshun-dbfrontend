@@ -1,5 +1,12 @@
 <template>
   <v-content>
+    <v-alert
+      v-model="alert"
+      dismissible
+      type="success"
+    >
+      保存成功！
+    </v-alert>
     <v-navigation-drawer
       v-model="drawer"
       fixed
@@ -172,11 +179,13 @@
 <script>
 import {bus} from '../../../bus.js'
 import { mapGetters } from 'vuex'
+import { throws } from 'assert';
 // import vCanvas  from './cvs/vCanvas.js';
 // import cvs from '../Cvs'
 export default {
   name: 'VillagerList',
   data: () => ({
+    alert:false, 
     tool: false,
     drawer: false,
     items: [
@@ -236,6 +245,7 @@ export default {
     bus.$on('save',(payload)=>{
         this.$store.dispatch('sentCanvas',payload);
         this.$store.dispatch('updateVillagerAll');
+        this.alert=true;
     });
   },
 
