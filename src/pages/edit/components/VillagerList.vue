@@ -217,8 +217,9 @@ export default {
     },
     ExportImg()
     {
-      let exportImgEvent = new Event("exportImg");
-      window.dispatchEvent(exportImgEvent);
+      // let exportImgEvent bus.$emit('save',event.detail.savePack);= new Event("exportImg");
+      // window.dispatchEvent(exportImgEvent);
+      bus.$emit('exportImg');
     }
   },
   created(){

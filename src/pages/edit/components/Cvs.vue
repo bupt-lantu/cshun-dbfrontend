@@ -318,22 +318,25 @@ export default {
       }
         else
         {
-            canvasStr="";
+            let canvasStr="";
             cvs = new vCanvas({x:width,y:height},'c',canvasStr);
         }
       });    
-      window.addEventListener('addSVG',function(event){
-          bus.$emit('showP',event.detail.id);
-      });
-      window.addEventListener('removeSVG',function(event){
-          bus.$emit('removeP',event.detail.id);
-      });
-      window.addEventListener('exportImg',()=>{
-          this.exportImg();
-      });
-      window.addEventListener('saveToServer',(event)=>{
-          bus.$emit('save',event.detail.savePack);
-      });
+    //   window.addEventListener('addSVG',function(event){
+    //       bus.$emit('showP',event.detail.id);
+    //   });
+    //   window.addEventListener('removeSVG',function(event){
+    //       bus.$emit('removeP',event.detail.id);
+    //   });
+    //   window.addEventListener('exportImg',()=>{
+    //       this.exportImg();
+    //   });
+        bus.$on('exportImg',()=>{
+            this.exportImg();
+        });
+    //   window.addEventListener('saveToServer',(event)=>{
+    //       bus.$emit('save',event.detail.savePack);
+    //   });
   }
 }
 </script>

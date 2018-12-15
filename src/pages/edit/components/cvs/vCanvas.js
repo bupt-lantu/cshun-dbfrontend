@@ -1,6 +1,7 @@
 import MP from './ds';
 import { fabric } from 'fabric';
 import History from './history';
+import { bus } from '../../../../bus.js'
 export default class vCanvas
 {
     constructor(siz,name,savepack=null,mapprop=null)
@@ -329,8 +330,9 @@ export default class vCanvas
     addSVG(obj,id,save=true)
     {
         this.SVGMap.set(parseInt(id),obj);
-        let addSVGEvent = new CustomEvent('addSVG',{detail:{id: this.SVGIdArray[id-1]}});
-        window.dispatchEvent(addSVGEvent);
+        // let addSVGEvent = new CustomEvent('addSVG',{detail:{id: this.SVGIdArray[id-1]}});
+        // window.dispatchEvent(addSVGEvent);
+        bus.$emit('showP',id);
         this.add(obj);
         if(save){this.save(id);}
     }
@@ -346,8 +348,9 @@ export default class vCanvas
             this.canvas.remove(obj);
             if(obj.isSVG)
             {
-                let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[obj.id-1]}});
-                window.dispatchEvent(removeSVGEvent);
+                // let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[obj.id-1]}});
+                // window.dispatchEvent(removeSVGEvent);
+                bus.$emit('removeP',this.SVGIdArray[obj.id-1]);
                 this.SVGMap.delete(parseInt(obj.id));
                 if(save) this.save(-obj.id);
             }
@@ -592,8 +595,9 @@ export default class vCanvas
     {
         let savePack = this.save(0,false);
         //let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:this.history.getTop()}});
-        let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:savePack}});
-        window.dispatchEvent(saveEvent);
+        // let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:savePack}});
+        // window.dispatchEvent(saveEvent);
+        bus.$emit('save',savePack);
     }
     export()
     {
@@ -607,8 +611,9 @@ export default class vCanvas
         let id = parseInt(this.history.getTopSVGid());
         if(id>0)
         {
-            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[id-1]}});
-            window.dispatchEvent(removeSVGEvent);
+            // let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[id-1]}});
+            // window.dispatchEvent(removeSVGEvent);
+            bus.$emit('removeP',this.SVGIdArray[id-1]);
         }
         this.restore(this.history.undo());
     }
@@ -619,8 +624,9 @@ export default class vCanvas
         let id = parseInt(this.history.getTopSVGid());
         if(id<0)
         {
-            let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[-id-1]}});
-            window.dispatchEvent(removeSVGEvent);
+            // let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[-id-1]}});
+            // window.dispatchEvent(removeSVGEvent);
+            bus.$emit('removeP',this.SVGIdArray[id-1]);
         }
         this.restore(src);
     }
