@@ -10,7 +10,25 @@
           <v-layout row wrap justify-space-between>
             <v-flex xs12 sm4 md3>
               <v-card-title>
-                <h1>村落选择</h1>
+                  <v-form ref="form">
+                    <v-select 
+                      :items="item1s"
+                      v-model="select1"
+                      label="选择镇"
+                      required
+                      :rules="[v => !!v || '请选择镇']"
+                    >
+                    </v-select>
+                      <v-select 
+                      :items="item2s"
+                      v-model="select2"
+                      label="选择村"
+                      required
+                      :rules="[v => !!v || '请选择村']"
+                    >
+                    </v-select>
+                    <v-btn class="mx-0 px-0 text-xs-center" @click="submit">确定</v-btn>
+                  </v-form>
               </v-card-title>
             </v-flex>
             <!-- Search Field -->
@@ -79,8 +97,12 @@ export default {
     return {
       keyword: "",
       // villages: [],
-      selectedName: ""
+      selectedName: "",
       // villagesInfo: []
+      item1s:['大王镇','小王镇','双王镇'],
+      item2s:['大王村','小王村','双王村'],
+      select1:'',
+      select2:'',
     };
   },
   computed:{
@@ -100,7 +122,6 @@ export default {
       this.search(val);
     },  
   },
-
   methods: {
     //select a village and jump to its edit page
     //@params: {string} 'villageId' for redirect
@@ -109,7 +130,6 @@ export default {
       this.$store.dispatch('setCurrentVillageName',villageName);
       this.$router.push({ name: 'edit', params: { id: villageId}});
     },
-
     //search for a village's id according to 'key'
     //@params: {string} 'key' village's name for searching
     search: function(key) {
@@ -118,11 +138,15 @@ export default {
       for(const village of this.villagesInfo)
         if(key == village.name)
           this.select(village._id);
-    }
+    },
+    submit(){
+      if(this.$refs.form.validate()) {
+        alert('dsada');
+      }
   }
 }
+}
 </script>
-
 
 <style scoped>
 h1 {

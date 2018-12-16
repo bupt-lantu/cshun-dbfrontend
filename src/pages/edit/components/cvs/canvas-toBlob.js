@@ -16,7 +16,7 @@
 (function(view) {
 "use strict";
 var
-	  Uint8Array = view.Uint8Array
+	Uint8Array = view.Uint8Array
 	, HTMLCanvasElement = view.HTMLCanvasElement
 	, canvas_proto = HTMLCanvasElement && HTMLCanvasElement.prototype
 	, is_base64_regex = /\s*;\s*base64\s*(?:;|$)/i
