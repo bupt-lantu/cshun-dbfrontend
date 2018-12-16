@@ -83,6 +83,8 @@ export default new Vuex.Store({
         if(!res)
           reject();
         context.commit('setVillagers',res.data.villagers);
+        context.commit('setCurrentVillageName',res.data.name);
+        console.log(res);
         await sessionStorage.setItem(`canvas${context.state.currentVillageId}`,res.data.canvas);
         resolve();
       })},
