@@ -30,6 +30,7 @@ export default class vCanvas
         };
         this.selectedVert = this.vRoot;
         this.selectedVert2 = this.vRoot;
+        this.selectedEdge = null;
         this.counter = 0;
         this.freeDrawPth = new Array();
         this.vis = new Set();
@@ -51,6 +52,7 @@ export default class vCanvas
             this.state = sta;
             return;
         }
+        if(sta!=this.state)this.selectEdge(null);
         let objs = this.canvas.getObjects();
         if(sta=="move"||sta=="freedraw")
         {
@@ -76,7 +78,17 @@ export default class vCanvas
     }
     setLineProp(name,prop)
     {
-        this.lineprop[name] = prop;
+        if(this.selectedEdge==null){this.lineprop[name] = prop;}
+        else
+        {
+            if(this.selectedEdge.lineprop[name]!=prop)
+            {
+                this.selectedEdge.lineprop[name]=prop;
+                this.selectedEdge.p1.linkVert(this.selectedEdge.p2,this.selectedEdge.lineprop);
+                this.renderAll();
+                this.save();
+            } 
+        }
     }
     onClk(e) 
     {
@@ -99,11 +111,19 @@ export default class vCanvas
             return;
         }
         let c = e.target;
-        if(c==null) {this.selectVert(this.vRoot);return;}
+        if(c==null) 
+        {
+            this.selectVert(this.vRoot);
+            this.selectEdge(null);
+            return;
+        }
         if(c instanceof fabric.Circle)
         {
             if (this.state == "editvert") 
-            {this.selectVert(c);}
+            {
+                this.selectVert(c);
+                this.selectEdge(null);
+            }
             else if(this.state=="connect")
             {
                 this.selectVert(c);
@@ -132,9 +152,9 @@ export default class vCanvas
         }
         else
         {
+            if(this.state=="editvert"&&c.lineprop){this.selectEdge(c);}
+            if(this.state=="remove"&&c.isSVG){this.remove(c);}
             this.selectVert(this.vRoot);
-            if(this.state=="remove"&&c.isSVG)
-            {this.remove(c);}
         }
     }
     onMove(e) 
@@ -184,7 +204,6 @@ export default class vCanvas
             else if(e.pointer.x>this.size.x+10){this.moveMap(-5,0);}
             if(e.pointer.y<10){this.moveMap(0,5);}
             else if(e.pointer.y>this.size.y+10){this.moveMap(0,-5);}
-            console.log(e.pointer);
         }
         else if(this.state=="freedraw")
         {
@@ -250,6 +269,22 @@ export default class vCanvas
             this.selectedVert.set({fill:'blue',stroke:'blue'});
         }
         this.renderAll();
+    }
+    selectEdge(edge)
+    {
+        if(this.selectedEdge!=null)
+        {
+            this.selectedEdge.p1.set({fill:'red',stroke:'red'});
+            this.selectedEdge.p2.set({fill:'red',stroke:'red'});
+        }
+        if(edge==null){bus.$emit('selectEdge',this.lineprop);}
+        else
+        {
+            bus.$emit('selectEdge',edge.lineprop);
+            edge.p1.set({fill:'blue',stroke:'blue'});
+            edge.p2.set({fill:'blue',stroke:'blue'});
+        }
+        this.selectedEdge = edge;
     }
     removeE(v1,v2)
     {
@@ -332,7 +367,7 @@ export default class vCanvas
         this.SVGMap.set(parseInt(id),obj);
         // let addSVGEvent = new CustomEvent('addSVG',{detail:{id: this.SVGIdArray[id-1]}});
         // window.dispatchEvent(addSVGEvent);
-        bus.$emit('showP',id);
+        bus.$emit('showP',this.SVGIdArray[id-1]);
         this.add(obj);
         if(save){this.save(id);}
     }
@@ -400,6 +435,7 @@ export default class vCanvas
                         lineColor: lineprop.lineColor, lineWidth: lineprop.lineWidth,
                         strokeColor: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth,
                     };
+        ret.p1 = p1; ret.p2 = p2;
         return ret;
     }
     makeCurve(p1,p2,p3,p4,tension,lineprop)
@@ -448,17 +484,16 @@ export default class vCanvas
             lineColor: lineprop.lineColor, lineWidth: lineprop.lineWidth,
             strokeColor: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth,
         };
+        ret.p1 = p2;ret.p2 = p3;
         return ret;
     }
     makeFreeCurve()
     {
-        console.log(this.freeDrawPth.length);
         if(this.freeDrawPth.length==1) {this.remove(this.freeDrawPth[0]);}
         if(this.freeDrawPth.length==2){return;}
         else
         {
             let pre = this.freeDrawPth[0];
-            console.log(pre.id);
             let x1,x2,y1,y2,i;
             let eps = 0.985;
             for(i=1;i<this.freeDrawPth.length-1;i++)
@@ -498,7 +533,6 @@ export default class vCanvas
                 strokeColor: lineprop.strokeColor, strokeWidth: lineprop.strokeWidth,
             };
             let edg = {lineprop: lp};
-            //console.log(vert);
             this.link.add(vert,edg); vert.link.add(this,edg);
         }
         fabric.Circle.prototype.linkVert = function(vert,lineprop){
@@ -536,10 +570,12 @@ export default class vCanvas
     }
     resize(siz)
     {
+        let sta = this.state;
         this.canvas.dispose();
         this.size = siz;
         this.initCanvas();
         this.restore(this.history.getTop());
+        this.changeStateTo(sta);
     }
     dfs(now,fa)
     {
@@ -626,7 +662,7 @@ export default class vCanvas
         {
             // let removeSVGEvent = new CustomEvent('removeSVG',{detail:{id: this.SVGIdArray[-id-1]}});
             // window.dispatchEvent(removeSVGEvent);
-            bus.$emit('removeP',this.SVGIdArray[id-1]);
+            bus.$emit('removeP',this.SVGIdArray[-id-1]);
         }
         this.restore(src);
     }

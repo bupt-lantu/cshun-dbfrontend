@@ -334,6 +334,14 @@ export default {
         bus.$on('exportImg',()=>{
             this.exportImg();
         });
+        bus.$on('selectEdge',(e)=>{
+            this.linetp=e.linetp;
+            this.lineMode=e.lineMode;
+            this.lineColor=e.lineColor;
+            this.lineWidth=e.lineWidth;
+            this.strokeColor=e.strokeColor;
+            this.strokeWidth=e.strokeWidth;
+        });
     //   window.addEventListener('saveToServer',(event)=>{
     //       bus.$emit('save',event.detail.savePack);
     //   });
