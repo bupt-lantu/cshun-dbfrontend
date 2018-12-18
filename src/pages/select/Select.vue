@@ -12,16 +12,16 @@
               <v-card-title>
                   <v-form ref="form">
                     <v-select 
-                      :items="item1s"
-                      v-model="select1"
+                      :items="townsArr"
+                      v-model="selectTown"
                       label="选择镇"
                       required
                       :rules="[v => !!v || '请选择镇']"
                     >
                     </v-select>
                       <v-select 
-                      :items="item2s"
-                      v-model="select2"
+                      :items="bigvillagesArr"
+                      v-model="selectBigvillage"
                       label="选择村"
                       required
                       :rules="[v => !!v || '请选择村']"
@@ -99,20 +99,25 @@ export default {
       // villages: [],
       selectedName: "",
       // villagesInfo: []
-      item1s:['大王镇','小王镇','双王镇'],
+      // item1s:['大王镇','小王镇','双王镇'],
       item2s:['大王村','小王村','双王村'],
-      select1:'',
-      select2:'',
+      selectTown:'',
+      selectBigvillage:'',
     };
   },
   computed:{
     ...mapGetters([
       'villagesInfo',
-      'villages'
+      'villages',
+      'towns',
+      'townsArr',
+      'bigvillagesArr',
+      'bigvillages'
     ]),
   },
-  mounted(){
-      this.$store.dispatch('getVillagesInfo');
+  created(){
+      // this.$store.dispatch('getVillagesInfo');
+      this.$store.dispatch('getTowns');
     },
 
   watch: {
@@ -120,7 +125,13 @@ export default {
       if(!val)
         return;
       this.search(val);
-    },  
+    },
+    selectTown:function(val){
+      if(!val)
+        return;
+      let town=this.towns.find((obj) => obj.name===val);
+      this.$store.dispatch('getBigvillages',town._id);
+    },
   },
   methods: {
     //select a village and jump to its edit page
@@ -141,7 +152,9 @@ export default {
     },
     submit(){
       if(this.$refs.form.validate()) {
-        alert('dsada');
+         let bigvillage=this.bigvillages.find((obj) => obj.name===this.selectBigvillage);
+        //  alert(bigvillage.name);
+         this.$store.dispatch('getVillagesInfo',bigvillage.gumis);
       }
   }
 }

@@ -10,7 +10,13 @@ export default new Vuex.Store({
       villages:[],
       villagers:[],
       currentVillageId:'',
-      currentVillageName:''
+      currentVillageName:'',
+      towns:[],
+      townsArr:[],
+      currentTown:'',
+      bigvillages:[],
+      bigvillagesArr:[],
+      currentBigvillage:''
   },
 
   mutations: {
@@ -36,6 +42,26 @@ export default new Vuex.Store({
       state.villagers=[...tmp];
       // let ele=state.villagers.find((obj)=> obj._id==payload.id);
       // ele.isInCanvas=payload.isIn;
+    },
+    setTowns(state,payload){
+      state.towns=payload;
+    },
+    setTownsArr(state,payload){
+      for(let town of payload){
+        state.townsArr.push(town.name);
+      }
+    },
+    setCurrentTown(state,payload){
+      state.currentTown=payload;
+    },
+    setBigvillages(state,payload){
+      state.bigvillages=payload;
+    },
+    setBigvillagesArr(state,payload){
+      state.bigvillagesArr=payload;
+    },
+    setCurrentBigvillage(state,payload){
+      state.currentBigvillage=payload;
     }
   },
 
@@ -54,18 +80,37 @@ export default new Vuex.Store({
     },
     currentVillageName(state){
       return state.currentVillageName;
+    },
+    towns(state){
+      return state.towns;
+    },
+    townsArr(state){
+      return state.townsArr;
+    },
+    currentTown(state){
+      return state.currentTown;
+    },
+    bigvillages(state){
+      return state.bigvillages;
+    },
+    bigvillagesArr(state){
+      return state.bigvillagesArr;
+    },
+    currentBigvillage(state){
+      return state.bigvillages;
     }
   },
 
   actions: {
-    getVillagesInfo(context){
-      axios.get('village').then((res) =>{
-        context.commit('setVillagesInfo',res.data.list);
-        context.state.villages=[];
-        for(let obj of res.data.list)
-          context.state.villages.push(obj.name);
-      }).catch((err)=>{
-        console.log(err);
+    getVillagesInfo(context,payload){
+      payload.map((xid)=>{
+        axios.get(`village/${xid}`).then((res) =>{
+          // context.commit('setVillagesInfo',res.data.list);
+          context.state.villagesInfo.push(res.data);
+          context.state.villages.push(res.data.name);
+        }).catch((err)=>{
+          console.log(err);
+        });
       });
     },
 
@@ -127,5 +172,35 @@ export default new Vuex.Store({
         }
       );
     },
+    getTowns(context){
+      axios.get(`towns`).then((res) => {
+        context.commit('setTowns',res.data.list);
+        context.commit('setTownsArr',res.data.list);
+      })
+    },
+    getBigvillages(context,id){
+      axios.get(`towns/${id}`).then((res) => {
+        let bigvillages=res.data.info.villages;
+        let tmpArr=[];
+        let tmp=[];
+        bigvillages.map((xid) => {
+            axios.get(`bigvillage/${xid}`).then(
+            (res)=>{
+              tmpArr.push(res.data.info.name);
+              let tmpData={};
+              tmpData.id=xid;
+              tmpData.name=res.data.info.name;
+              tmpData.gumis=res.data.info.gumis;
+              tmp.push(tmpData);
+             },
+            (err)=>{
+              console.log(err);
+            }
+          );
+        });
+        context.commit('setBigvillagesArr',tmpArr);
+        context.commit('setBigvillages',tmp);
+      })
+    }
   }
 })

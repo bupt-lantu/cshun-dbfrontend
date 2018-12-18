@@ -91,7 +91,6 @@ export default {
         this.$Http.post('login', postdata)
         .then(
           response => {
-            console.log("Get Response");
             console.log(response);
             sessionStorage.setItem('isLogin', true);
             this.$router.push({ name: 'select'});
