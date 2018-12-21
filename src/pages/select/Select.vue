@@ -153,7 +153,7 @@ export default {
     submit(){
       if(this.$refs.form.validate()) {
          let bigvillage=this.bigvillages.find((obj) => obj.name===this.selectBigvillage);
-        //  alert(bigvillage.name);
+         this.$store.dispatch('setCurrentBigvillage',this.selectBigvillage);
          this.$store.dispatch('getVillagesInfo',bigvillage.gumis);
       }
   }

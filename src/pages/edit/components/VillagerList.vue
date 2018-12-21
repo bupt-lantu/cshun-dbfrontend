@@ -141,7 +141,7 @@
       </v-toolbar-side-icon>
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">
-          {{currentVillageName}}
+         <span class="grey--text text--darken-4 px-0 mx-0">{{currentTown}}</span>/<span class="grey--text text--darken-3 px-0 mx-0">{{currentBigvillage}}</span>/{{currentVillageName}}
         </span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -206,7 +206,15 @@ export default {
     ...mapGetters([
       'villagers',
       'currentVillageName',
+      // 'currentTown',
+      // 'currentBigvillage'
     ]),
+    currentTown(){
+      return sessionStorage.getItem('CT');
+    },
+    currentBigvillage(){
+      return sessionStorage.getItem('CB');
+    },
   },
   props: {
     source: String,

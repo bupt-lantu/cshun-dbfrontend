@@ -47,12 +47,14 @@ export default new Vuex.Store({
       state.towns=payload;
     },
     setTownsArr(state,payload){
+      state.townsArr=[];
       for(let town of payload){
         state.townsArr.push(town.name);
       }
     },
     setCurrentTown(state,payload){
       state.currentTown=payload;
+      sessionStorage.setItem('CT',payload);
     },
     setBigvillages(state,payload){
       state.bigvillages=payload;
@@ -62,6 +64,7 @@ export default new Vuex.Store({
     },
     setCurrentBigvillage(state,payload){
       state.currentBigvillage=payload;
+      sessionStorage.setItem('CB',payload);
     }
   },
 
@@ -97,7 +100,7 @@ export default new Vuex.Store({
       return state.bigvillagesArr;
     },
     currentBigvillage(state){
-      return state.bigvillages;
+      return state.currentBigvillage;
     }
   },
 
@@ -180,6 +183,7 @@ export default new Vuex.Store({
     },
     getBigvillages(context,id){
       axios.get(`towns/${id}`).then((res) => {
+        context.commit('setCurrentTown',res.data.info.name);
         let bigvillages=res.data.info.villages;
         let tmpArr=[];
         let tmp=[];
@@ -201,6 +205,9 @@ export default new Vuex.Store({
         context.commit('setBigvillagesArr',tmpArr);
         context.commit('setBigvillages',tmp);
       })
+    },
+    setCurrentBigvillage(context,name){
+      context.commit('setCurrentBigvillage',name);
     }
   }
 })
