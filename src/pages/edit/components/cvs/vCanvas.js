@@ -13,7 +13,7 @@ export default class vCanvas
         this.vRoot.id = 0;
         this.mousePos = {x:0,y:0};
         this.mapProp={
-            mapSrc:"../assets/map.png",
+            mapSrc:null,
             mapPos: {x:0,y:0},
             mapSize: {x:1920,y:1080}//
         }
@@ -317,6 +317,11 @@ export default class vCanvas
     {
         this.canvas.renderAll();
     }
+    setMap(src)
+    {
+        this.mapProp.mapSrc = src;
+        this.renderMap();
+    }
     moveMap(x,y)
     {
         this.mapProp.mapPos.x+=x;
@@ -333,14 +338,15 @@ export default class vCanvas
             tt.setCoords();
         }
         this.canvas.renderAll();
-        /*
-        this.canvas.setBackgroundImage(this.mapProp.mapSrc, this.canvas.renderAll.bind(this.canvas), {
-            left: this.mapProp.mapPos.x,
-            top: this.mapProp.mapPos.y,
-            originX: 'left',
-            originY: 'top'
-        });
-        */
+        if(this.mapProp.mapSrc)
+        {
+            this.canvas.setBackgroundImage(this.mapProp.mapSrc, this.canvas.renderAll.bind(this.canvas), {
+                left: this.mapProp.mapPos.x,
+                top: this.mapProp.mapPos.y,
+                originX: 'left',
+                originY: 'top'
+            });
+        }
     }
     createSVG(str,pos,id,save=true,SVGprop=null)
     {
