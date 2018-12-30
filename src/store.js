@@ -187,23 +187,22 @@ export default new Vuex.Store({
         let bigvillages=res.data.info.villages;
         let tmpArr=[];
         let tmp=[];
-        bigvillages.map((xid) => {
-            axios.get(`bigvillage/${xid}`).then(
-            (res)=>{
-              tmpArr.push(res.data.info.name);
-              let tmpData={};
-              tmpData.id=xid;
-              tmpData.name=res.data.info.name;
-              tmpData.gumis=res.data.info.gumis;
-              tmp.push(tmpData);
-             },
-            (err)=>{
-              console.log(err);
-            }
-          );
+        const promises=bigvillages.map((xid)=>{
+          return axios.get(`bigvillage/${xid}`);
         });
-        context.commit('setBigvillagesArr',tmpArr);
-        context.commit('setBigvillages',tmp);
+        Promise.all(promises).then((ress)=>{
+          for(let res of ress){
+            tmpArr.push(res.data.info.name);
+            let tmpData={};
+            tmpData.id=res.data.info._id;
+            tmpData.name=res.data.info.name;
+            tmpData.gumis=res.data.info.gumis;
+            tmp.push(tmpData);
+          }
+        }).then(()=>{
+          context.commit('setBigvillagesArr',tmpArr);
+          context.commit('setBigvillages',tmp);
+        }).catch((err) => console.log(err));
       })
     },
     setCurrentBigvillage(context,name){

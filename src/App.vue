@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <router-view :key="new Date()"></router-view>
+    <router-view></router-view>
   </v-app>
 </template>
 
