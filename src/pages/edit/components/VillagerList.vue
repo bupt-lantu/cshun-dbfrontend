@@ -161,18 +161,38 @@
           <span v-if="tool">退出编辑</span>
           <span v-else>编辑模式</span>
         </v-btn>
-        <v-btn 
+        <!-- v-btn 
           color="lime darken-1"
           :loading="loading"
           :disabled="loading"
           @click.native="loader = 'loading'"
-        >导出数据</v-btn>
+        >
+          上传地图
+          <input type="file" id = "uploadMap" @change = "uploadMap($event)"/>
+        </v-btn -->
+        <v-btn 
+          color="lime darken-1"
+          @click = "updMap^=1;"  
+        >
+          设置地图
+        </v-btn>
         <v-btn
           color="light-green"
           @click="ExportImg()"
         >导出长图</v-btn>
       </v-layout>
     </v-toolbar>
+    <v-layout v-if="updMap" row align-center style="max-width: 650px">
+      <v-btn id = "uploadMap">
+        <p>上传图片</p>
+        <form>
+          <input type="file" @change = "uploadMap($event);"/>
+        </form>
+      </v-btn>
+      <v-btn color="blue-grey" @click = "confirmMap();">
+        确认
+      </v-btn>
+    </v-layout>
   </v-content>
 </template>
 
@@ -188,6 +208,7 @@ export default {
     alert:false, 
     tool: false,
     drawer: false,
+    updMap: false,
     items: [
     { icon: 'arrow_back', text: '返回地点选择' },
     ],
@@ -221,6 +242,19 @@ export default {
     villageId:String
   },
   methods:{
+    uploadMap(e)
+    { 
+      let imgfile = e.target.files;
+      let reader = new FileReader();
+      reader.readAsDataURL(imgfile[0]);
+      reader.onload = (e)=>{
+        bus.$emit('uploadMap',e.target.result);
+      }
+    },
+    confirmMap()
+    {
+      this.updMap = false;
+    },
     goBackToSelect(){
       this.$router.push({ name: 'select'});
     },
@@ -271,6 +305,15 @@ export default {
 </script>
 
 <style>
+  #uploadMap
+  {
+      position: absolute;left:50%;top:10px;width: 80px;height: 40px;line-height: 40px;background: #74d855;text-align: center;
+      color: #FFF;padding: 0px 5px;-webkit-border-radius: 3px;border-radius: 3px;
+      margin: 0 auto;
+  }
+  #uploadMap form{width:100%;position:absolute; left:0; top:0;opacity:0; filter:alpha(opacity=0);}
+  #uploadMap form input{width: 100%;}
+
   .custom-loader {
     animation: loader 1s infinite;
     display: flex;

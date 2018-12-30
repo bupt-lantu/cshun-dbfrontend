@@ -342,6 +342,9 @@ export default {
             this.strokeColor=e.strokeColor;
             this.strokeWidth=e.strokeWidth;
         });
+        bus.$on('uploadMap',(e)=>{
+            cvs.setMap(e);
+        });
     //   window.addEventListener('saveToServer',(event)=>{
     //       bus.$emit('save',event.detail.savePack);
     //   });

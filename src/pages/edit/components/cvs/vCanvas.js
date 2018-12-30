@@ -45,7 +45,7 @@ export default class vCanvas
         this.changeStateTo("move"); 
         this.save();
     }
-    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw
+    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw，setmap
     {
         if(sta=="restore")
         {
@@ -54,7 +54,8 @@ export default class vCanvas
         }
         if(sta!=this.state)this.selectEdge(null);
         let objs = this.canvas.getObjects();
-        if(sta=="move"||sta=="freedraw")
+        if(this.state=="setmap")this.save();
+        if(sta=="move"||sta=="setmap"||sta=="freedraw")
         {
             this.selectVert(this.vRoot);
             for(let tt of objs) 
@@ -93,7 +94,7 @@ export default class vCanvas
     onClk(e) 
     {
         if(this.state == "addvert") {this.mouseDown = true;return;}
-        if(this.state=="move")
+        if(this.state=="move"||this.state=="setmap")
         {
             this.mouseDown = true;
             this.mousePos = e.pointer;
@@ -189,7 +190,7 @@ export default class vCanvas
     onMouseMove(e)
     {
         if(!this.mouseDown) return;
-        if(this.state=="move")
+        if(this.state=="move"||this.state=="setmap")
         {
             let det = {x: e.pointer.x-this.mousePos.x,y: e.pointer.y-this.mousePos.y};
             if(Math.abs(det.x)>10||Math.abs(det.y)>10)
@@ -237,7 +238,7 @@ export default class vCanvas
             this.save();
             this.moveflag = false;
         }
-        else if(this.state=="move"){this.mouseDown = false;}
+        else if(this.state=="move"||this.state=="setmap"){this.mouseDown = false;}
         else if(this.state=="freedraw")
         {
             this.mouseDown = false;
@@ -331,11 +332,22 @@ export default class vCanvas
     renderMap()// calculate the relative position
     {
         let objs = this.canvas.getObjects();
-        for(let tt of objs)
+        if(this.state=="setmap")
         {
-            tt.left = this.mapProp.mapPos.x+tt.rlPos.x;
-            tt.top = this.mapProp.mapPos.y+tt.rlPos.y;
-            tt.setCoords();
+            for(let tt of objs)
+            {
+                tt.rlPos.x = tt.left-this.mapProp.mapPos.x;
+                tt.rlPos.y = tt.top-this.mapProp.mapPos.y;
+            }
+        }
+        else
+        {
+            for(let tt of objs)
+            {
+                tt.left = this.mapProp.mapPos.x+tt.rlPos.x;
+                tt.top = this.mapProp.mapPos.y+tt.rlPos.y;
+                tt.setCoords();
+            }
         }
         this.canvas.renderAll();
         if(this.mapProp.mapSrc)
@@ -346,6 +358,11 @@ export default class vCanvas
                 originX: 'left',
                 originY: 'top'
             });
+        }
+        else
+        {
+            this.canvas.backgroundImage = 0;
+            this.renderAll();
         }
     }
     createSVG(str,pos,id,save=true,SVGprop=null)
