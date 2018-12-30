@@ -186,8 +186,11 @@
       <v-btn id = "uploadMap">
         <p>上传图片</p>
         <form>
-          <input type="file" @change = "uploadMap($event);"/>
+          <input type="file" id = "upMap" @change = "uploadMap($event);"/>
         </form>
+      </v-btn>
+      <v-btn color="blue-grey" @click = "clearMap();">
+        清除地图
       </v-btn>
       <v-btn color="blue-grey" @click = "confirmMap();">
         确认
@@ -242,13 +245,19 @@ export default {
     villageId:String
   },
   methods:{
+    clearMap()
+    {
+      bus.$emit('uploadMap',null);
+      this.changeUpdState();
+    },
     uploadMap(e)
     { 
+      if(!e.target.files[0]) return;
       let imgfile = e.target.files;
       let reader = new FileReader();
       reader.readAsDataURL(imgfile[0]);
       reader.onload = (e)=>{
-        bus.$emit('uploadMap',e.target.result);
+        if(e){bus.$emit('uploadMap',e.target.result);}
       }
     },
     confirmMap()

@@ -128,6 +128,7 @@ export default {
   props: ['EditBtn','editId'],
   data () {
     return {
+        updMap: false,
         linetpOptions:[
             {text: '曲线', value: 'curve'},
             {text: '直线', value: 'line'}
@@ -258,7 +259,11 @@ export default {
       EditBtn: function()
       {
           if(this.EditBtn){cvs.changeStateTo("editvert");}
-          else{cvs.changeStateTo("move");}
+          else
+          {
+              if(this.updMap){cvs.changeStateTo("setmap");}
+              else{cvs.changeStateTo("move");}
+          }
       },
       linetp: function(val)
       {
@@ -346,9 +351,13 @@ export default {
             cvs.setMap(e);
         });
         bus.$on('changeUpdState',(e)=>{
-            console.log(e);
+            this.updMap = e;
             if(e){this.changeStateTo("setmap");}
-            else{this.changeStateTo("move");}
+            else
+            {
+                if(this.EditBtn) this.changeStateTo("editvert");
+                else{this.changeStateTo("move");}
+            }
         })
     //   window.addEventListener('saveToServer',(event)=>{
     //       bus.$emit('save',event.detail.savePack);
