@@ -172,7 +172,7 @@
         </v-btn -->
         <v-btn 
           color="lime darken-1"
-          @click = "updMap^=1;"  
+          @click = "changeUpdState();"  
         >
           设置地图
         </v-btn>
@@ -253,7 +253,12 @@ export default {
     },
     confirmMap()
     {
-      this.updMap = false;
+      this.changeUpdState();
+    },
+    changeUpdState()
+    {
+      this.updMap^=1;
+      bus.$emit('changeUpdState',this.updMap);
     },
     goBackToSelect(){
       this.$router.push({ name: 'select'});

@@ -258,7 +258,7 @@ export default {
       EditBtn: function()
       {
           if(this.EditBtn){cvs.changeStateTo("editvert");}
-          if(!this.EditBtn){cvs.changeStateTo("move");}
+          else{cvs.changeStateTo("move");}
       },
       linetp: function(val)
       {
@@ -345,6 +345,11 @@ export default {
         bus.$on('uploadMap',(e)=>{
             cvs.setMap(e);
         });
+        bus.$on('changeUpdState',(e)=>{
+            console.log(e);
+            if(e){this.changeStateTo("setmap");}
+            else{this.changeStateTo("move");}
+        })
     //   window.addEventListener('saveToServer',(event)=>{
     //       bus.$emit('save',event.detail.savePack);
     //   });

@@ -45,7 +45,7 @@ export default class vCanvas
         this.changeStateTo("move"); 
         this.save();
     }
-    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw，setmap
+    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw,setmap
     {
         if(sta=="restore")
         {
