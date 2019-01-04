@@ -93,7 +93,8 @@ export default {
           response => {
             console.log(response);
             sessionStorage.setItem('isLogin', true);
-            this.$router.push({ name: 'select'});
+            // this.$router.push({ name: 'select'});
+            this.switchToRoute(response.data.info.level,response.data.info.visable[0]);
           },
           error => {
             console.log("Error Occurs");
@@ -109,9 +110,16 @@ export default {
       } else {
         console.log("Invalid Input");
       }
-    }//end submit
+    },//end submit
+    switchToRoute(level,id){
+      if(level==7){
+        this.$router.push({ name: 'edit',params:{id:id}});
+      }
+      else{
+         this.$router.push({ name: 'select'});
+      }
+    }
   }
-
 };
 </script>
 
