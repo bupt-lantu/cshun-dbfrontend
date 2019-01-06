@@ -273,7 +273,12 @@ export default class vCanvas
                     removeflag = true;
                 }
             }
-            if(removeflag){this.save();}
+            if(removeflag)
+            {
+                this.save();
+                this.canvas.discardActiveObject();
+                this.renderAll();
+            }
         }
     }
     selectVert(vert)
