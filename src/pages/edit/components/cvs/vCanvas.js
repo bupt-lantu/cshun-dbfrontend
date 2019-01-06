@@ -47,6 +47,7 @@ export default class vCanvas
     }
     changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw,setmap
     {
+        if(this.state=="remove"){this.canvas.selection = false;}
         if(sta=="restore")
         {
             this.state = sta;
@@ -72,7 +73,12 @@ export default class vCanvas
                 if(tt.isSVG==true) tt.set({selectable:true});
                 tt.setCoords();
             }
-            if(sta=="remove"||sta=="connect"){this.selectVert(this.vRoot);}
+            if(sta=="remove")
+            {
+                this.selectVert(this.vRoot);
+                this.canvas.selection = true;
+            }
+            else if(sta=="connect"){this.selectVert(this.vRoot);}
         }
         this.state = sta;
         this.renderAll();
@@ -154,7 +160,13 @@ export default class vCanvas
         else
         {
             if(this.state=="editvert"&&c.lineprop){this.selectEdge(c);}
-            if(this.state=="remove"&&c.isSVG){this.remove(c);}
+            else if(this.state=="remove"&&c.lineprop)
+            {   
+                this.selectVert(this.vRoot);
+                this.removeEdge(c.p1,c.p2);
+                this.save();
+            }
+            else if(this.state=="remove"&&c.isSVG){this.remove(c);}
             this.selectVert(this.vRoot);
         }
     }
@@ -243,6 +255,25 @@ export default class vCanvas
         {
             this.mouseDown = false;
             //this.makeFreeCurve();
+        }
+        else if(this.state=="remove")
+        {
+            let selectedgroup = this.canvas.getActiveObjects();
+            let removeflag = false;
+            for(let tt of selectedgroup)
+            {
+                if(tt.isSVG)
+                {
+                    this.remove(tt);
+                    removeflag = true;
+                }
+                else if(tt instanceof fabric.Circle)
+                {
+                    for(let ano of tt.link.map){this.removeEdge(ano[0],tt);}
+                    removeflag = true;
+                }
+            }
+            if(removeflag){this.save();}
         }
     }
     selectVert(vert)
