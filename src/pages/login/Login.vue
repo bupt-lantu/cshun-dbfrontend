@@ -3,13 +3,18 @@
     class="login"
     light
   >
+  <div id="Header">
+    <h1>
+      长顺脱贫攻坚可视化数据库
+    </h1>
+  </div>
   <div id="Login">
-  
     <v-container>
+      <!-- <img src="../../assets/cshun.jpg"/> -->
       <v-card max-width="400">
         <v-card-title primary-title>
-          <h1>长顺可视化数据库</h1>
-
+          <h1>欢迎登录</h1>
+          
         <v-form ref="form" v-model="valid">
           <v-text-field id="username" 
             v-model="username"
@@ -33,9 +38,9 @@
           ></v-text-field>
   
           <v-card-actions>
-            <v-btn color="primary" large block 
+            <v-btn color="teal" large block 
               @click="submit">
-              登录
+              <span style="color: white; font-size: 150%">登录</span>
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -127,13 +132,25 @@ export default {
 <style scoped>
 #Login {
   text-align: center;
+  /* padding: 20px; */
+  background: url(../../assets/bg01.jpg);
+  background-size: 100% 100%;
+  width: 80%;
+  height: 80%;
+  /* right: 500px; */
+  margin-right: 20px;
+}
+#Header {
+  /* background-color: black; */
   padding: 20px;
 }
 #Login div {
+  top: 40px;
+  right: -90%;
   margin-top: 20px;
-  margin-right: auto;
+  margin-right: 20px;
   margin-bottom: 20px;
-  margin-left: auto;
+  margin-left: 20px;
   display: block;
 }
 </style>

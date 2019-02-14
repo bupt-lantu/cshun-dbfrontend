@@ -14,9 +14,18 @@
       app
     >
       <v-list dense>
-        <v-subheader class="mt-3 grey--text text--darken-1">
-          村户详细信息
-        </v-subheader>
+        <span class="info-title">村户详细信息</span>
+        <v-icon color="grey darken-1" style="margin-left:60px">add</v-icon>
+        <v-icon color="grey darken-1" style="margin-left:20px">edit</v-icon>
+        <v-text-field
+          :append-icon-cb="() => {}"
+          placeholder="村户查询..."
+          single-line
+          clearable
+          append-icon="search"
+          hide-details
+          style="margin-left:15px; margin-right:15px"
+        ></v-text-field>
         <v-list>
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
@@ -100,86 +109,60 @@
             </v-list-tile-title>
           </v-list-tile>
         </v-list>
-        <v-list-tile class="mt-3">
-          <v-list-tile-action>
-            <v-icon color="grey darken-1">add_circle_outline</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title class="grey--text text--darken-1">
-            添加村户
-          </v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon color="grey darken-1">settings</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title class="grey--text text--darken-1">
-            修改村户信息
-          </v-list-tile-title>
-        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
-      color="teal"
+      color="teal lighten-2"
       dense
       fixed
       clipped-left
       app
     >
-      <v-list-tile v-for="item in items" :key="item.text" @click="goBackToSelect">
-        <v-list-tile-action>
-          <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>
-              {{ item.text }}
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer">
-        <v-icon v-if="drawer" large>keyboard_arrow_up</v-icon>
-        <v-icon v-else large>keyboard_arrow_down</v-icon>
+      <v-toolbar-side-icon>
+        <v-icon style="color:white" @click="goBackToSelect">arrow_back</v-icon>
       </v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer">
+        <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
+        <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
+      </v-toolbar-side-icon>
+      <span class="title" style="color:white">长顺脱贫攻坚可视化数据库</span>
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">
-         <span class="grey--text text--darken-4 px-0 mx-0">{{currentTown}}</span>/<span class="grey--text text--darken-3 px-0 mx-0">{{currentBigvillage}}</span>/{{currentVillageName}}
+         <span class="grey--text text--lighten-2 px-0 mx-0">{{currentTown}}</span>/
+         <span class="grey--text text--lighten-3 px-0 mx-0">{{currentBigvillage}}</span>/
+         <span class="grey--text text--lighten-4 px-0 mx-0" style="font-weight:bold">{{currentVillageName}}</span>
         </span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-layout row align-center style="max-width: 650px">
-        <v-text-field
-          :append-icon-cb="() => {}"
-          placeholder="村户查询..."
-          single-line
-          append-icon="search"
-          color="white"
-          hide-details
-        ></v-text-field>
-        <v-btn 
-          color="blue-grey"
-          @click="ChangeEditState()"
-        >
-          <span v-if="tool">退出编辑</span>
-          <span v-else>编辑模式</span>
-        </v-btn>
-        <!-- v-btn 
-          color="lime darken-1"
-          :loading="loading"
-          :disabled="loading"
-          @click.native="loader = 'loading'"
-        >
-          上传地图
-          <input type="file" id = "uploadMap" @change = "uploadMap($event)"/>
-        </v-btn -->
-        <v-btn 
-          color="lime darken-1"
-          @click = "changeUpdState();"  
-        >
-          设置地图
-        </v-btn>
-        <v-btn
-          color="light-green"
-          @click="ExportImg()"
-        >导出长图</v-btn>
+      <v-layout column wrap>
+        <v-flex xs12 md5 offset-md6>
+          <v-btn 
+            color="blue-grey"
+            @click="ChangeEditState()"
+          >
+            <span v-if="tool">
+              <span style="color:white">退出编辑</span>
+            </span>
+            <span v-else>
+              <span style="color:white">开启编辑</span>
+            </span>
+          </v-btn>
+          <v-btn 
+            color="lime darken-3"
+            @click = "changeUpdState()"  
+          >
+            <span style="color:white">导入</span>
+          </v-btn>
+          <v-btn
+            color="light-green"
+            @click="ExportImg()"
+          >
+            <span style="color:white">导出</span>
+          </v-btn>
+          <v-toolbar-side-icon @click.stop="drawer = !drawer">
+            <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
+            <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
+          </v-toolbar-side-icon>
+        </v-flex>
       </v-layout>
     </v-toolbar>
     <v-layout v-if="updMap" row align-center style="max-width: 650px">
@@ -196,6 +179,14 @@
         确认
       </v-btn>
     </v-layout>
+    <!-- <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      clipped
+      app
+    >
+      <v-list dense></v-list>
+    </v-navigation-drawer> -->
   </v-content>
 </template>
 
@@ -213,7 +204,7 @@ export default {
     drawer: false,
     updMap: false,
     items: [
-    { icon: 'arrow_back', text: '返回地点选择' },
+    { icon: 'arrow_back' },
     ],
     // items2: [
     // { id: 1, text: '老张' ,isInCanvas:false},
@@ -363,5 +354,11 @@ export default {
     to {
       transform: rotate(360deg);
     }
+  }
+  .info-title {
+    display: inline-block;
+    font-size: 20px;
+    margin-left: 15px;
+    margin-top: 10px;
   }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <v-app
     class="edit"
-    dark
   > 
     <villager-list @CES = "ChangeEditState"></villager-list>
     <cvs :EditBtn = "!isedit" :editId= "this.$route.params.id"></cvs>
