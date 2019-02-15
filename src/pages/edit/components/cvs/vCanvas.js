@@ -689,7 +689,6 @@ export default class vCanvas
             mapSrc: "SB"
         };
         if(saveMap){savePack.mapprop.mapSrc=this.mapProp.mapSrc;}
-        console.log("SAVE"+" "+savePack.mapprop.mapSrc);
         let ret = JSON.stringify(savePack);
         if(record) this.history.add(ret,changedSVGid);
         return ret;
@@ -701,6 +700,7 @@ export default class vCanvas
         // let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:savePack}});
         // window.dispatchEvent(saveEvent);
         bus.$emit('save',savePack);
+        return savePack;
     }
     saveToOuter()
     {
@@ -746,7 +746,6 @@ export default class vCanvas
         this.lineprop = savePack.lineprop;
         this.mapProp.mapPos = savePack.mapprop.mapPos;
         this.mapProp.mapSize = savePack.mapprop.mapSize;
-        console.log(savePack.mapprop.mapSrc);
         if(savePack.mapprop.mapSrc!="SB"){this.mapProp.mapSrc = savePack.mapprop.mapSrc;}
         this.counter = savePack.counter;
         this.SVGIdArray = savePack.svgidarray;

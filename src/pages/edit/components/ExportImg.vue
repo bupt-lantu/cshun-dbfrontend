@@ -11,6 +11,12 @@
             <v-layout align-center justify-center>
                 <v-spacer></v-spacer>
                 <v-btn
+                    @click="$router.push({ name: 'edit',params:{id : $route.params.previd}});"
+                    color="green darken-3"
+                >
+                    返回
+                </v-btn>
+                <v-btn
                     @click="exportImg();"
                     color="green darken-3"
                 >

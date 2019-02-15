@@ -248,11 +248,12 @@ export default {
     },
     exportImg()
     {
-        let savePack = cvs.saveToOuter();//cvs.save(0,false,);  
-        //let routeData = this.$router.push({ name: 'exportImg'});
-        let routeData = this.$router.resolve({ name: 'exportImg'});
+        let savePack = cvs.saveToServer();//cvs.save(0,false,);  
         sessionStorage.setItem("savePack",savePack);
-        let wd = window.open(routeData.href,'_blank');
+        sessionStorage.setItem("historyStack",JSON.stringify(cvs.history));
+        this.$router.push({ name: 'exportImg',params:{previd : this.$route.params.id}});
+        //let routeData = this.$router.resolve({ name: 'exportImg'});
+        //let wd = window.open(routeData.href,'_blank');
     }
   },
   watch:{
@@ -326,6 +327,15 @@ export default {
             let canvasStr="";
             cvs = new vCanvas({x:width,y:height},'c',canvasStr);
         }
+      let historystack = sessionStorage.getItem("historyStack");
+      if(historystack!=null)
+      {
+          let temphistory = JSON.parse(historystack);
+          cvs.history.top = temphistory.top;
+          cvs.history.historyStack = temphistory.historyStack;
+          cvs.history.changedSVGid = temphistory.changedSVGid;
+          
+      }
       });    
     //   window.addEventListener('addSVG',function(event){
     //       bus.$emit('showP',event.detail.id);

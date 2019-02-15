@@ -37,7 +37,7 @@ export default new Router({
     },
 
     {
-      path: '/exportImg',
+      path: '/exportImg/:previd',
       name: 'exportImg',
       component: ExportImg,
       meta:{
