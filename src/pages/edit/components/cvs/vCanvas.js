@@ -43,7 +43,7 @@ export default class vCanvas
         if(savepack){this.restore(savepack);}//RESTORE FROM PREVIOUS DATA
         else{this.renderMap();}
         this.changeStateTo("move"); 
-        this.save();
+        this.save(0,true,true);
     }
     changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw,setmap
     {
@@ -55,7 +55,7 @@ export default class vCanvas
         }
         if(sta!=this.state)this.selectEdge(null);
         let objs = this.canvas.getObjects();
-        if(this.state=="setmap")this.save();
+        if((this.state=="setmap")&&(this.mapProp.mapSrc!=null))this.save(0,true,true);
         if(sta=="move"||sta=="setmap"||sta=="freedraw")
         {
             this.selectVert(this.vRoot);
@@ -633,7 +633,8 @@ export default class vCanvas
         this.canvas.dispose();
         this.size = siz;
         this.initCanvas();
-        this.restore(this.history.getTop());
+        //this.restore(this.history.getTop());
+        this.restore(this.saveToOuter());
         this.changeStateTo(sta);
     }
     dfs(now,fa)
@@ -652,7 +653,7 @@ export default class vCanvas
             if(!this.vis.has(tt[0]))this.dfs(tt[0],now);
         }
     }
-    save(changedSVGid=0,record=true)
+    save(changedSVGid=0,record=true,saveMap=false)
     {   
         if(this.state=="restore") return;
         let savePack=null;
@@ -680,19 +681,31 @@ export default class vCanvas
             lineprop: this.lineprop,
             counter: this.counter,
             state: this.state,
-            mapprop: this.mapProp
+            //mapprop: this.mapProp
         }
+        savePack.mapprop = {
+            mapSize: this.mapProp.mapSize,
+            mapPos: this.mapProp.mapPos,
+            mapSrc: "SB"
+        };
+        if(saveMap){savePack.mapprop.mapSrc=this.mapProp.mapSrc;}
+        console.log("SAVE"+" "+savePack.mapprop.mapSrc);
         let ret = JSON.stringify(savePack);
         if(record) this.history.add(ret,changedSVGid);
         return ret;
     }
     saveToServer()
     {
-        let savePack = this.save(0,false);
+        let savePack = this.saveToOuter();
         //let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:this.history.getTop()}});
         // let saveEvent = new CustomEvent('saveToServer',{detail:{savePack:savePack}});
         // window.dispatchEvent(saveEvent);
         bus.$emit('save',savePack);
+    }
+    saveToOuter()
+    {
+        let savePack = this.save(0,false,true);
+        return savePack;
     }
     export()
     {
@@ -731,7 +744,10 @@ export default class vCanvas
         this.canvas.clear();
         let savePack = JSON.parse(src);
         this.lineprop = savePack.lineprop;
-        this.mapProp = savePack.mapprop;
+        this.mapProp.mapPos = savePack.mapprop.mapPos;
+        this.mapProp.mapSize = savePack.mapprop.mapSize;
+        console.log(savePack.mapprop.mapSrc);
+        if(savePack.mapprop.mapSrc!="SB"){this.mapProp.mapSrc = savePack.mapprop.mapSrc;}
         this.counter = savePack.counter;
         this.SVGIdArray = savePack.svgidarray;
         let svgArray = savePack.svgarray;

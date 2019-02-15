@@ -248,7 +248,7 @@ export default {
     },
     exportImg()
     {
-        let savePack = cvs.save(0,false);  
+        let savePack = cvs.saveToOuter();//cvs.save(0,false,);  
         //let routeData = this.$router.push({ name: 'exportImg'});
         let routeData = this.$router.resolve({ name: 'exportImg'});
         sessionStorage.setItem("savePack",savePack);
