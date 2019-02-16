@@ -709,8 +709,9 @@ export default class vCanvas
     }
     export()
     {
+        let FileSaver = require('file-saver');
         document.getElementById(this.name).toBlob(function(blob){
-            saveAs(blob,"map.png");
+            FileSaver.saveAs(blob,"map.png");
         });
     }
     undo()

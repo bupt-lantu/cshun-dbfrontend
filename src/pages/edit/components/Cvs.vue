@@ -299,7 +299,7 @@ export default {
   mounted()
   {
       let wZoom = 0.9,hZoom = 0.9;
-      window.addEventListener('resize',function(event){
+      window.addEventListener('resize',function(){
           let width = Math.round(document.body.clientWidth*wZoom);
           let height = Math.round((document.body.clientHeight-40)*hZoom);
           document.getElementById('c').width = width;

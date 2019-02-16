@@ -145,6 +145,7 @@ export default class exportSupport
         }(typeof self !== "undefined" && self || typeof window !== "undefined" && window || this.content || this)); 
         
         /**Init FileSaver */
+        /*
         (function(a, b) {
             if ("function" == typeof define && define.amd) define([], b);
             else if ("undefined" != typeof exports) b();
@@ -298,5 +299,7 @@ export default class exportSupport
               "undefined" != typeof module && (module.exports = a);
           });
           //# sourceMappingURL=FileSaver.min.js.map
+          */
     }
+    
 }

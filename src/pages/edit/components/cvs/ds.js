@@ -1,3 +1,4 @@
+import { fabric } from 'fabric';
 export default class MP
 {
     constructor(cvs)
