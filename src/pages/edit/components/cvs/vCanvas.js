@@ -117,6 +117,7 @@ export default class vCanvas
             this.mousePos = e.pointer;
             return;
         }
+        if(this.state=="remove"){this.mousePos = e.pointer;}
         let c = e.target;
         if(c==null) 
         {
@@ -258,6 +259,7 @@ export default class vCanvas
         }
         else if(this.state=="remove")
         {
+            if(Math.abs(e.pointer.x-this.mousePos.x)<5&&Math.abs(e.pointer.y-this.mousePos.y)<5) return;
             let selectedgroup = this.canvas.getActiveObjects();
             let removeflag = false;
             for(let tt of selectedgroup)
