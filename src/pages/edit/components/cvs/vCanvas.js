@@ -255,6 +255,7 @@ export default class vCanvas
         else if(this.state=="freedraw")
         {
             this.mouseDown = false;
+            this.save();
             //this.makeFreeCurve();
         }
         else if(this.state=="remove")
@@ -657,6 +658,7 @@ export default class vCanvas
     }
     save(changedSVGid=0,record=true,saveMap=false)
     {   
+        console.log("SAVE!");
         if(this.state=="restore") return;
         let savePack=null;
         this.vis.clear();
@@ -718,6 +720,7 @@ export default class vCanvas
     }
     undo()
     {
+        console.log(this.history.canUndo());
         if(!this.history.canUndo()) return;
         let id = parseInt(this.history.getTopSVGid());
         if(id>0)
