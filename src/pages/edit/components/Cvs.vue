@@ -251,7 +251,7 @@ export default {
         let savePack = cvs.saveToServer();//cvs.save(0,false,);  
         sessionStorage.setItem("savePack",savePack);
         sessionStorage.setItem("historyStack",JSON.stringify(cvs.history));
-        this.$router.push({ name: 'exportImg',params:{previd : this.$route.params.id}});
+        this.$router.push({ name: 'exportImg'});
         //let routeData = this.$router.resolve({ name: 'exportImg'});
         //let wd = window.open(routeData.href,'_blank');
     }
