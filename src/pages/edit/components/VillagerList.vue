@@ -15,6 +15,16 @@
       temporary
       fixed
     >
+      <v-list>
+        <v-list-tile v-for="(item,index) in svgdemo" :key="item.title" avatar>
+          <v-list-tile-action :id="item._id">
+            <img :src="item.avatar" width="80%">
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
     </v-navigation-drawer>
     <v-navigation-drawer
       v-model="drawer"
@@ -48,71 +58,11 @@
         <v-list>
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
-              <template v-if="(index-'0')%6==0">
+              <template>
                 <svg width="180" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:green;stroke:blue;
-                    stroke-width:5;opacity:0.5"
-                  ></rect>
-                  <text x="45" y="30">
-                    {{ index-'0'+1 }}
-                  </text>
-                </svg>
-              </template>
-              <template v-else-if="(index-'0')%6==1" flat>
-                <svg width="180" height="100%" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="6" width="100" height="36" 
-                    style="fill:green;stroke:blue;
-                    stroke-width:5;opacity:0.5"
-                  ></rect>
-                  <text x="45" y="30">
-                    {{ index-'0'+1 }}
-                  </text>
-                </svg>
-              </template>
-              <template v-else-if="(index-'0')%6==2">
-                <svg width="180" height="100%" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="6" width="100" height="36" 
-                    style="fill:yellow;stroke:black;
-                    stroke-width:5;opacity:0.5"
-                  ></rect>
-                  <text x="45" y="30">
-                    {{ index-'0'+1 }}
-                  </text>
-                </svg>
-              </template>
-              <template v-else-if="(index-'0')%6==3">
-                <svg width="180" height="100%" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="6" width="100" height="36" 
-                    style="fill:orange;stroke:brown;
-                    stroke-width:5;opacity:0.5"
-                  ></rect>
-                  <text x="45" y="30">
-                    {{ index-'0'+1 }}
-                  </text>
-                </svg>
-              </template>
-              <template v-else-if="(index-'0')%6==4">
-                <svg width="180" height="100%" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="6" width="100" height="36" 
-                    style="fill:red;stroke:brown;
-                    stroke-width:5;opacity:0.5"
-                  ></rect>
-                  <text x="45" y="30">
-                    {{ index-'0'+1 }}
-                  </text>
-                </svg>
-              </template>
-              <template v-else-if="(index-'0')%6==5">
-                <svg width="180" height="100%" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="6" width="100" height="36" 
-                    style="fill:#8BC34A;stroke:brown;
                     stroke-width:5;opacity:0.5"
                   ></rect>
                   <text x="45" y="30">
@@ -244,7 +194,55 @@ export default {
     loading: false,
     loading2: false,
     loading3: false,
-    loading4: false
+    loading4: false,
+    svgdemo: [
+      {
+        title: "普通户",
+        avatar: require("@/assets/basic/0.png")
+      },{
+        title: "已脱贫贫困户",
+        avatar: require("@/assets/basic/1.png")
+      },{
+        title: "一般贫困户",
+        avatar: require("@/assets/basic/2.png")
+      },{
+        title: "低保贫困户",
+        avatar: require("@/assets/basic/3.png")
+      },{
+        title: "五保户贫困户",
+        avatar: require("@/assets/basic/4.png")
+      },{
+        title: "孤儿低保户",
+        avatar: require("@/assets/basic/5.png")
+      },{
+        title: "外地常住户口未迁",
+        avatar: require("@/assets/basic/6.png")
+      },{
+        title: "有安全饮水",
+        avatar: require("@/assets/basic/7.png")
+      },{
+        title: "无安全饮水",
+        avatar: require("@/assets/basic/8.png")
+      },{
+        title: "危房",
+        avatar: require("@/assets/basic/9.png")
+      },{
+        title: "危房改造中",
+        avatar: require("@/assets/basic/10.png")
+      },{
+        title: "危房已改造",
+        avatar: require("@/assets/basic/11.png")
+      },{
+        title: "医保未参合",
+        avatar: require("@/assets/basic/12.png")
+      },{
+        title: "教育无保障",
+        avatar: require("@/assets/basic/13.png")
+      },{
+        title: "无主要收入来源",
+        avatar: require("@/assets/basic/14.png")
+      }
+    ]
   }),
   computed:{
     ...mapGetters([
