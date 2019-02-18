@@ -12,15 +12,19 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     @click="$router.go(-1);"
-                    color="green darken-3"
+                    flat
                 >
-                    <span style="color:white">返回</span>
+                    <span class="title" style="color:white">返回编辑</span>
                 </v-btn>
+                <v-divider
+                    class="mx-3"
+                    vertical
+                ></v-divider>
                 <v-btn
                     @click="exportImg();"
-                    color="green darken-3"
+                    flat
                 >
-                    <span style="color:white">确认导出</span>
+                    <span class="title" style="color:white">确认导出</span>
                 </v-btn>
                 <v-spacer></v-spacer>
             </v-layout>

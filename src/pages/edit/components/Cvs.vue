@@ -8,7 +8,7 @@
             <v-flex xs12 md8 offset-md2> -->
             <v-toolbar
                 floating
-                style="width:1000px;left:200px"
+                style="width:1000px;left:200px;top:-20px"
                 v-if="EditBtn"
             >
             <v-flex md1>
@@ -134,7 +134,7 @@
             </v-toolbar>
             <!-- </v-flex>
         </v-layout> -->
-    <v-layout 
+    <v-layout
         justify-center
         align-space-around
         @dragover="dragOver($event)" @drop="dragFinished($event)"

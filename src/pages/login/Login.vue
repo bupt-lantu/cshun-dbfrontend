@@ -135,6 +135,7 @@ export default {
   width: 80%;
   height: 80%;
   /* right: 500px; */
+  margin-top: -10px;
   margin-right: 20px;
 }
 #Header {

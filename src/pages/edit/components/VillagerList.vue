@@ -230,7 +230,7 @@ export default {
     },
     color () {
       if(this.tool){
-        return 'blue-grey'
+        return '#917369'
       }
       else{
         return 'teal'
