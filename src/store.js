@@ -76,6 +76,7 @@ export default new Vuex.Store({
       return state.villages;
     },
     villagers(state){
+      console.log(state.villagers);
       return state.villagers;
     },
     currentVillageId(state){

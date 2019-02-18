@@ -33,16 +33,16 @@
       app
     >
       <v-list dense>
-        <span class="info-title">村户详细信息</span>
+        <span class="info-title">村户信息</span>
         <!-- <v-icon color="grey darken-1" style="margin-left:60px">add</v-icon> -->
         <v-tooltip right>
           <v-btn
             slot="activator"
             icon 
             @click="rdrawer = !rdrawer"
-            style="margin-left:100px"
+            style="left:130px"
           >
-            <v-icon>apps</v-icon>
+            <v-icon>bar_chart</v-icon>
           </v-btn>
           <span>查看统计信息</span>
         </v-tooltip>
@@ -59,7 +59,7 @@
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
               <template>
-                <svg width="180" height="100%" version="1.1"
+                <svg width="300" height="100%" version="1.1"
                 xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="6" width="100" height="36" 
                     style="fill:green;stroke:blue;
@@ -73,9 +73,22 @@
             </v-list-tile-action>
             <v-spacer></v-spacer>
             <!-- <v-list-tile-title v-text="item.name"></v-list-tile-title> -->
-            <v-list-tile-title>
-              {{"&emsp;&emsp;&emsp;"+item.name}}
+            <v-list-tile-title style="left:25px;font-size:large">
+              {{item.name}}
             </v-list-tile-title>
+            <v-list-tile-action>
+              <v-tooltip right>
+                <v-btn
+                  slot="activator"
+                  icon
+                  style="left:28px"
+                  @click="getDetails(index)"
+                >
+                  <v-icon color="grey lighten-1">info</v-icon>
+                </v-btn>
+                <span>查看详细信息</span>
+              </v-tooltip>
+            </v-list-tile-action>
           </v-list-tile>
         </v-list>
       </v-list>
@@ -157,14 +170,28 @@
         确认
       </v-btn>
     </v-layout>
-    <!-- <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      clipped
-      app
+    <v-dialog
+      v-model="dialogShow"
+      persistent
+      max-width="500px"
     >
-      <v-list dense></v-list>
-    </v-navigation-drawer> -->
+      <v-card>
+        <div>&nbsp;</div>
+        <div class="title" style="text-align:center;height:50px;">村户信息一览表</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"户名:&nbsp;&nbsp;&nbsp;"+dialog.name}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"性质:&nbsp;&nbsp;&nbsp;"+dialog.condition}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"饮水:&nbsp;&nbsp;&nbsp;"+dialog.safeWater}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"道路:&nbsp;&nbsp;&nbsp;"+dialog.haveRoad}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"人口:&nbsp;&nbsp;&nbsp;"+dialog.members}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"房屋:&nbsp;&nbsp;&nbsp;"+dialog.dilapidatedHouses}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"教育保障:&nbsp;&nbsp;&nbsp;"+dialog.education}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"医疗保障:&nbsp;&nbsp;&nbsp;"+dialog.medicine}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"致贫原因:&nbsp;&nbsp;&nbsp;"+dialog.poorReason}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"主要收入来源:&nbsp;&nbsp;&nbsp;"+dialog.incomeSource}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"帮扶措施:&nbsp;&nbsp;&nbsp;"+dialog.measure}}</div>
+        <v-btn color="blue darken-1" flat @click="dialogShow = false" style="left:200px">关闭窗口</v-btn>
+      </v-card>
+    </v-dialog>
   </v-content>
 </template>
 
@@ -181,20 +208,24 @@ export default {
     tool: false,
     drawer: false,
     rdrawer: false,
+    dialogShow: false,
+    dialog: {
+      name: null,
+      condition: null,
+      safeWater: null,
+      haveRoad: null,
+      members: null,
+      dilapidatedHouses: null,
+      education: null,
+      medicine: null,
+      poorReason: null,
+      incomeSource: null,
+      measure: null,
+      comments: null,
+      livedInVillage: null
+    },
     updMap: false,
-    items: [
-    { icon: 'arrow_back' },
-    ],
-    // items2: [
-    // { id: 1, text: '老张' ,isInCanvas:false},
-    // { id: 2, text: '老赵' ,isInCanvas:false},
-    // { id: 3, text: '老李' ,isInCanvas:false}
-    // ],
     loader: null,
-    loading: false,
-    loading2: false,
-    loading3: false,
-    loading4: false,
     svgdemo: [
       {
         title: "普通户",
@@ -311,6 +342,21 @@ export default {
       // let exportImgEvent bus.$emit('save',event.detail.savePack);= new Event("exportImg");
       // window.dispatchEvent(exportImgEvent);
       bus.$emit('exportImg');
+    },
+    getDetails(curId){
+      this.dialogShow = true;
+      this.dialog.name = this.villagers[curId].name;
+      this.dialog.condition = this.villagers[curId].condition;
+      this.dialog.safeWater = this.villagers[curId].safeWater==undefined?"":this.villagers[curId].safeWater;
+      this.dialog.haveRoad = this.villagers[curId].haveRoad?"有":"无";
+      this.dialog.members = this.villagers[curId].members;
+      this.dialog.dilapidatedHouses = this.villagers[curId].dilapidatedHouses;
+      this.dialog.education = this.villagers[curId].education;
+      this.dialog.medicine = this.villagers[curId].medicine;
+      this.dialog.poorReason = this.villagers[curId].poorReason;
+      this.dialog.incomeSource = this.villagers[curId].incomeSource;
+      this.dialog.measure = this.villagers[curId].measure;
+      // console.log();
     }
   },
   created(){

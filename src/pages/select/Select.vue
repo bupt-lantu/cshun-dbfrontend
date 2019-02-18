@@ -104,13 +104,24 @@
           </v-hover>
         </v-flex>
       </v-layout>
-      <v-btn
+      <v-tooltip bottom>
+        <v-btn
+          slot="activator"
+          v-show="backTopShow" @click="backTop"
+          fab dark color="teal darken-1" bottom right fixed
+          :style="{'margin':'50px 20px'}"
+        >
+          <v-icon large>keyboard_arrow_up</v-icon>
+        </v-btn>
+        <span>回到顶部</span>
+      </v-tooltip>
+      <!-- <v-btn
         v-show="backTopShow" @click="backTop"
         fab dark color="teal darken-1" bottom right fixed small
         :style="{'margin':'50px 20px'}"
       >
         <v-icon>keyboard_arrow_up</v-icon>
-      </v-btn>
+      </v-btn> -->
     </v-container>
   </v-app>
 </template>
