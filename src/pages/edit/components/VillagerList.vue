@@ -10,6 +10,13 @@
       保存成功！
     </v-alert>
     <v-navigation-drawer
+      v-model="rdrawer"
+      right
+      temporary
+      fixed
+    >
+    </v-navigation-drawer>
+    <v-navigation-drawer
       v-model="drawer"
       fixed
       clipped
@@ -17,8 +24,18 @@
     >
       <v-list dense>
         <span class="info-title">村户详细信息</span>
-        <v-icon color="grey darken-1" style="margin-left:60px">add</v-icon>
-        <v-icon color="grey darken-1" style="margin-left:20px">edit</v-icon>
+        <!-- <v-icon color="grey darken-1" style="margin-left:60px">add</v-icon> -->
+        <v-tooltip right>
+          <v-btn
+            slot="activator"
+            icon 
+            @click="rdrawer = !rdrawer"
+            style="margin-left:100px"
+          >
+            <v-icon>apps</v-icon>
+          </v-btn>
+          <span>统计信息</span>
+        </v-tooltip>
         <v-text-field
           :append-icon-cb="() => {}"
           placeholder="村户查询..."
@@ -136,7 +153,7 @@
         </span>
       </v-toolbar-title>
       <v-layout column wrap>
-        <v-flex xs12 md5 offset-md6>
+        <v-flex xs12 md5 offset-md7>
           <v-btn 
             flat
             @click="ChangeEditState()"
@@ -156,10 +173,6 @@
           >
             <span class="title" style="color:white">导出</span>
           </v-btn>
-          <v-toolbar-side-icon @click.stop="drawer = !drawer">
-            <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
-            <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
-          </v-toolbar-side-icon>
         </v-flex>
       </v-layout>
     </v-toolbar>
@@ -200,6 +213,7 @@ export default {
     alert:false, 
     tool: false,
     drawer: false,
+    rdrawer: false,
     updMap: false,
     items: [
     { icon: 'arrow_back' },
