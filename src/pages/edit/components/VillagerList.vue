@@ -34,7 +34,7 @@
           >
             <v-icon>apps</v-icon>
           </v-btn>
-          <span>统计信息</span>
+          <span>查看统计信息</span>
         </v-tooltip>
         <v-text-field
           :append-icon-cb="() => {}"
@@ -137,13 +137,30 @@
       app
       :color="color"
     >
-      <v-toolbar-side-icon>
+      <!-- <v-toolbar-side-icon>
         <v-icon style="color:white" @click="goBackToSelect">arrow_back</v-icon>
-      </v-toolbar-side-icon>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer">
-        <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
-        <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
-      </v-toolbar-side-icon>
+      </v-toolbar-side-icon> -->
+      <v-tooltip bottom>
+        <v-btn
+          slot="activator"
+          icon
+          @click="goBackToSelect"
+        >
+          <v-icon style="color:white">arrow_back</v-icon>
+        </v-btn>
+        <span>返回选择页</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <v-btn
+          slot="activator"
+          icon
+          @click.stop="drawer = !drawer"
+        >
+          <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
+          <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
+        </v-btn>
+        <span>查看村户信息</span>
+      </v-tooltip>
       <span class="title" style="color:white">长顺脱贫攻坚可视化数据库</span>
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">
