@@ -3,7 +3,9 @@
     <v-alert
       v-model="alert"
       dismissible
-      type="success"
+      color="success"
+      icon="check_circle"
+      outline
     >
       保存成功！
     </v-alert>
@@ -112,11 +114,11 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
-      color="teal lighten-2"
       dense
       fixed
       clipped-left
       app
+      :color="color"
     >
       <v-toolbar-side-icon>
         <v-icon style="color:white" @click="goBackToSelect">arrow_back</v-icon>
@@ -128,35 +130,31 @@
       <span class="title" style="color:white">长顺脱贫攻坚可视化数据库</span>
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">
-         <span class="grey--text text--lighten-2 px-0 mx-0">{{currentTown}}</span>/
-         <span class="grey--text text--lighten-3 px-0 mx-0">{{currentBigvillage}}</span>/
+         <span class="grey--text text--lighten-2 px-0 mx-0">{{currentTown}}/</span>
+         <span class="grey--text text--lighten-3 px-0 mx-0">{{currentBigvillage}}/</span>
          <span class="grey--text text--lighten-4 px-0 mx-0" style="font-weight:bold">{{currentVillageName}}</span>
         </span>
       </v-toolbar-title>
       <v-layout column wrap>
         <v-flex xs12 md5 offset-md6>
           <v-btn 
-            color="blue-grey"
+            flat
             @click="ChangeEditState()"
           >
-            <span v-if="tool">
-              <span style="color:white">退出编辑</span>
-            </span>
-            <span v-else>
-              <span style="color:white">开启编辑</span>
-            </span>
+            <span v-if="tool" class="title" style="color:white">浏览</span>
+            <span v-else class="title" style="color:white">编辑</span>
           </v-btn>
           <v-btn 
-            color="lime darken-3"
+            flat
             @click = "changeUpdState()"  
           >
-            <span style="color:white">导入</span>
+            <span class="title" style="color:white">导入</span>
           </v-btn>
           <v-btn
-            color="light-green"
+            flat
             @click="ExportImg()"
           >
-            <span style="color:white">导出</span>
+            <span class="title" style="color:white">导出</span>
           </v-btn>
           <v-toolbar-side-icon @click.stop="drawer = !drawer">
             <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
@@ -230,6 +228,14 @@ export default {
     currentBigvillage(){
       return sessionStorage.getItem('CB');
     },
+    color () {
+      if(this.tool){
+        return 'blue-grey'
+      }
+      else{
+        return 'teal'
+      }
+    }
   },
   props: {
     source: String,

@@ -4,13 +4,10 @@
     light
   >
   <div id="Header">
-    <h1>
-      长顺脱贫攻坚可视化数据库
-    </h1>
+    <img width="384" height="73" src="../../assets/logo.png"/>
   </div>
   <div id="Login">
     <v-container>
-      <!-- <img src="../../assets/cshun.jpg"/> -->
       <v-card max-width="400">
         <v-card-title primary-title>
           <h1>欢迎登录</h1>

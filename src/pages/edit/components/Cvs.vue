@@ -1,52 +1,23 @@
 <template>
     <v-content>
-        <v-layout
+        <!-- <v-layout
             justify-space-between 
             row 
             v-if="EditBtn"
-        >
-            <!-- <v-btn
-                v-on:click="changeStateTo('move');"
-                color="brown light-1"
+        >   
+            <v-flex xs12 md8 offset-md2> -->
+            <v-toolbar
+                floating
+                style="width:1000px;left:200px"
+                v-if="EditBtn"
             >
-                移动画布
-            </v-btn> -->
-            <v-btn
-                v-on:click="changeStateTo('editvert');"
-                color="brown light-1"
-            >
-                选择 | 移动对象
-            </v-btn>
-            <v-btn
-                v-on:click="changeStateTo('freedraw');"
-                color="brown light-1"
-            >
-                自由绘制
-            </v-btn>
-            <v-btn
-                v-on:click="changeStateTo('addvert');"
-                color="brown light-1"
-            >
-                添加控制点
-            </v-btn>
-            <v-btn
-                v-on:click="changeStateTo('connect');"
-                color="brown light-1"
-            >
-                连接
-            </v-btn>
-            <v-btn
-                v-on:click="changeStateTo('remove');"
-                color="brown light-1"
-            >
-                移除
-            </v-btn>
             <v-flex md1>
                 <v-select
                     :items="linetpOptions"
                     label="线条形状"
                     color ='brown light-1'
                     v-model="linetp"
+                    style="margin-top:15px"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -55,6 +26,7 @@
                     label="线条样式"
                     color ='brown light-1'
                     v-model="lineMode"
+                    style="margin-top:15px"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -63,6 +35,7 @@
                     label="线条颜色"
                     color ='brown light-1'
                     v-model="lineColor"
+                    style="margin-top:15px"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -71,6 +44,7 @@
                     label="线条宽度"
                     color ='brown light-1'
                     v-model="lineWidth"
+                    style="margin-top:15px"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -79,6 +53,7 @@
                     label="边缘颜色"
                     color ='brown light-1'
                     v-model="strokeColor"
+                    style="margin-top:15px"
                 ></v-select>
             </v-flex>
             <v-flex md1>
@@ -87,27 +62,78 @@
                     label="边缘宽度"
                     color ='brown light-1'
                     v-model="strokeWidth"
+                    style="margin-top:15px"
                 ></v-select>
             </v-flex>
-            <v-btn
-                v-on:click="undo();"
-                color="blue-grey lighten-1"
-            >
-                <v-icon>undo</v-icon>
-            </v-btn>
-            <v-btn
-                v-on:click="redo();"
-                color="blue-grey lighten-1"
-            >
-                <v-icon>redo</v-icon>
-            </v-btn>
-            <v-btn
-                v-on:click="save();"
-                color="green lighten-1"
-            >
-                保存
-            </v-btn>
-        </v-layout>
+            <v-btn-toggle mandatory class="transparent">
+                <v-btn
+                    flat
+                    v-on:click="changeStateTo('editvert');"
+                    color="brown light-1"
+                >
+                    选择 | 移动
+                </v-btn>
+                <v-btn
+                    flat 
+                    v-on:click="changeStateTo('freedraw');"
+                    color="brown light-1"
+                >
+                    自由绘制
+                </v-btn>
+                <v-btn
+                    flat
+                    v-on:click="changeStateTo('addvert');"
+                    color="brown light-1"
+                >
+                    添加控制点
+                </v-btn>
+                <v-btn
+                    flat
+                    v-on:click="changeStateTo('connect');"
+                    color="brown light-1"
+                >
+                    连接
+                </v-btn>
+                <v-btn
+                    flat
+                    v-on:click="changeStateTo('remove');"
+                    color="brown light-1"
+                >
+                    移除
+                </v-btn>
+                <v-divider
+                    class="mx-2"
+                    vertical
+                ></v-divider>
+                <v-btn
+                    flat
+                    v-on:click="undo();"
+                    color="blue-grey lighten-1"
+                >
+                    <v-icon>undo</v-icon>
+                </v-btn>
+                <v-btn
+                    flat
+                    v-on:click="redo();"
+                    color="blue-grey lighten-1"
+                >
+                    <v-icon>redo</v-icon>
+                </v-btn>
+                <v-divider
+                    class="mx-2"
+                    vertical
+                ></v-divider>
+                <v-btn
+                    flat
+                    v-on:click="save();"
+                    color="green lighten-1"
+                >
+                    <v-icon>save</v-icon>
+                </v-btn>
+            </v-btn-toggle>
+            </v-toolbar>
+            <!-- </v-flex>
+        </v-layout> -->
     <v-layout 
         justify-center
         align-space-around
@@ -298,7 +324,7 @@ export default {
 //   },
   mounted()
   {
-      let wZoom = 0.9,hZoom = 0.9;
+      let wZoom = 0.9,hZoom = 0.8;
       window.addEventListener('resize',function(){
           let width = Math.round(document.body.clientWidth*wZoom);
           let height = Math.round((document.body.clientHeight-40)*hZoom);

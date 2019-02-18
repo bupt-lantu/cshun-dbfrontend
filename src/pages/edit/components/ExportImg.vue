@@ -1,5 +1,5 @@
 <template>
-    <v-app dark>
+    <v-app>
         <v-content>
             <v-toolbar
                 color="teal"
@@ -14,13 +14,13 @@
                     @click="$router.go(-1);"
                     color="green darken-3"
                 >
-                    返回
+                    <span style="color:white">返回</span>
                 </v-btn>
                 <v-btn
                     @click="exportImg();"
                     color="green darken-3"
                 >
-                    确认导出
+                    <span style="color:white">确认导出</span>
                 </v-btn>
                 <v-spacer></v-spacer>
             </v-layout>
