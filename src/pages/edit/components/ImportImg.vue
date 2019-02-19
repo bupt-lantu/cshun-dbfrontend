@@ -10,7 +10,7 @@
             >
             <v-layout align-center justify-center>
                 <v-spacer></v-spacer>
-                <v-btn flat id = "uploadMap">
+                 <v-btn flat id = "uploadMap">
                     <span class="title" style="color:white">上传图片</span>
                     <form>
                         <input type="file" id = "upMap" @change = "uploadMap($event);"/>
@@ -69,7 +69,8 @@ export default {
       let reader = new FileReader();
       reader.readAsDataURL(imgfile[0]);
       reader.onload = (e)=>{
-        if(e){importCvs.setMap(e.target.result);}
+        //if(e){importCvs.setMap(e.target.result);}
+        if(e){this.compressMap(e.target.result,importCvs.setMap.bind(importCvs));}
       }
     },
     confirmMap()
@@ -83,6 +84,26 @@ export default {
     dismiss()
     {
       this.$router.go(-1);
+    },
+    compressMap(src,callbk)
+    {
+      let img = new Image();
+      img.src = src;
+      img.onload = function(){
+        let that = this;
+        let w = this.width, h = this.height;
+        let canvast = document.createElement('canvas');
+        let ctx = canvast.getContext('2d');
+        let scale = Math.max(1,2048/Math.max(w,h));
+        let minw = Math.floor(scale*w),minh = Math.floor(scale*h);
+        //console.log(w,h,minw,minh);
+        this.width = minw, this.height = minh;
+        canvast.width = minw, canvast.height = minh;
+        ctx.drawImage(that,0,0,minw,minh);
+        canvast
+        var ret = canvast.toDataURL('image/jpeg',0.75);
+        callbk(ret);
+      }
     }
   },
   watch:{
