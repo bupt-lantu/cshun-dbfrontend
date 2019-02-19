@@ -446,7 +446,7 @@ export default {
     },
     ChangeEditState(){
       this.tool = !this.tool;
-      console.log("tool:"+this.tool);
+      // console.log("tool:"+this.tool);
       this.$emit('CES');
     },
     ExportImg()
@@ -472,7 +472,7 @@ export default {
     },
     outOfPoverty(condition){
       // console.log(condition.indexOf("已脱贫贫困户"));
-      if(condition.indexOf("已脱贫贫困户")!=-1){
+      if(condition.indexOf("已脱贫")!=-1){
         return true;
       }
       else{
@@ -485,7 +485,7 @@ export default {
         this.firstOpen = true;
         this.totalHousehold = this.villagers.length;
         for(var i=0;i<this.totalHousehold;i++){
-          console.log(this.villagers[i].condition);
+          // console.log(this.villagers[i].condition);
           this.totalVillagers += this.villagers[i].members;
           if(this.villagers[i].condition=="普通户"){
             this.svgdemo[0].household++;
