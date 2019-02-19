@@ -29,7 +29,9 @@
                 <v-spacer></v-spacer>
             </v-layout>
             </v-toolbar>
-            <canvas id="e"></canvas>
+            <div id="cvsdiv" style="overflow-x:auto">
+                <canvas id="e"></canvas>
+            </div>
         </v-content>
     </v-app>
 </template>
@@ -56,6 +58,7 @@ export default {
   },
   mounted()
   {
+        document.getElementById('cvsdiv').width = document.body.clientWidth;
         let width = 2000,height = 2000;
         let savePack = sessionStorage.getItem("savePack");
         document.getElementById('e').width = width;
