@@ -55,21 +55,25 @@ export default class vCanvas
         }
         if(sta!=this.state)this.selectEdge(null);
         let objs = this.canvas.getObjects();
-        if((this.state=="setmap")&&(this.mapProp.mapSrc!=null))this.save(0,true,true);
+        if(this.state=="setmap")
+        {
+            this.state = sta;
+            this.save(0,true,true);
+        }
         if(sta=="move"||sta=="setmap"||sta=="freedraw")
         {
             this.selectVert(this.vRoot);
             for(let tt of objs) 
             {
                 tt.set({selectable:false});
-                if(tt instanceof fabric.Circle) tt.set({strokeWidth: 0,radius: 0});//hide the control points
+                if(tt instanceof fabric.Circle) tt.set({strokeWidth: 0});//hide the control points
             }
         }
         else
         {
             for(let tt of objs)
             {
-                if(tt instanceof fabric.Circle) tt.set({selectable:true,radius:tt.r,strokeWidth:5});
+                if(tt instanceof fabric.Circle) tt.set({selectable:true,strokeWidth:5});
                 if(tt.isSVG==true) tt.set({selectable:true});
                 tt.setCoords();
             }
@@ -110,7 +114,7 @@ export default class vCanvas
         {
             this.mouseDown = true;
             this.freeDrawPth.length = 0;
-            let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
+            let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth/2);
             now.selectable = false;
             now.addlk(this.vRoot,this.lineprop);this.add(now); this.renderAll();
             this.freeDrawPth.push(now);
@@ -223,7 +227,7 @@ export default class vCanvas
         {
             if(Math.abs(e.pointer.x-this.mousePos.x)>=30||Math.abs(e.pointer.y-this.mousePos.y)>=30)
             {
-                let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth);
+                let now = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth/2);
                 now.selectable = false;
                 let pre = this.freeDrawPth[this.freeDrawPth.length-1];
                 this.add(now); now.addlk(pre,this.lineprop);
@@ -238,7 +242,8 @@ export default class vCanvas
     {
         if (this.state == "addvert") 
         {
-            let c = this.makeCircle(e.pointer,++this.counter,this);
+            let c = this.makeCircle(e.pointer,++this.counter,this,this.lineprop.lineWidth/2);
+            c.strokeWidth = 5;
             c.addlk(this.selectedVert,this.lineprop);
             if(this.selectedVert!=this.vRoot) this.selectedVert.draw();
             this.add(c);
@@ -658,7 +663,6 @@ export default class vCanvas
     }
     save(changedSVGid=0,record=true,saveMap=false)
     {   
-        console.log("SAVE!");
         if(this.state=="restore") return;
         let savePack=null;
         this.vis.clear();
@@ -720,7 +724,6 @@ export default class vCanvas
     }
     undo()
     {
-        console.log(this.history.canUndo());
         if(!this.history.canUndo()) return;
         let id = parseInt(this.history.getTopSVGid());
         if(id>0)
