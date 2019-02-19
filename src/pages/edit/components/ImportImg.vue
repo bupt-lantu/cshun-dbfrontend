@@ -94,7 +94,8 @@ export default {
         let w = this.width, h = this.height;
         let canvast = document.createElement('canvas');
         let ctx = canvast.getContext('2d');
-        let scale = Math.max(1,2048/Math.max(w,h));
+        let scale = Math.min(1,2048/Math.max(w,h));
+        console.log(scale);
         let minw = Math.floor(scale*w),minh = Math.floor(scale*h);
         //console.log(w,h,minw,minh);
         this.width = minw, this.height = minh;
