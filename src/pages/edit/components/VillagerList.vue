@@ -10,7 +10,7 @@
       保存成功！
     </v-alert>
     <v-navigation-drawer
-          v-model="rdrawer"
+      v-model="rdrawer"
       right
       temporary
       fixed
@@ -22,6 +22,7 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
+            <div>{{item.household+"户，"+item.people+"人，"+item.proportion+"%"}}</div>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -212,7 +213,7 @@
         <v-btn
           slot="activator"
           icon
-          @click.stop="drawer = !drawer"
+          @click.stop="changeDrawer()"
         >
           <v-icon v-if="drawer" large style="color:white">keyboard_arrow_up</v-icon>
           <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
@@ -293,6 +294,9 @@ export default {
     drawer: false,
     rdrawer: false,
     dialogShow: false,
+    firstOpen: false,
+    totalVillagers: 0,
+    totalHousehold: 0,
     dialog: {
       name: null,
       condition: null,
@@ -313,49 +317,94 @@ export default {
     svgdemo: [
       {
         title: "普通户",
-        avatar: require("@/assets/basic/0.png")
+        avatar: require("@/assets/basic/0.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "已脱贫贫困户",
-        avatar: require("@/assets/basic/1.png")
+        avatar: require("@/assets/basic/1.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "一般贫困户",
-        avatar: require("@/assets/basic/2.png")
+        avatar: require("@/assets/basic/2.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "低保贫困户",
-        avatar: require("@/assets/basic/3.png")
+        avatar: require("@/assets/basic/3.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
-        title: "五保户贫困户",
-        avatar: require("@/assets/basic/4.png")
+        title: "五保贫困户",
+        avatar: require("@/assets/basic/4.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "孤儿低保户",
-        avatar: require("@/assets/basic/5.png")
+        avatar: require("@/assets/basic/5.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "外地常住户口未迁",
-        avatar: require("@/assets/basic/6.png")
+        avatar: require("@/assets/basic/6.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "有安全饮水",
-        avatar: require("@/assets/basic/7.png")
+        avatar: require("@/assets/basic/7.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "无安全饮水",
-        avatar: require("@/assets/basic/8.png")
+        avatar: require("@/assets/basic/8.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "危房",
-        avatar: require("@/assets/basic/9.png")
+        avatar: require("@/assets/basic/9.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "危房改造中",
-        avatar: require("@/assets/basic/10.png")
+        avatar: require("@/assets/basic/10.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "危房已改造",
-        avatar: require("@/assets/basic/11.png")
+        avatar: require("@/assets/basic/11.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "医保未参合",
-        avatar: require("@/assets/basic/12.png")
+        avatar: require("@/assets/basic/12.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "教育无保障",
-        avatar: require("@/assets/basic/13.png")
+        avatar: require("@/assets/basic/13.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       },{
         title: "无主要收入来源",
-        avatar: require("@/assets/basic/14.png")
+        avatar: require("@/assets/basic/14.png"),
+        household: 0,
+        people: 0,
+        proportion: 0
       }
     ]
   }),
@@ -363,8 +412,6 @@ export default {
     ...mapGetters([
       'villagers',
       'currentVillageName',
-      // 'currentTown',
-      // 'currentBigvillage'
     ]),
     currentTown(){
       return sessionStorage.getItem('CT');
@@ -431,6 +478,80 @@ export default {
       else{
         return false;
       }
+    },
+    changeDrawer(){
+      this.drawer = !this.drawer;
+      if(this.firstOpen==false){
+        this.firstOpen = true;
+        this.totalHousehold = this.villagers.length;
+        for(var i=0;i<this.totalHousehold;i++){
+          console.log(this.villagers[i].condition);
+          this.totalVillagers += this.villagers[i].members;
+          if(this.villagers[i].condition=="普通户"){
+            this.svgdemo[0].household++;
+            this.svgdemo[0].people += this.villagers[i].members;
+          }
+          else if(this.outOfPoverty(this.villagers[i].condition)){
+            this.svgdemo[1].household++;
+            this.svgdemo[1].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].condition=="一般贫困户"){
+            this.svgdemo[2].household++;
+            this.svgdemo[2].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].condition=="低保贫困户"){
+            this.svgdemo[3].household++;
+            this.svgdemo[3].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].condition=="五保贫困户"){
+            this.svgdemo[4].household++;
+            this.svgdemo[4].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].condition=="孤儿贫困户"){
+            this.svgdemo[5].household++;
+            this.svgdemo[5].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].condition=="外地常住户口未迁"){
+            this.svgdemo[6].household++;
+            this.svgdemo[6].people += this.villagers[i].members;
+          }
+          if(this.villagers[i].safeWater==true){
+            this.svgdemo[7].household++;
+            this.svgdemo[7].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].safeWater==false){
+            this.svgdemo[8].household++;
+            this.svgdemo[8].people += this.villagers[i].members;
+          }
+          if(this.villagers[i].dilapidatedHouses==0){
+            this.svgdemo[9].household++;
+            this.svgdemo[9].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].dilapidatedHouses==1){
+            this.svgdemo[10].household++;
+            this.svgdemo[10].people += this.villagers[i].members;
+          }
+          else if(this.villagers[i].dilapidatedHouses==3){
+            this.svgdemo[11].household++;
+            this.svgdemo[11].people += this.villagers[i].members;
+          }
+          if(this.villagers[i].medicine=='未参合'){
+            this.svgdemo[12].household++;
+            this.svgdemo[12].people += this.villagers[i].members;
+          }
+          if(this.villagers[i].education=='无在读'){
+            this.svgdemo[13].household++;
+            this.svgdemo[13].people += this.villagers[i].members;
+          }
+          if(this.villagers[i].incomeSource=='无劳力'||this.villagers[i].incomeSource=='无业'){
+            this.svgdemo[14].household++;
+            this.svgdemo[14].people += this.villagers[i].members;
+          }
+        }
+        for(var i=0;i<15;i++){
+          this.svgdemo[i].proportion = (this.svgdemo[i].people/this.totalVillagers*100).toFixed(0);
+        }
+      }
     }
   },
   created(){
@@ -450,7 +571,6 @@ export default {
         this.alert=true;
     });
   },
-
   watch: {
       loader () {
         const l = this.loader
