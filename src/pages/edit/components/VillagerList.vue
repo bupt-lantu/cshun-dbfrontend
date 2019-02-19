@@ -10,7 +10,7 @@
       保存成功！
     </v-alert>
     <v-navigation-drawer
-      v-model="rdrawer"
+          v-model="rdrawer"
       right
       temporary
       fixed
@@ -123,7 +123,7 @@
           <v-icon v-else large style="color:white">keyboard_arrow_down</v-icon>
         </v-btn>
         <span>查看村户信息</span>
-      </v-tooltip>
+      </v-tooltip>      
       <span class="title" style="color:white">长顺脱贫攻坚可视化数据库</span>
       <v-toolbar-title class="mr-5 align-center">
         <span class="title">
@@ -143,7 +143,7 @@
           </v-btn>
           <v-btn 
             flat
-            @click = "changeUpdState()"  
+            @click = "importImg()"  
           >
             <span class="title" style="color:white">导入</span>
           </v-btn>
@@ -156,20 +156,6 @@
         </v-flex>
       </v-layout>
     </v-toolbar>
-    <v-layout v-if="updMap" row align-center style="max-width: 650px">
-      <v-btn id = "uploadMap">
-        <p>上传图片</p>
-        <form>
-          <input type="file" id = "upMap" @change = "uploadMap($event);"/>
-        </form>
-      </v-btn>
-      <v-btn color="blue-grey" @click = "clearMap();">
-        清除地图
-      </v-btn>
-      <v-btn color="blue-grey" @click = "confirmMap();">
-        确认
-      </v-btn>
-    </v-layout>
     <v-dialog
       v-model="dialogShow"
       persistent
@@ -302,29 +288,9 @@ export default {
     villageId:String
   },
   methods:{
-    clearMap()
+    importImg()
     {
-      bus.$emit('uploadMap',null);
-      this.changeUpdState();
-    },
-    uploadMap(e)
-    { 
-      if(!e.target.files[0]) return;
-      let imgfile = e.target.files;
-      let reader = new FileReader();
-      reader.readAsDataURL(imgfile[0]);
-      reader.onload = (e)=>{
-        if(e){bus.$emit('uploadMap',e.target.result);}
-      }
-    },
-    confirmMap()
-    {
-      this.changeUpdState();
-    },
-    changeUpdState()
-    {
-      this.updMap^=1;
-      bus.$emit('changeUpdState',this.updMap);
+      bus.$emit('importImg');
     },
     goBackToSelect(){
       if(this.$store.state.userLevel<=6)
@@ -392,14 +358,6 @@ export default {
 </script>
 
 <style>
-  #uploadMap
-  {
-      position: absolute;left:50%;top:10px;width: 80px;height: 40px;line-height: 40px;background: #74d855;text-align: center;
-      color: #FFF;padding: 0px 5px;-webkit-border-radius: 3px;border-radius: 3px;
-      margin: 0 auto;
-  }
-  #uploadMap form{width:100%;position:absolute; left:0; top:0;opacity:0; filter:alpha(opacity=0);}
-  #uploadMap form input{width: 100%;}
 
   .custom-loader {
     animation: loader 1s infinite;

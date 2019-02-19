@@ -134,7 +134,7 @@
             </v-toolbar>
             <!-- </v-flex>
         </v-layout> -->
-    <v-layout
+    <v-layout 
         justify-center
         align-space-around
         @dragover="dragOver($event)" @drop="dragFinished($event)"
@@ -280,6 +280,14 @@ export default {
         this.$router.push({ name: 'exportImg'});
         //let routeData = this.$router.resolve({ name: 'exportImg'});
         //let wd = window.open(routeData.href,'_blank');
+    },
+    importImg()
+    {
+        let savePack = cvs.save(0,true,true);
+        //let savePack = cvs.saveToOuter();//cvs.save(0,false,);  
+        sessionStorage.setItem("savePack",savePack);
+        sessionStorage.setItem("historyStack",JSON.stringify(cvs.history));
+        this.$router.push({ name: 'importImg'});
     }
   },
   watch:{
@@ -337,7 +345,19 @@ export default {
       document.getElementById('c').width = width;
       document.getElementById('c').height = height;
       this.$store.dispatch('getVillagers',this.editId).then(()=>{
-      if(sessionStorage.getItem(`canvas${this.editId}`))
+      let savePack = sessionStorage.getItem("savePack");
+      if(!(savePack===null))
+      {
+            cvs = new vCanvas({x:width,y:height},'c',savePack);
+            this.linetp=cvs.lineprop.linetp;
+            this.lineMode=cvs.lineprop.lineMode;
+            this.lineColor=cvs.lineprop.lineColor;
+            this.lineWidth=cvs.lineprop.lineWidth;
+            this.strokeColor=cvs.lineprop.strokeColor;
+            this.strokeWidth=cvs.lineprop.strokeWidth;
+            sessionStorage.removeItem("savePack");
+      }
+      else if(sessionStorage.getItem(`canvas${this.editId}`))
       {
             let canvasStr=sessionStorage.getItem(`canvas${this.editId}`);
             cvs = new vCanvas({x:width,y:height},'c',canvasStr);
@@ -348,19 +368,19 @@ export default {
             this.strokeColor=cvs.lineprop.strokeColor;
             this.strokeWidth=cvs.lineprop.strokeWidth;
       }
-        else
-        {
+      else
+      {
             let canvasStr="";
             cvs = new vCanvas({x:width,y:height},'c',canvasStr);
-        }
+      }
       let historystack = sessionStorage.getItem("historyStack");
-      if(historystack!=null)
+      if(!(historystack===null))
       {
           let temphistory = JSON.parse(historystack);
           cvs.history.top = temphistory.top;
           cvs.history.historyStack = temphistory.historyStack;
           cvs.history.changedSVGid = temphistory.changedSVGid;
-          
+          sessionStorage.removeItem("historyStack");
       }
       });    
     //   window.addEventListener('addSVG',function(event){
@@ -375,6 +395,9 @@ export default {
         bus.$on('exportImg',()=>{
             this.exportImg();
         });
+        bus.$on('importImg',()=>{
+            this.importImg();
+        });
         bus.$on('selectEdge',(e)=>{
             this.linetp=e.linetp;
             this.lineMode=e.lineMode;
@@ -383,21 +406,15 @@ export default {
             this.strokeColor=e.strokeColor;
             this.strokeWidth=e.strokeWidth;
         });
-        bus.$on('uploadMap',(e)=>{
-            cvs.setMap(e);
-        });
-        bus.$on('changeUpdState',(e)=>{
-            this.updMap = e;
-            if(e){this.changeStateTo("setmap");}
-            else
-            {
-                if(this.EditBtn) this.changeStateTo("editvert");
-                else{this.changeStateTo("move");}
-            }
-        })
     //   window.addEventListener('saveToServer',(event)=>{
     //       bus.$emit('save',event.detail.savePack);
     //   });
+  },
+  destroyed()
+  {
+      bus.$off('exportImg');
+      bus.$off('importImg');
+      bus.$off('selectEdge');
   }
 }
 </script>

@@ -11,7 +11,7 @@
             <v-layout align-center justify-center>
                 <v-spacer></v-spacer>
                 <v-btn
-                    @click="$router.go(-1);"
+                    @click="goBack();"
                     flat
                 >
                     <span class="title" style="color:white">返回编辑</span>
@@ -45,6 +45,11 @@ export default {
   methods:{
     exportImg: function(){
           exportCvs.export();
+    },
+    goBack()
+    {
+        sessionStorage.removeItem("savePack");
+        this.$router.go(-1);
     }
   },
   watch:{
