@@ -327,7 +327,8 @@ export default {
       bus.$emit('changeUpdState',this.updMap);
     },
     goBackToSelect(){
-      this.$router.push({ name: 'select'});
+      if(this.$store.state.userLevel<=6)
+        this.$router.push({ name: 'select'});
     },
     dragStart(event){
         event.dataTransfer.setData("text/plain", event.target.id);

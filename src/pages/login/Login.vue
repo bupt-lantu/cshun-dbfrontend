@@ -11,7 +11,6 @@
       <v-card max-width="400">
         <v-card-title primary-title>
           <h1>欢迎登录</h1>
-          
         <v-form ref="form" v-model="valid">
           <v-text-field id="username" 
             v-model="username"
@@ -93,7 +92,7 @@ export default {
         this.$Http.post('login', postdata)
         .then(
           response => {
-            console.log(response);
+            // console.log(response);
             sessionStorage.setItem('isLogin', true);
             // this.$router.push({ name: 'select'});
             this.switchToRoute(response.data.info.level,response.data.info.visable[0]);
@@ -114,6 +113,8 @@ export default {
       }
     },//end submit
     switchToRoute(level,id){
+      this.$store.state.userLevel=level;
+      this.$store.state.userRespectId=id;
       if(level==7){
         this.$router.push({ name: 'edit',params:{id:id}});
       }
