@@ -465,7 +465,6 @@ export default {
 </script>
 
 <style>
-
   .custom-loader {
     animation: loader 1s infinite;
     display: flex;

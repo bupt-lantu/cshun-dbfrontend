@@ -10,20 +10,32 @@
             >
             <v-layout align-center justify-center>
                 <v-spacer></v-spacer>
-                <v-btn color="green darken-3" id = "uploadMap">
-                    <span style="color:white">上传图片</span>
+                <v-btn flat id = "uploadMap">
+                    <span class="title" style="color:white">上传图片</span>
                     <form>
                         <input type="file" id = "upMap" @change = "uploadMap($event);"/>
                     </form>
                 </v-btn>
-                <v-btn color="green darken-3" @click = "clearMap();">
-                    <span style="color:white">清除地图</span>
+                <v-divider
+                    class="mx-3"
+                    vertical
+                ></v-divider>
+                <v-btn flat @click = "clearMap();">
+                    <span class="title" style="color:white">清除地图</span>
                 </v-btn>
-                <v-btn color="green darken-3" @click = "confirmMap();">
-                    <span style="color:white">确认</span>
+                <v-divider
+                    class="mx-3"
+                    vertical
+                ></v-divider>
+                <v-btn flat @click = "confirmMap();">
+                    <span class="title" style="color:white">确认</span>
                 </v-btn>
-                <v-btn color="green darken-3" @click = "dismiss();">
-                    <span style="color:white">取消</span>
+                <v-divider
+                    class="mx-3"
+                    vertical
+                ></v-divider>
+                <v-btn flat @click = "dismiss();">
+                    <span class="title" style="color:white">取消</span>
                 </v-btn>
                 <v-spacer></v-spacer>
             </v-layout>
