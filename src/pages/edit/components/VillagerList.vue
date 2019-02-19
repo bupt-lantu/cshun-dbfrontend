@@ -48,7 +48,7 @@
         </v-tooltip>
         <v-text-field
           :append-icon-cb="() => {}"
-          placeholder="村户查询..."
+          placeholder="搜索村户"
           single-line
           clearable
           append-icon="search"
@@ -58,18 +58,113 @@
         <v-list>
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
-              <template>
-                <svg width="300" height="100%" version="1.1"
-                xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="6" width="100" height="36" 
-                    style="fill:green;stroke:blue;
-                    stroke-width:5;opacity:0.5"
-                  ></rect>
-                  <text x="45" y="30">
-                    {{ index-'0'+1 }}
-                  </text>
-                </svg>
-              </template>
+              <svg width="100%" height="100%" version="1.1"
+              xmlns="http://www.w3.org/2000/svg">
+                <template v-if="item.condition=='外地常住户口未迁'">
+                  <rect x="2" y="6" width="100" height="36" style="stroke:#999999;stroke-width:3;"></rect>
+                </template>
+                <template v-else>
+                  <rect v-if="item.condition=='普通户'&&item.safeWater=='有安全饮水'" x="2" y="6" width="100" height="36" style="fill:#2F75C1;stroke:#002FF9;stroke-width:3;"></rect>
+                  <rect v-else-if="outOfPoverty(item.condition)&&item.safeWater==true" x="2" y="6" width="100" height="36" style="fill:#00AE57;stroke:#002FF9;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='一般贫困户'&&item.safeWater==true" x="2" y="6" width="100" height="36" style="fill:#FFFC3F;stroke:#002FF9;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='低保贫困户'&&item.safeWater==true" x="2" y="6" width="100" height="36" style="fill:#FFBD2F;stroke:#002FF9;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='五保贫困户'&&item.safeWater==true" x="2" y="6" width="100" height="36" style="fill:#FF000C;stroke:#002FF9;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='孤儿低保户'&&item.safeWater==true" x="2" y="6" width="100" height="36" style="fill:#8ECE5B;stroke:#002FF9;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='普通户'&&item.safeWater==false" x="2" y="6" width="100" height="36" style="fill:#2F75C1;stroke:#000000;stroke-width:3;"></rect>
+                  <rect v-else-if="outOfPoverty(item.condition)&&item.safeWater==false" x="2" y="6" width="100" height="36" style="fill:#00AE57;stroke:#000000;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='一般贫困户'&&item.safeWater==false" x="2" y="6" width="100" height="36" style="fill:#FFFC3F;stroke:#000000;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='低保贫困户'&&item.safeWater==false" x="2" y="6" width="100" height="36" style="fill:#FFBD2F;stroke:#000000;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='五保贫困户'&&item.safeWater==false" x="2" y="6" width="100" height="36" style="fill:#FF000C;stroke:#000000;stroke-width:3;"></rect>
+                  <rect v-else-if="item.condition=='孤儿低保户'&&item.safeWater==false" x="2" y="6" width="100" height="36" style="fill:#8ECE5B;stroke:#000000;stroke-width:3;"></rect>
+                  <!-- 非危房 -->
+                  <template v-if="item.dilapidatedHouses==0">
+                    <path d="M5 10 L 100 40" fill="transparent" stroke="brown"/>
+                    <path d="M24 10 L 100 34" fill="transparent" stroke="brown"/>
+                    <path d="M43 10 L 100 28" fill="transparent" stroke="brown"/>
+                    <path d="M62 10 L 100 22" fill="transparent" stroke="brown"/>
+                    <path d="M81 10 L 100 16" fill="transparent" stroke="brown"/>
+
+                    <path d="M5 40 L 100 10" fill="transparent" stroke="brown"/>
+                    <path d="M5 34 L 81 10" fill="transparent" stroke="brown"/>
+                    <path d="M5 28 L 62 10" fill="transparent" stroke="brown"/>
+                    <path d="M5 22 L 43 10" fill="transparent" stroke="brown"/>
+                    <path d="M5 16 L 24 10" fill="transparent" stroke="brown"/>
+
+                    <path d="M5 16 L 81 40" fill="transparent" stroke="brown"/>
+                    <path d="M5 22 L 62 40" fill="transparent" stroke="brown"/>
+                    <path d="M5 28 L 43 40" fill="transparent" stroke="brown"/>
+                    <path d="M5 34 L 24 40" fill="transparent" stroke="brown"/>
+
+                    <path d="M24 40 L 100 16" fill="transparent" stroke="brown"/>
+                    <path d="M43 40 L 100 22" fill="transparent" stroke="brown"/>
+                    <path d="M62 40 L 100 28" fill="transparent" stroke="brown"/>
+                    <path d="M81 40 L 100 34" fill="transparent" stroke="brown"/>
+                  </template>
+                  <!-- 危房改造中 -->
+                  <template v-else-if="item.dilapidatedHouses==1">
+                    <path d="M5 20 L 100 20" fill="transparent" stroke="brown" stroke-dasharray="5,5"/>
+                    <path d="M5 30 L 100 30" fill="transparent" stroke="brown" stroke-dasharray="5,5"/>
+                    <path d="M35 10 L 35 40" fill="transparent" stroke="brown" stroke-dasharray="3,3"/>
+                    <path d="M70 10 L 70 40" fill="transparent" stroke="brown" stroke-dasharray="3,3"/>
+                  </template>
+                  <!-- 危房已改造 -->
+                  <template v-else-if="item.dilapidatedHouses==3">
+                    <circle cx="14" cy="11" r="1" fill="brown"/>
+                    <circle cx="14" cy="18" r="1" fill="brown"/>
+                    <circle cx="14" cy="25" r="1" fill="brown"/>
+                    <circle cx="14" cy="32" r="1" fill="brown"/>
+                    <circle cx="14" cy="39" r="1" fill="brown"/>
+                    <circle cx="33" cy="11" r="1" fill="brown"/>
+                    <circle cx="33" cy="18" r="1" fill="brown"/>
+                    <circle cx="33" cy="25" r="1" fill="brown"/>
+                    <circle cx="33" cy="32" r="1" fill="brown"/>
+                    <circle cx="33" cy="39" r="1" fill="brown"/>
+                    <circle cx="52" cy="11" r="1" fill="brown"/>
+                    <circle cx="52" cy="18" r="1" fill="brown"/>
+                    <!-- <circle cx="52" cy="25" r="1" fill="brown"/> -->
+                    <circle cx="52" cy="32" r="1" fill="brown"/>
+                    <circle cx="52" cy="39" r="1" fill="brown"/>
+                    <circle cx="71" cy="11" r="1" fill="brown"/>
+                    <circle cx="71" cy="18" r="1" fill="brown"/>
+                    <circle cx="71" cy="25" r="1" fill="brown"/>
+                    <circle cx="71" cy="32" r="1" fill="brown"/>
+                    <circle cx="71" cy="39" r="1" fill="brown"/>
+                    <circle cx="90" cy="11" r="1" fill="brown"/>
+                    <circle cx="90" cy="18" r="1" fill="brown"/>
+                    <circle cx="90" cy="25" r="1" fill="brown"/>
+                    <circle cx="90" cy="32" r="1" fill="brown"/>
+                    <circle cx="90" cy="39" r="1" fill="brown"/>
+                  </template>
+
+                  <template v-if="item.medicine=='未参合'">
+                    <path d="M5 10 L 99 10 L 99 39 L 5 39 Z" fill="transparent" stroke="#FF2D36" stroke-width="3"/>
+                    <template v-if="item.education=='无在读'">
+                      <path d="M7 12 L 97 12 L 97 37 L 7 37 Z" fill="transparent" stroke="#FFFC74" stroke-width="3"/>
+                      <template v-if="item.incomeSource=='无业'||item.incomeSource=='无劳力'">
+                        <path d="M9 14 L 95 14 L 95 35 L 9 35 Z" fill="transparent" stroke="#969BCA" stroke-width="3"/>
+                      </template>
+                    </template>
+                    <template v-else-if="item.incomeSource=='无业'||item.incomeSource=='无劳力'">
+                      <path d="M7 12 L 97 12 L 97 37 L 7 37 Z" fill="transparent" stroke="#969BCA" stroke-width="3"/>
+                    </template>
+                  </template>
+                  <template v-else-if="item.education=='无在读'">
+                    <path d="M5 10 L 99 10 L 99 39 L 5 39 Z" fill="transparent" stroke="#FFFC74" stroke-width="3"/>
+                    <template v-if="item.incomeSource=='无业'||item.incomeSource=='无劳力'">
+                      <path d="M7 12 L 97 12 L 97 37 L 7 37 Z" fill="transparent" stroke="#969BCA" stroke-width="3"/>
+                    </template>
+                  </template>
+                  <template v-else-if="item.incomeSource=='无业'||item.incomeSource=='无劳力'">
+                    <path d="M5 10 L 99 10 L 99 39 L 5 39 Z" fill="transparent" stroke="#969BCA" stroke-width="3"/>
+                  </template>
+                  <!-- <path d="M5 10 L 99 10 L 99 39 L 5 39 Z" fill="transparent" stroke="yellow" stroke-width="3"/>
+                  <path d="M7 12 L 97 12 L 97 37 L 7 37 Z" fill="transparent" stroke="brown" stroke-width="3"/>
+                  <path d="M9 14 L 95 14 L 95 35 L 9 35 Z" fill="transparent" stroke="grey" stroke-width="3"/> -->
+                </template>
+                <text x="45" y="30">
+                  {{ index-'0'+1 }}
+                </text>
+              </svg>
             </v-list-tile-action>
             <v-spacer></v-spacer>
             <!-- <v-list-tile-title v-text="item.name"></v-list-tile-title> -->
@@ -180,10 +275,13 @@
         <div class="title" style="text-align:center;height:50px;">村户信息一览表</div>
         <div class="title" style="margin-left:30px;height:30px">{{"户名:&nbsp;&nbsp;&nbsp;"+dialog.name}}</div>
         <div class="title" style="margin-left:30px;height:30px">{{"性质:&nbsp;&nbsp;&nbsp;"+dialog.condition}}</div>
-        <div class="title" style="margin-left:30px;height:30px">{{"饮水:&nbsp;&nbsp;&nbsp;"+dialog.safeWater}}</div>
+        <div class="title" style="margin-left:30px;height:30px">{{"饮水:&nbsp;&nbsp;&nbsp;"+(dialog.safeWater?"有":"无")}}</div>
         <div class="title" style="margin-left:30px;height:30px">{{"道路:&nbsp;&nbsp;&nbsp;"+dialog.haveRoad}}</div>
         <div class="title" style="margin-left:30px;height:30px">{{"人口:&nbsp;&nbsp;&nbsp;"+dialog.members}}</div>
-        <div class="title" style="margin-left:30px;height:30px">{{"房屋:&nbsp;&nbsp;&nbsp;"+dialog.dilapidatedHouses}}</div>
+        <div class="title" style="margin-left:30px;height:30px">
+          {{"房屋:&nbsp;&nbsp;&nbsp;"+
+          (dialog.dilapidatedHouses==0?'危房':dialog.dilapidatedHouses==1?'危房改造中':dialog.dilapidatedHouses==2?'已搬迁':dialog.dilapidatedHouses==3?'危房已改造':'无房')}}
+        </div>
         <div class="title" style="margin-left:30px;height:30px">{{"教育保障:&nbsp;&nbsp;&nbsp;"+dialog.education}}</div>
         <div class="title" style="margin-left:30px;height:30px">{{"医疗保障:&nbsp;&nbsp;&nbsp;"+dialog.medicine}}</div>
         <div class="title" style="margin-left:30px;height:30px">{{"致贫原因:&nbsp;&nbsp;&nbsp;"+dialog.poorReason}}</div>
@@ -357,6 +455,15 @@ export default {
       this.dialog.incomeSource = this.villagers[curId].incomeSource;
       this.dialog.measure = this.villagers[curId].measure;
       // console.log();
+    },
+    outOfPoverty(condition){
+      // console.log(condition.indexOf("已脱贫贫困户"));
+      if(condition.indexOf("已脱贫贫困户")!=-1){
+        return true;
+      }
+      else{
+        return false;
+      }
     }
   },
   created(){
