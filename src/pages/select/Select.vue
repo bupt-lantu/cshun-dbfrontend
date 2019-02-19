@@ -11,10 +11,16 @@
     <v-container>
       <v-layout column wrap>
         <v-card-title>
+          <!-- 
+            level==5 显示一个村的组列表 
+            level==3 显示一个镇的村列表
+            level==1 显示镇的列表和村的列表
+          -->
             <v-form ref="form">
               <v-layout>
                 <v-flex xs12 md5>
                   <v-select 
+                  v-if="userLevel<=2"
                     :items="townsArr"
                     v-model="selectTown"
                     label="选择镇"
@@ -26,6 +32,7 @@
                 </v-flex>
                 <v-flex xs12 md5 offset-lg1>
                   <v-select 
+                   v-if="userLevel<=4"
                     :items="bigvillagesArr"
                     v-model="selectBigvillage"
                     label="选择村"
@@ -37,6 +44,7 @@
                 </v-flex>
                 <v-flex xs12 md5 offset-lg1>
                   <v-btn 
+                   v-if="userLevel<=4"
                     class="mx-0 px-0 text-xs-center"
                     color="blue-grey"
                     @click="submit"
@@ -46,7 +54,7 @@
                     </span>
                   </v-btn>
                 </v-flex>
-                <v-flex xs12 sm5 md5 offset-lg1>
+                <v-flex xs12 sm5 md5 offset-lg1 align-self-end px-0>
                   <v-autocomplete
                     v-model="keyword"
                     :items="villages"
@@ -129,6 +137,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import axios from './../../connect.js'
 export default {
   name: "Select",
   data(){
@@ -138,7 +147,7 @@ export default {
       selectedName: "",
       // villagesInfo: []
       // item1s:['大王镇','小王镇','双王镇'],
-      item2s:['大王村','小王村','双王村'],
+      // item2s:['大王村','小王村','双王村'],
       selectTown:'',
       selectBigvillage:'',
       backTopShow: false
@@ -151,12 +160,25 @@ export default {
       'towns',
       'townsArr',
       'bigvillagesArr',
-      'bigvillages'
+      'bigvillages',
+
+      'userLevel',
+      'userRespectId'
     ]),
   },
   created(){
     // this.$store.dispatch('getVillagesInfo');
-    this.$store.dispatch('getTowns');
+    if(this.userLevel==1||this.userLevel==2)
+      this.$store.dispatch('getTowns');
+    if(this.userLevel==3||this.userLevel==4)
+      this.$store.dispatch('getBigvillages');
+    if(this.userLevel==5||this.userLevel==6){
+      axios.get(`bigvillage/${this.userRespectId}`).then((res) => {
+        this.$store.dispatch('getVillagesInfo',res.data.info.gumis);
+        // console.log(res.data.info.gumis);
+      });
+    }
+
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
@@ -193,6 +215,7 @@ export default {
     },
     submit(){
       if(this.$refs.form.validate()) {
+        
          let bigvillage=this.bigvillages.find((obj) => obj.name===this.selectBigvillage);
          this.$store.dispatch('setCurrentBigvillage',this.selectBigvillage);
          this.$store.dispatch('getVillagesInfo',bigvillage.gumis);

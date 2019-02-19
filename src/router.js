@@ -4,6 +4,7 @@ import Login from '@/pages/login/Login.vue'
 import Select from '@/pages/select/Select.vue'
 import Edit from '@/pages/edit/Edit.vue'
 import ExportImg from '@/pages/edit/components/ExportImg.vue'
+import ImprotImg from '@/pages/edit/components/ImportImg.vue'
 import NotFound from '@/pages/errors/NotFound.vue'
 Vue.use(Router)
 
@@ -35,7 +36,14 @@ export default new Router({
         auth:true
       }
     },
-
+    {
+      path: '/importImg',
+      name: 'importImg',
+      component: ImprotImg,
+      meta:{
+        auth:true
+      }
+    },
     {
       path: '/exportImg',
       name: 'exportImg',

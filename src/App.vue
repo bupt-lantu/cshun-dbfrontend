@@ -15,3 +15,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+ *{
+    font-family:'Microsoft YaHei','Courier New', Courier, monospace
+ }
+</style>
+

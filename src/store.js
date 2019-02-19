@@ -16,7 +16,9 @@ export default new Vuex.Store({
       currentTown:'',
       bigvillages:[],
       bigvillagesArr:[],
-      currentBigvillage:''
+      currentBigvillage:'',
+      userLevel:999999,
+      userRespectId:''
   },
 
   mutations: {
@@ -102,6 +104,12 @@ export default new Vuex.Store({
     },
     currentBigvillage(state){
       return state.currentBigvillage;
+    },
+    userLevel(state){
+      return state.userLevel;
+    },
+    userRespectId(state){
+      return state.userRespectId;
     }
   },
 
@@ -177,34 +185,62 @@ export default new Vuex.Store({
       );
     },
     getTowns(context){
-      axios.get(`towns`).then((res) => {
-        context.commit('setTowns',res.data.list);
-        context.commit('setTownsArr',res.data.list);
-      })
+      if(context.state.userLevel<=2){
+        axios.get(`towns`).then((res) => {
+          context.commit('setTowns',res.data.list);
+          context.commit('setTownsArr',res.data.list);
+        })
+      }
     },
     getBigvillages(context,id){
-      axios.get(`towns/${id}`).then((res) => {
-        context.commit('setCurrentTown',res.data.info.name);
-        let bigvillages=res.data.info.villages;
-        let tmpArr=[];
-        let tmp=[];
-        const promises=bigvillages.map((xid)=>{
-          return axios.get(`bigvillage/${xid}`);
-        });
-        Promise.all(promises).then((ress)=>{
-          for(let res of ress){
-            tmpArr.push(res.data.info.name);
-            let tmpData={};
-            tmpData.id=res.data.info._id;
-            tmpData.name=res.data.info.name;
-            tmpData.gumis=res.data.info.gumis;
-            tmp.push(tmpData);
-          }
-        }).then(()=>{
-          context.commit('setBigvillagesArr',tmpArr);
-          context.commit('setBigvillages',tmp);
-        }).catch((err) => console.log(err));
-      })
+      if(context.state.userLevel<=2){
+        axios.get(`towns/${id}`).then((res) => {
+          context.commit('setCurrentTown',res.data.info.name);
+          let bigvillages=res.data.info.villages;
+          let tmpArr=[];
+          let tmp=[];
+          const promises=bigvillages.map((xid)=>{
+            return axios.get(`bigvillage/${xid}`);
+          });
+          Promise.all(promises).then((ress)=>{
+            for(let res of ress){
+              tmpArr.push(res.data.info.name);
+              let tmpData={};
+              tmpData.id=res.data.info._id;
+              tmpData.name=res.data.info.name;
+              tmpData.gumis=res.data.info.gumis;
+              tmp.push(tmpData);
+            }
+          }).then(()=>{
+            context.commit('setBigvillagesArr',tmpArr);
+            context.commit('setBigvillages',tmp);
+          }).catch((err) => console.log(err));
+        })
+      }
+      else if(context.state.userLevel==3||context.state.userLevel==4){
+        axios.get(`towns/${context.state.userRespectId}`).then((res) => {
+          context.commit('setCurrentTown',res.data.info.name);
+          let bigvillages=res.data.info.villages;
+          let tmpArr=[];
+          let tmp=[];
+          const promises=bigvillages.map((xid)=>{
+            return axios.get(`bigvillage/${xid}`);
+          });
+          Promise.all(promises).then((ress)=>{
+            for(let res of ress){
+              tmpArr.push(res.data.info.name);
+              let tmpData={};
+              tmpData.id=res.data.info._id;
+              tmpData.name=res.data.info.name;
+              tmpData.gumis=res.data.info.gumis;
+              tmp.push(tmpData);
+            }
+          }).then(()=>{
+            context.commit('setBigvillagesArr',tmpArr);
+            context.commit('setBigvillages',tmp);
+          }).catch((err) => console.log(err));
+        })
+      }
     },
     setCurrentBigvillage(context,name){
       context.commit('setCurrentBigvillage',name);
