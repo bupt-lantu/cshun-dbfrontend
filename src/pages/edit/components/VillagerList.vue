@@ -471,6 +471,7 @@ export default {
 
    search(key){
      if(!key){
+       this.keyword="";
        for(let villager of this.villagers)
             villager.show=true;
           return;
@@ -480,7 +481,6 @@ export default {
         if(villager.name.indexOf(key)>=0)
               villager.show=true;
      }
-    //  this.keyword="";
     },
     importImg()
     {
