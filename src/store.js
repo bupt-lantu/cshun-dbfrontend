@@ -18,7 +18,9 @@ export default new Vuex.Store({
       bigvillagesArr:[],
       currentBigvillage:'',
       userLevel:999999,
-      userRespectId:''
+      userRespectId:'',
+
+      selectLoading:false
   },
 
   mutations: {
@@ -67,6 +69,9 @@ export default new Vuex.Store({
     setCurrentBigvillage(state,payload){
       state.currentBigvillage=payload;
       sessionStorage.setItem('CB',payload);
+    },
+    changeSelectLoading(state){
+      state.selectLoading=!state.selectLoading;
     }
   },
 
@@ -110,20 +115,35 @@ export default new Vuex.Store({
     },
     userRespectId(state){
       return state.userRespectId;
+    },
+    selectLoading(state){
+      return state.selectLoading;
     }
   },
 
   actions: {
     getVillagesInfo(context,payload){
-      payload.map((xid)=>{
-        axios.get(`village/${xid}`).then((res) =>{
-          // context.commit('setVillagesInfo',res.data.list);
+      context.commit('changeSelectLoading');
+      // payload.map((xid)=>{
+      //   axios.get(`village/${xid}`).then((res) =>{
+      //     // context.commit('setVillagesInfo',res.data.list);
+      //     context.state.villagesInfo.push(res.data);
+      //     context.state.villages.push(res.data.name);
+      //   }).catch((err)=>{
+      //     console.log(err);
+      //   });
+      // });
+      const promises=payload.map((xid)=>{
+        return axios.get(`village/${xid}`);
+      });
+      Promise.all(promises).then((ress)=>{
+        for(let res of ress){
           context.state.villagesInfo.push(res.data);
           context.state.villages.push(res.data.name);
-        }).catch((err)=>{
-          console.log(err);
-        });
-      });
+        }
+      }).then(()=>{
+        context.commit('changeSelectLoading');
+      }).catch((err) => console.log(err));
     },
 
     getVillagers(context,id){

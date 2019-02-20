@@ -45,6 +45,7 @@
                 <v-flex xs12 md5 offset-lg1>
                   <v-btn 
                    v-if="userLevel<=4"
+                    :loading="selectLoading"
                     class="mx-0 px-0 text-xs-center"
                     color="blue-grey"
                     @click="submit"
@@ -163,19 +164,20 @@ export default {
       'bigvillages',
 
       'userLevel',
-      'userRespectId'
+      'userRespectId',
+
+      'selectLoading'
     ]),
   },
   created(){
     // this.$store.dispatch('getVillagesInfo');
-    if(this.userLevel==1||this.userLevel==2)
+    if(this.userLevel==1||this.userLevel==2||this.userLevel==0)
       this.$store.dispatch('getTowns');
     if(this.userLevel==3||this.userLevel==4)
       this.$store.dispatch('getBigvillages');
     if(this.userLevel==5||this.userLevel==6){
       axios.get(`bigvillage/${this.userRespectId}`).then((res) => {
         this.$store.dispatch('getVillagesInfo',res.data.info.gumis);
-        // console.log(res.data.info.gumis);
       });
     }
 
