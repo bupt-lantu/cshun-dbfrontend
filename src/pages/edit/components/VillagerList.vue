@@ -199,7 +199,7 @@
       <!-- <v-toolbar-side-icon>
         <v-icon style="color:white" @click="goBackToSelect">arrow_back</v-icon>
       </v-toolbar-side-icon> -->
-      <v-tooltip bottom>
+      <v-tooltip bottom v-if="userLevel<=6">
         <v-btn
           slot="activator"
           icon
@@ -231,6 +231,7 @@
       <v-layout column wrap>
         <v-flex xs12 md5 offset-md7>
           <v-btn 
+            v-if="userLevel%2"
             flat
             @click="ChangeEditState()"
           >
@@ -238,6 +239,7 @@
             <span v-else class="title" style="color:white">编辑</span>
           </v-btn>
           <v-btn 
+            v-if="userLevel%2"
             flat
             @click = "importImg()"  
           >
@@ -412,6 +414,8 @@ export default {
     ...mapGetters([
       'villagers',
       'currentVillageName',
+
+      'userLevel'
     ]),
     currentTown(){
       return sessionStorage.getItem('CT');
