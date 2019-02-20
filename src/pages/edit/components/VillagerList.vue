@@ -47,7 +47,7 @@
           </v-btn>
           <span>查看统计信息</span>
         </v-tooltip>
-        <v-text-field
+        <!-- <v-text-field
           :append-icon-cb="() => {}"
           placeholder="搜索村户"
           single-line
@@ -55,9 +55,29 @@
           append-icon="search"
           hide-details
           style="margin-left:15px; margin-right:15px"
-        ></v-text-field>
+        ></v-text-field> -->
+          <v-list-tile>
+            <v-autocomplete
+                    v-model="keyword"
+                    :items="villagersNameArr"
+                    :search-input.sync="selectedVillager"
+                    :label="'搜索村户'"
+                    append-icon="search"
+                    large
+                    autofocus
+                    light
+                  >
+                    <template slot="no-data">
+                      <v-list-tile>
+                        <v-list-tile-title>
+                          无此人
+                        </v-list-tile-title>
+                      </v-list-tile>
+                    </template>
+            </v-autocomplete>
+          </v-list-tile>
         <v-list>
-          <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas" avatar>
+          <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas && (item.show==undefined||item.show==true)" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
               <svg width="100%" height="100%" version="1.1"
               xmlns="http://www.w3.org/2000/svg">
@@ -312,7 +332,7 @@ export default {
       incomeSource: null,
       measure: null,
       comments: null,
-      livedInVillage: null
+      livedInVillage: null,
     },
     updMap: false,
     loader: null,
@@ -408,7 +428,10 @@ export default {
         people: 0,
         proportion: 0
       }
-    ]
+    ],
+
+    keyword:"",
+    selectedVillager:"",
   }),
   computed:{
     ...mapGetters([
@@ -430,6 +453,14 @@ export default {
       else{
         return 'teal'
       }
+    },
+    villagersNameArr(){
+      return this.villagers.map(item => { 
+        if(!item.isInCanvas) 
+          return item.name
+        else
+          return `${item.name}(地图中)`;
+        });
     }
   },
   props: {
@@ -437,6 +468,20 @@ export default {
     villageId:String
   },
   methods:{
+
+   search(key){
+     if(!key){
+       for(let villager of this.villagers)
+            villager.show=true;
+          return;
+      }
+     for(let villager of this.villagers){
+       villager.show=false;
+        if(villager.name.indexOf(key)>=0)
+              villager.show=true;
+     }
+    //  this.keyword="";
+    },
     importImg()
     {
       bus.$emit('importImg');
@@ -583,8 +628,11 @@ export default {
         setTimeout(() => (this[l] = false), 3000)
 
         this.loader = null
-      }
-    }
+      },
+      selectedVillager:function(val){
+          this.search(val);
+      },
+    },
 }
 </script>
 

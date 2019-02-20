@@ -55,6 +55,8 @@
                     </span>
                   </v-btn>
                 </v-flex>
+                <v-flex><v-btn large v-if="userLevel>=5 && !selectLoading" flat disabled></v-btn></v-flex>
+                <v-flex><v-btn large v-if="userLevel>=5 && selectLoading" :loading="selectLoading" flat center></v-btn></v-flex>
                 <v-flex xs12 sm5 md5 offset-lg1 align-self-end px-0>
                   <v-autocomplete
                     v-model="keyword"
