@@ -251,7 +251,7 @@
       <v-layout column wrap>
         <v-flex xs12 md5 offset-md7>
           <v-btn 
-            v-if="userLevel%2"
+            v-if="userLevel%2||userLevel==0"
             flat
             @click="ChangeEditState()"
           >
@@ -259,7 +259,7 @@
             <span v-else class="title" style="color:white">编辑</span>
           </v-btn>
           <v-btn 
-            v-if="userLevel%2"
+            v-if="userLevel%2||userLevel==0"
             flat
             @click = "importImg()"  
           >
