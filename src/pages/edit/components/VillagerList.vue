@@ -76,7 +76,7 @@
                     </template>
             </v-autocomplete>
           </v-list-tile>
-        <v-list>
+        <v-list ref="villagerList">
           <v-list-tile v-for="(item,index) in villagers" :key="item.name" v-show="!item.isInCanvas && (item.show==undefined||item.show==true)" avatar>
             <v-list-tile-action :id="item._id" draggable="true" @dragstart="dragStart($event)" @drag="drag($event)" @dragend="dragEnd($event)">
               <svg width="100%" height="100%" version="1.1"
@@ -468,7 +468,6 @@ export default {
     villageId:String
   },
   methods:{
-
    search(key){
      if(!key){
        this.keyword="";
@@ -477,8 +476,8 @@ export default {
           return;
       }
      for(let villager of this.villagers){
-       villager.show=false;
-        if(villager.name.indexOf(key)>=0)
+      villager.show=false;
+      if(villager.name.indexOf(key)>=0)
               villager.show=true;
      }
     },
@@ -502,6 +501,7 @@ export default {
     {
       // let exportImgEvent bus.$emit('save',event.detail.savePack);= new Event("exportImg");
       // window.dispatchEvent(exportImgEvent);
+      // this.getVillagersSvg();
       bus.$emit('exportImg');
     },
     getDetails(curId){
@@ -601,6 +601,14 @@ export default {
           this.svgdemo[i].proportion = (this.svgdemo[i].people/this.totalVillagers*100).toFixed(0);
         }
       }
+    },
+    getVillagersSvg(){
+      let svg_xmls=[];
+      for(let villager of this.villagers){
+        let div=document.getElementById(villager._id);
+        svg_xmls.push(new XMLSerializer().serializeToString(div.childNodes[0]).toString());
+      }
+      this.$store.dispatch('setVillagersSvg',svg_xmls);
     }
   },
   created(){

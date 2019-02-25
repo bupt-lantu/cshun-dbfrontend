@@ -20,7 +20,9 @@ export default new Vuex.Store({
       userLevel:999999,
       userRespectId:'',
 
-      selectLoading:false
+      selectLoading:false,
+
+      villagersSvg:[]
   },
 
   mutations: {
@@ -72,6 +74,9 @@ export default new Vuex.Store({
     },
     changeSelectLoading(state){
       state.selectLoading=!state.selectLoading;
+    },
+    setVillagersSvg(state,payload){
+      state.villagersSvg=payload;
     }
   },
 
@@ -118,6 +123,9 @@ export default new Vuex.Store({
     },
     selectLoading(state){
       return state.selectLoading;
+    },
+    villagersSvg(state){
+      return state.villagersSvg;
     }
   },
 
@@ -264,6 +272,9 @@ export default new Vuex.Store({
     },
     setCurrentBigvillage(context,name){
       context.commit('setCurrentBigvillage',name);
+    },
+    setVillagersSvg(context,payload){
+      context.commit('setVillagersSvg',payload);
     }
   }
 })
