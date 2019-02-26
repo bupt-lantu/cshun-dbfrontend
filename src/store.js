@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
       // canvas:'',
+      historyStack: null,
       villagesInfo:[],
       villages:[],
       villagers:[],
@@ -26,6 +27,9 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    setHistoryStack(state,str){
+      state.historyStack = str;
+    },
     setVillagesInfo(state,obj){
       state.villagesInfo=obj;
     },

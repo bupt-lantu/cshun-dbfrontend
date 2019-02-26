@@ -29,7 +29,7 @@
                 <v-spacer></v-spacer>
             </v-layout>
             </v-toolbar>
-            <div id="cvsdiv" style="overflow-x:auto">
+            <div id="cvsdiv" style="overflow:auto">
                 <canvas id="e"></canvas>
             </div>
         </v-content>
@@ -44,6 +44,12 @@ var exportCvs;
 export default {
   name: 'ExportImg',
   props: ['savePack'],
+  data () {
+    return {
+        svgdemo: null,
+        villagers: null
+    }
+  },
   methods:{
     exportImg: function(){
           exportCvs.export();
@@ -59,12 +65,23 @@ export default {
   mounted()
   {
         document.getElementById('cvsdiv').width = document.body.clientWidth;
-        let width = 2000,height = 2000;
+        document.getElementById('cvsdiv').height = document.body.clientHeight;
+         window.addEventListener('resize',function(){
+            document.getElementById('cvsdiv').width = document.body.clientWidth;
+            document.getElementById('cvsdiv').height = document.body.clientHeight;
+      });
+        this.svgdemo = JSON.parse(sessionStorage.getItem('svgDemo'));
+        this.villagers = JSON.parse(sessionStorage.getItem('villagers'));
         let savePack = sessionStorage.getItem("savePack");
+        let width = 2450,height = 2000;
         document.getElementById('e').width = width;
         document.getElementById('e').height = height;
-        exportCvs = new vCanvas({x:width,y:height},'e',savePack);
         exportSupport.init();
+        exportCvs = new vCanvas({x:width,y:height},'e',savePack);
+        exportCvs.changeStateTo("export");
+        exportCvs.prepareForExport(this.$route.params.firstname,this.$route.params.lastname,this.svgdemo,this.villagers,document.getElementById('e'));
+        sessionStorage.removeItem('svgDemo');
+        sessionStorage.removeItem('villagers');
   }
 }
 </script>

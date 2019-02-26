@@ -45,7 +45,7 @@ export default new Router({
       }
     },
     {
-      path: '/exportImg',
+      path: '/exportImg/:firstname/:lastname',
       name: 'exportImg',
       component: ExportImg,
       meta:{

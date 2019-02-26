@@ -211,6 +211,11 @@ export default {
         */
     }
   },
+  computed:{
+      historyStack() {
+          return this.$store.state.historyStack;
+      }
+  },
   methods:{
     getScrollTop(){
         let scrollTop = 0;
@@ -272,21 +277,21 @@ export default {
         cvs.saveToServer();
         // alert("保存成功");
     },
-    exportImg()
+    exportImg(e)
     {
         let savePack = cvs.saveToServer();//cvs.save(0,false,);  
         sessionStorage.setItem("savePack",savePack);
-        sessionStorage.setItem("historyStack",JSON.stringify(cvs.history));
-        this.$router.push({ name: 'exportImg'});
-        //let routeData = this.$router.resolve({ name: 'exportImg'});
-        //let wd = window.open(routeData.href,'_blank');
+        this.$store.commit("setHistoryStack",JSON.stringify(cvs.history));
+        this.$router.push({ 
+            name: 'exportImg',
+            params: e
+        });
     },
     importImg()
     {
         let savePack = cvs.save(0,true,true);
-        //let savePack = cvs.saveToOuter();//cvs.save(0,false,);  
         sessionStorage.setItem("savePack",savePack);
-        sessionStorage.setItem("historyStack",JSON.stringify(cvs.history));
+        this.$store.commit("setHistoryStack",JSON.stringify(cvs.history));
         this.$router.push({ name: 'importImg'});
     }
   },
@@ -373,14 +378,13 @@ export default {
             let canvasStr="";
             cvs = new vCanvas({x:width,y:height},'c',canvasStr);
       }
-      let historystack = sessionStorage.getItem("historyStack");
-      if(!(historystack===null))
+      if(!(this.historyStack===null))
       {
-          let temphistory = JSON.parse(historystack);
+          let temphistory = JSON.parse(this.historyStack);
           cvs.history.top = temphistory.top;
           cvs.history.historyStack = temphistory.historyStack;
           cvs.history.changedSVGid = temphistory.changedSVGid;
-          sessionStorage.removeItem("historyStack");
+          this.$store.commit("setHistoryStack",null);
       }
       });    
     //   window.addEventListener('addSVG',function(event){
@@ -392,8 +396,8 @@ export default {
     //   window.addEventListener('exportImg',()=>{
     //       this.exportImg();
     //   });
-        bus.$on('exportImg',()=>{
-            this.exportImg();
+        bus.$on('exportImg',(e)=>{
+            this.exportImg(e);
         });
         bus.$on('importImg',()=>{
             this.importImg();

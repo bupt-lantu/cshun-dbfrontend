@@ -102,7 +102,7 @@ export default {
         ctx.drawImage(that,0,0,minw,minh);
         canvast
         var ret = canvast.toDataURL('image/jpeg',0.75);
-        callbk(ret);
+        callbk(ret,minw,minh);
       }
     }
   },

@@ -45,7 +45,7 @@ export default class vCanvas
         this.changeStateTo("move"); 
         this.save(0,true,true);
     }
-    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw,setmap
+    changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw,setmap,export
     {
         if(this.state=="remove"){this.canvas.selection = false;}
         if(sta=="restore")
@@ -60,7 +60,7 @@ export default class vCanvas
             this.state = sta;
             this.save(0,true,true);
         }
-        if(sta=="move"||sta=="setmap"||sta=="freedraw")
+        if(sta=="move"||sta=="setmap"||sta=="freedraw"||sta=="export")
         {
             this.selectVert(this.vRoot);
             for(let tt of objs) 
@@ -103,6 +103,7 @@ export default class vCanvas
     }
     onClk(e) 
     {
+        if(this.state=="export"){return;}
         if(this.state == "addvert") {this.mouseDown = true;return;}
         if(this.state=="move"||this.state=="setmap")
         {
@@ -362,9 +363,10 @@ export default class vCanvas
     {
         this.canvas.renderAll();
     }
-    setMap(src)
+    setMap(src,width,height)
     {
         this.mapProp.mapSrc = src;
+        this.mapProp.mapSize.x = width, this.mapProp.mapSize.y = height;
         this.renderMap();
     }
     moveMap(x,y)
@@ -442,6 +444,13 @@ export default class vCanvas
     {
         obj.rlPos = {x: obj.left-this.mapProp.mapPos.x,y: obj.top-this.mapProp.mapPos.y};
         this.canvas.add(obj);
+    }
+    addText(content,left,top,fontSize,fontWeight='bold',textAlign='left')
+    {
+        let text = new fabric.Text(content);
+        text.set({left: left,top: top,fontSize: fontSize,fontWeight: fontWeight,textAlign: textAlign,selectable: false});
+        this.add(text);
+        return text;
     }
     remove(obj,save=true)
     {
@@ -634,6 +643,91 @@ export default class vCanvas
         this.canvas.on('object:moving',this.onMove.bind(this));
         this.canvas.on('object:rotated',this.save.bind(this));
         this.canvas.on('object:scaled',this.save.bind(this));
+    }
+    prepareForExport(firstName,lastName,svgDemo,villagerList,outerCanvas)
+    {
+        let vilPreLine = 9;
+        let rlHeight = this.mapProp.mapSize.y+Math.ceil(villagerList.length/vilPreLine)*200+50; 
+        outerCanvas.height = rlHeight; outerCanvas.width = 2450;
+        this.resize({x: 2450, y: rlHeight});
+        let detx = 1100-this.mapProp.mapSize.x/2-this.mapProp.mapPos.x;
+        let dety = 10-this.mapProp.mapPos.y;
+        this.moveMap(detx,dety);
+        let bg = new fabric.Rect({
+            width: this.mapProp.mapSize.x, height: this.mapProp.mapSize.y, 
+            fill: '#cce29a', 
+            left: 1100,top: this.mapProp.mapSize.y/2+10
+        });
+        this.add(bg);
+        this.sendToBack(bg);
+        //handle title
+        let left = 40,top = 30;
+        let title = firstName+"脱贫攻坚作战示意图||"+lastName;
+        for(let i of title)
+        {
+            top += this.addText(i,left,top,45).height+5;
+        }
+        //handle villagers
+        /*name String The name of the villager
+        /condition String Family condition, enum from{已脱贫贫困户,一般贫困户,低保贫困户,五保户贫困户,孤儿低保户,外地常住户口未迁}
+        /safeWater Boolean Whether have safe drinking water
+        /haveRoad Boolean Whether have a road to his home
+        /members Number The number of his family members
+        /dilapidatedHouses Number The condition of his home(0-危房 1-改造中 2-已搬迁 3-危房改造完毕 -1-无房)
+        /education String Family education condition
+        /medicine String Whether ake part in medical insurance
+        /poorReason String
+        /incomeSource String Source of finance
+        /measure String The measure to help
+        /comments String
+        livedInVillage Boolean Whether lived in the village, default is true
+        */
+        let stleft = 150;
+        left = stleft,top = this.mapProp.mapSize.y+50;
+        let cnt = 1;
+        for(let i of villagerList)
+        {
+            let rltop = top;
+            rltop+=this.addText(cnt+"："+i.name,left,rltop,10).height+2;
+            rltop+=this.addText("状态："+i.condition,left,rltop,10).height+2;
+            rltop+=this.addText("饮用水是否安全："+(i.safeWater?"是":"否"),left,rltop,10).height+2;
+            rltop+=this.addText("是否通路："+(i.haveRoad?"是":"否"),left,rltop,10).height+2;
+            rltop+=this.addText("家庭成员数量："+i.members,left,rltop,10).height+2;
+            let house;
+            switch(i.dilapidatedHouses)
+            {
+                case 0: {house="危房";break;} case 1: {house="改造中";break;} 
+                case 2: {house="已搬迁";break;}; case 3: {house="危房改造完毕";break;}; 
+                case -1: {house="无房";break;};
+            }
+            rltop+=this.addText("房屋状态："+house,left,rltop,10).height+2;
+            rltop+=this.addText("家庭成员受教育状况："+i.education,left,rltop,10).height+2;
+            rltop+=this.addText("医保状况："+i.medicine,left,rltop,10).height+2;
+            rltop+=this.addText("贫穷原因："+i.poorReason,left,rltop,10).height+2;
+            rltop+=this.addText("家庭收入来源："+i.incomeSource,left,rltop,10).height+2;
+            rltop+=this.addText("扶贫措施："+i.measure,left,rltop,10).height+2;
+            rltop+=this.addText("备注："+i.comments,left,rltop,10).height+2;
+            rltop+=this.addText("是否住在本地："+(i.livedInVillage?"是":"否"),left,rltop,10).height+2;
+            if(cnt%vilPreLine==0){left = stleft,top+=200;}
+            else{left+=350;}
+            cnt++;
+        }
+         //handle svgDemo
+        //avatar household people proportion title
+        left = 1100+this.mapProp.mapSize.x/2+10,top = 10;
+        for(let i of svgDemo)
+        {
+            fabric.Image.fromURL(i.avatar, (img)=> {
+                img.scale(0.7);
+                let rlleft = left+img.width/2, rltop = top+img.height/2;
+                img.set({left: rlleft,top: rltop,selectable: false});
+                this.canvas.add(img);
+                this.addText(i.title+"（"+i.household+"户 "+i.people+"人 "+i.proportion+"%"+"）",left+img.width+105,rltop,14);
+                top+=img.height+5;
+              });
+        }
+        this.canvas.setBackgroundColor('white');
+        this.renderAll();
     }
     resize(siz)
     {

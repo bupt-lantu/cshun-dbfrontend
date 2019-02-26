@@ -428,7 +428,7 @@ export default {
         people: 0,
         proportion: 0
       }
-    ],
+        ],
 
     keyword:"",
     selectedVillager:"",
@@ -437,7 +437,7 @@ export default {
     ...mapGetters([
       'villagers',
       'currentVillageName',
-
+      
       'userLevel'
     ]),
     currentTown(){
@@ -461,14 +461,14 @@ export default {
         else
           return `${item.name}(地图中)`;
         });
-    }
+      }
   },
   props: {
     source: String,
     villageId:String
   },
   methods:{
-   search(key){
+       search(key){
      if(!key){
        this.keyword="";
        for(let villager of this.villagers)
@@ -494,15 +494,20 @@ export default {
     },
     ChangeEditState(){
       this.tool = !this.tool;
-      // console.log("tool:"+this.tool);
+      //console.log("tool:"+this.tool);
       this.$emit('CES');
     },
     ExportImg()
     {
       // let exportImgEvent bus.$emit('save',event.detail.savePack);= new Event("exportImg");
       // window.dispatchEvent(exportImgEvent);
-      // this.getVillagersSvg();
-      bus.$emit('exportImg');
+      if(this.firstOpen==false){
+        this.firstOpen = true;
+        this.getDrawerData();
+      }
+      sessionStorage.setItem('svgDemo',JSON.stringify(this.svgdemo));
+      sessionStorage.setItem('villagers',JSON.stringify(this.villagers));
+      bus.$emit('exportImg',{firstname: this.currentBigvillage ,lastname: this.currentVillageName});
     },
     getDetails(curId){
       this.dialogShow = true;
@@ -528,13 +533,11 @@ export default {
         return false;
       }
     },
-    changeDrawer(){
-      this.drawer = !this.drawer;
-      if(this.firstOpen==false){
-        this.firstOpen = true;
-        this.totalHousehold = this.villagers.length;
+    getDrawerData()
+    {
+      this.totalHousehold = this.villagers.length;
         for(var i=0;i<this.totalHousehold;i++){
-          // console.log(this.villagers[i].condition);
+          //console.log(this.villagers[i].condition);
           this.totalVillagers += this.villagers[i].members;
           if(this.villagers[i].condition=="普通户"){
             this.svgdemo[0].household++;
@@ -600,6 +603,12 @@ export default {
         for(var i=0;i<15;i++){
           this.svgdemo[i].proportion = (this.svgdemo[i].people/this.totalVillagers*100).toFixed(0);
         }
+    },
+    changeDrawer(){
+      this.drawer = !this.drawer;
+      if(this.firstOpen==false){
+        this.firstOpen = true;
+        this.getDrawerData();
       }
     },
     getVillagersSvg(){
@@ -636,11 +645,17 @@ export default {
         setTimeout(() => (this[l] = false), 3000)
 
         this.loader = null
-      },
+            },
       selectedVillager:function(val){
           this.search(val);
       },
     },
+    destroyed()
+    {
+      bus.$off('showP');
+      bus.$off('removeP');
+      bus.$off('save');
+    }
 }
 </script>
 
