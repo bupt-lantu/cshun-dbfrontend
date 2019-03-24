@@ -434,12 +434,21 @@ export default {
     selectedVillager:"",
   }),
   computed:{
-    ...mapGetters([
-      'villagers',
-      'currentVillageName',
+    // ...mapGetters([
+    //   'villagers',
+    //   'currentVillageName',
       
-      'userLevel'
-    ]),
+    //   'userLevel'
+    // ]),
+    villagers(){
+      return this.$store.getters.villagers
+    },
+    currentVillageName(){
+      return this.$store.getters.currentVillageName
+    },
+    userLevel(){
+      return this.$store.getters.userLevel
+    },
     currentTown(){
       return sessionStorage.getItem('CT');
     },

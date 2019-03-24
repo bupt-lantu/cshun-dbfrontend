@@ -159,30 +159,53 @@ export default {
   data(){
     return {
       keyword: "",
-      // villages: [],
       selectedName: "",
-      // villagesInfo: []
-      // item1s:['大王镇','小王镇','双王镇'],
-      // item2s:['大王村','小王村','双王村'],
       selectTown:'',
       selectBigvillage:'',
       backTopShow: false
     };
   },
   computed:{
-    ...mapGetters([
-      'villagesInfo',
-      'villages',
-      'towns',
-      'townsArr',
-      'bigvillagesArr',
-      'bigvillages',
+    // ...mapGetters([
+    //   'villagesInfo',
+    //   'villages',
+    //   'towns',
+    //   'townsArr',
+    //   'bigvillagesArr',
+    //   'bigvillages',
 
-      'userLevel',
-      'userRespectId',
+    //   'userLevel',
+    //   'userRespectId',
 
-      'selectLoading'
-    ]),
+    //   'selectLoading'
+    // ]),
+    villagesInfo(){
+      return this.$store.getters.villagesInfo
+    },
+    villages(){
+      return this.$store.getters.villages
+    },
+    towns(){
+      return this.$store.getters.towns
+    },
+    townsArr(){
+      return this.$store.getters.townsArr
+    },
+    bigvillagesArr(){
+      return this.$store.getters.bigvillagesArr
+    },
+    bigvillages(){
+      return this.$store.getters.bigvillages
+    },
+    userLevel(){
+      return this.$store.getters.userLevel
+    },
+    userRespectId(){
+      return this.$store.getters.userRespectId
+    },
+    selectLoading(){
+      return this.$store.getters.selectLoading
+    }
   },
   created(){
     // this.$store.dispatch('getVillagesInfo');
