@@ -42,22 +42,35 @@
                   >
                   </v-select>
                 </v-flex>
-                <v-flex xs12 md5 offset-lg1>
+                <v-flex xs12 md5>
                   <v-btn 
                    v-if="userLevel<=4"
                     :loading="selectLoading"
                     class="mx-0 px-0 text-xs-center"
                     color="blue-grey"
-                    @click="submit"
+                    @click="submit()"
                   >
                     <span style="color: white">
                     确定
                     </span>
                   </v-btn>
+                  </v-flex>
+                  <v-flex xs12 md5>
+                  <v-btn 
+                   v-if="userLevel<=4"
+                    :loading="selectLoading"
+                    class="mx-0 px-0 text-xs-center"
+                    color="blue-grey"
+                    @click="importfile()"
+                  >
+                    <span style="color: white">
+                    上传文件
+                    </span>
+                  </v-btn>
                 </v-flex>
                 <v-flex><v-btn large v-if="userLevel>=5 && !selectLoading" flat disabled></v-btn></v-flex>
                 <v-flex><v-btn large v-if="userLevel>=5 && selectLoading" :loading="selectLoading" flat center></v-btn></v-flex>
-                <v-flex xs12 sm5 md5 offset-lg1 align-self-end px-0>
+                <v-flex xs12 sm5 md2 align-self-end px-0>
                   <v-autocomplete
                     v-model="keyword"
                     :items="villages"
@@ -224,6 +237,9 @@ export default {
          this.$store.dispatch('setCurrentBigvillage',this.selectBigvillage);
          this.$store.dispatch('getVillagesInfo',bigvillage.gumis);
       }
+    },
+    importfile(){
+      // TODO
     },
     backTop() {
       let back = setInterval(() => {
