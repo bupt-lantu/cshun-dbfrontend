@@ -176,6 +176,14 @@ export default class vCanvas
             this.selectVert(this.vRoot);
         }
     }
+    onDBClk(e)
+    {
+        if(e.target.isSVG)
+        {
+            console.log(e.target.id);
+            bus.$emit('showDetail',this.SVGIdArray[e.target.id-1]);   
+        }
+    }
     onMove(e) 
     {
         let p = e.target;
@@ -643,6 +651,7 @@ export default class vCanvas
         this.canvas.on('object:moving',this.onMove.bind(this));
         this.canvas.on('object:rotated',this.save.bind(this));
         this.canvas.on('object:scaled',this.save.bind(this));
+        this.canvas.on('mouse:dblclick',this.onDBClk.bind(this));
     }
     prepareForExport(firstName,lastName,svgDemo,villagerList,outerCanvas)
     {

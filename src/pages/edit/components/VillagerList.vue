@@ -631,6 +631,10 @@ export default {
         // element.isInCanvas=false;
         this.$store.dispatch('updateVillager',{ id, isIn:false});
     });
+    bus.$on('showDetail',(id)=>{
+        let showId = this.villagers.findIndex((obj)=>obj._id==id);
+        this.getDetails(showId);
+    });
     bus.$on('save',(payload)=>{
         this.$store.dispatch('sentCanvas',payload);
         this.$store.dispatch('updateVillagerAll');
