@@ -16,7 +16,7 @@
       fixed
     >
       <v-list>
-        <v-list-tile v-for="(item,index) in svgdemo" :key="item.title" avatar>
+        <v-list-tile v-for="item in svgdemo" :key="item.title" avatar>
           <v-list-tile-action :id="item._id">
             <img :src="item.avatar" width="80%">
           </v-list-tile-action>
