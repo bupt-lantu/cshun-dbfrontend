@@ -160,23 +160,11 @@ export default new Vuex.Store({
 
     getVillagers(context,id){
       context.commit('setCurrentVillageId',id);
-      // axios.get(`village/${id}?villagerInfo=true`).then((res) =>{
-      //   context.commit('setVillagers',res.data.villagers);
-      //   sessionStorage.setItem(`canvas${context.state.currentVillageId}`,res.data.canvas);
-      // }).catch((err)=>{
-      //   console.log(err);
-      // });
-      return new Promise(async (resolve, reject)=>{
-        // context.commit('setCurrentVillageId',id);
-        const res=await axios.get(`village/${id}?villagerInfo=true`);
-        if(!res)
-          reject();
+      return axios.get(`village/${id}?villagerInfo=true`).then((res) => {
         context.commit('setVillagers',res.data.villagers);
-        context.commit('setCurrentVillageName',res.data.name);
-        console.log(res);
-        await sessionStorage.setItem(`canvas${context.state.currentVillageId}`,res.data.canvas);
-        resolve();
-      })},
+        sessionStorage.setItem(`canvas${context.state.currentVillageId}`,res.data.canvas);
+      });
+    },
     setCurrentVillageId(context,id){
       context.commit('setCurrentVillageId',id);
     },

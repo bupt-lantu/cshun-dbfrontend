@@ -20,8 +20,8 @@ router.beforeEach((to, from, next) => {
   next();
 });
 new Vue({
-  router,
-  store,
+  router:router,
+  store:store,
   render: h => h(App)/*,
   mounted(){
     this.$router.push('/');

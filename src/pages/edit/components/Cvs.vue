@@ -387,15 +387,6 @@ export default {
           this.$store.commit("setHistoryStack",null);
       }
       });    
-    //   window.addEventListener('addSVG',function(event){
-    //       bus.$emit('showP',event.detail.id);
-    //   });
-    //   window.addEventListener('removeSVG',function(event){
-    //       bus.$emit('removeP',event.detail.id);
-    //   });
-    //   window.addEventListener('exportImg',()=>{
-    //       this.exportImg();
-    //   });
         bus.$on('exportImg',(e)=>{
             this.exportImg(e);
         });
