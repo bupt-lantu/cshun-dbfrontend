@@ -124,7 +124,7 @@ export default class vCanvas
         }
         if(this.state=="remove"){this.mousePos = e.pointer;}
         let c = e.target;
-        if(c==null) 
+        if(c===null) 
         {
             this.selectVert(this.vRoot);
             this.selectEdge(null);
@@ -318,12 +318,12 @@ export default class vCanvas
     }
     selectEdge(edge)
     {
-        if(this.selectedEdge!=null)
+        if(!(this.selectedEdge===null))
         {
             this.selectedEdge.p1.set({fill:'red',stroke:'red'});
             this.selectedEdge.p2.set({fill:'red',stroke:'red'});
         }
-        if(edge==null){bus.$emit('selectEdge',this.lineprop);}
+        if(edge===null){bus.$emit('selectEdge',this.lineprop);}
         else
         {
             bus.$emit('selectEdge',edge.lineprop);
@@ -454,7 +454,7 @@ export default class vCanvas
     }
     remove(obj,save=true)
     {
-        if(obj!=null) 
+        if(!(obj===null)) 
         {
             this.canvas.remove(obj);
             if(obj.isSVG)
