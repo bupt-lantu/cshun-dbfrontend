@@ -61,11 +61,14 @@
                     :loading="selectLoading"
                     class="mx-0 px-0 text-xs-center"
                     color="blue-grey"
-                    @click="importfile()"
+                    id = "uploadMap"
                   >
                     <span style="color: white">
                     上传文件
                     </span>
+                    <form>
+                        <input type="file" accept = ".csv" @change = "uploadCsv($event);"/>
+                    </form>
                   </v-btn>
                 </v-flex>
                 <v-flex><v-btn large v-if="userLevel>=5 && !selectLoading" flat disabled></v-btn></v-flex>
@@ -261,9 +264,6 @@ export default {
          this.$store.dispatch('getVillagesInfo',bigvillage.gumis);
       }
     },
-    importfile(){
-      // TODO
-    },
     backTop() {
       let back = setInterval(() => {
         if (document.body.scrollTop || document.documentElement.scrollTop) {
@@ -280,6 +280,22 @@ export default {
       } else {
         this.backTopShow = false;
       }
+    },
+    uploadCsv(e)
+    {
+      console.log("SBSBB");
+      if(!e.target.files[0]) return;
+      let formData = new FormData();
+      formData.append("data",e.target.files[0]);
+      axios.post('import',formData)
+      .then(
+        (res)=> { 
+              //console.log(res);
+            },
+        (error) => {
+            console.log(error);
+        }
+      );
     }
   }
 }
@@ -340,5 +356,6 @@ p {
 .titleHovered {
   border-bottom-color: rgb(182, 219, 184);
 }
-
+#uploadCsv form{width:100%;position:absolute; left:0; top:0;opacity:0; filter:alpha(opacity=0);}
+#uploadCsv form input{width: 100%;}
 </style>
