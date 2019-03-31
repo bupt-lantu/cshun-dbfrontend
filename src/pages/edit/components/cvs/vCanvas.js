@@ -453,9 +453,10 @@ export default class vCanvas
         obj.rlPos = {x: obj.left-this.mapProp.mapPos.x,y: obj.top-this.mapProp.mapPos.y};
         this.canvas.add(obj);
     }
-    addText(content,left,top,fontSize,fontWeight='bold',textAlign='left')
+    addText(content,left,top,fontSize,fontWeight='bold',textAlign='center')
     {
-        let text = new fabric.Text(content);
+        let text = new fabric.Textbox(content);
+        text.absolutePositioned = true;
         text.set({left: left,top: top,fontSize: fontSize,fontWeight: fontWeight,textAlign: textAlign,selectable: false});
         this.add(text);
         return text;

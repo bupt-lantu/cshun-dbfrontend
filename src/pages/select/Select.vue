@@ -283,7 +283,6 @@ export default {
     },
     uploadCsv(e)
     {
-      console.log("SBSBB");
       if(!e.target.files[0]) return;
       let formData = new FormData();
       formData.append("data",e.target.files[0]);
