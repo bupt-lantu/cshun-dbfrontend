@@ -404,7 +404,7 @@ export default class vCanvas
             }
         }
         this.canvas.renderAll();
-        if(this.mapProp.mapSrc)
+        if(!(this.mapProp.mapSrc===null))
         {
             this.canvas.setBackgroundImage(this.mapProp.mapSrc, this.canvas.renderAll.bind(this.canvas), {
                 left: this.mapProp.mapPos.x,
@@ -419,13 +419,14 @@ export default class vCanvas
             this.renderAll();
         }
     }
-    createSVG(str,pos,id,save=true,SVGprop=null)
+    createSVG(str,pos,id,save=true,SVGprop=null,pos2={angle: 0,scaleX: 1,scaleY: 1})
     {
         if(this.state=="move") return;
         let that = this;
         fabric.loadSVGFromString(str, function(objects, options) {
             let obj = fabric.util.groupSVGElements(objects, options);
-            obj.set({left:pos.x,top:pos.y,});
+            obj.set({left:pos.x,top:pos.y,angle:pos2.angle,scaleX:pos2.scaleX,scaleY:pos2.scaleY});
+            obj.setCoords();
             let numId = that.SVGIdArray.indexOf(id);
             if(numId==-1)
             {
@@ -865,7 +866,7 @@ export default class vCanvas
         let svgArray = savePack.svgarray;
         this.SVGMap.clear();
         for(let tt of svgArray)
-        {this.createSVG(tt.svgstr,tt.pos,this.SVGIdArray[parseInt(tt.id-1)],false,tt.prop);}
+        {this.createSVG(tt.svgstr,tt.pos,this.SVGIdArray[parseInt(tt.id-1)],false,tt.prop,{angle:tt.prop.angle,scaleX:tt.prop.scaleX,scaleY:tt.prop.scaleY});}
         let vtmap = new Map();
         for(let tt of savePack.vertset)
         {

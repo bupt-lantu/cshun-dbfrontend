@@ -60,7 +60,7 @@ export default {
   methods:{
     clearMap()
     {
-      importCvs.setMap(null);
+      importCvs.setMap(null,2048,2048);
     },
     uploadMap(e)
     { 
