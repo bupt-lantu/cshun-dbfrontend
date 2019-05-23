@@ -47,12 +47,12 @@ export default class vCanvas
     }
     changeStateTo(sta)//move,editvert,addvert,remove,connect,restore,freedraw,setmap,export
     {
-        if(this.state=="remove"){this.canvas.selection = false;}
         if(sta=="restore")
         {
             this.state = sta;
             return;
         }
+        if(this.state=="remove"){this.canvas.selection = false;}
         if(sta!=this.state)this.selectEdge(null);
         let objs = this.canvas.getObjects();
         if(this.state=="setmap")
@@ -69,12 +69,22 @@ export default class vCanvas
                 if(tt instanceof fabric.Circle) tt.set({strokeWidth: 0});//hide the control points
             }
         }
+        else if(sta=="addvert"||sta=="freedraw")
+        {
+            for(let tt of objs)
+                if(tt instanceof fabric.Circle) 
+                {
+                    tt.set({selectable: false, strokeWidth: 5});
+                    tt.setCoords();
+                }
+                else if(tt.isSVG){tt.set({selectable: false});}
+        }
         else
         {
             for(let tt of objs)
             {
                 if(tt instanceof fabric.Circle) tt.set({selectable:true,strokeWidth:5});
-                if(tt.isSVG==true) tt.set({selectable:true});
+                if(tt.isSVG) tt.set({selectable:true});
                 tt.setCoords();
             }
             if(sta=="remove")
@@ -178,6 +188,7 @@ export default class vCanvas
     }
     onDBClk(e)
     {
+        if(this.state!="move") return;
         if(e.target.isSVG)
         {
             console.log(e.target.id);
@@ -421,7 +432,8 @@ export default class vCanvas
     }
     createSVG(str,pos,id,save=true,SVGprop=null,pos2={angle: 0,scaleX: 1,scaleY: 1})
     {
-        if(this.state=="move") return;
+        console.log(this.state)
+        if(this.state!="restore"&&this.state!="editvert") return;
         let that = this;
         fabric.loadSVGFromString(str, function(objects, options) {
             let obj = fabric.util.groupSVGElements(objects, options);
@@ -492,7 +504,8 @@ export default class vCanvas
             fill: 'red',
             stroke: 'red',
             hasControls: false,
-            hasBorders: true
+            hasBorders: true,
+            selectable: false
         });
         c.r = radius;
         c.cvs = cvs;  
@@ -667,7 +680,8 @@ export default class vCanvas
         let bg = new fabric.Rect({
             width: this.mapProp.mapSize.x, height: this.mapProp.mapSize.y, 
             fill: '#cce29a', 
-            left: 1100,top: this.mapProp.mapSize.y/2+10
+            left: 1100, top: this.mapProp.mapSize.y/2+10,
+            selectable: false, evented: false,
         });
         this.add(bg);
         this.sendToBack(bg);
@@ -742,6 +756,7 @@ export default class vCanvas
     }
     resize(siz)
     {
+        console.log("resize!")
         let sta = this.state;
         this.canvas.dispose();
         this.size = siz;
@@ -854,6 +869,7 @@ export default class vCanvas
     }
     restore(src)
     {
+        console.log("RESTORE")
         this.changeStateTo("restore");
         this.canvas.clear();
         let savePack = JSON.parse(src);
