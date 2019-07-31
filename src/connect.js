@@ -3,7 +3,8 @@ import router from "./router";
 axios.defaults.withCredentials = true; //允许设置cookie
 //axios.defaults.baseURL='https://dev.cshun.gaojianli.me/api';
 //axios.defaults.baseURL = "http://39.98.84.18/api";
-axios.defaults.baseURL = "http://39.98.84.18:10081/api";
+//axios.defaults.baseURL = "http://39.98.84.18:10081/api";
+axios.defaults.baseURL = "http://localhost:3000/api";
 
 axios.interceptors.response.use(
   response => {
