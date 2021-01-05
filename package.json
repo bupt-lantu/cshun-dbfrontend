@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "canvas": "^2.1.0",
     "fabric": "^2.4.3",
